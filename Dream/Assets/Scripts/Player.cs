@@ -35,8 +35,7 @@ public class Player : MonoBehaviour
 
     private InputMaster inputActions;
     private Animator animator;
-    private bool startAnimation ,endAnimation;
-    private bool startJump, stopJump, startAttack, endAttack, firstAttack, stopAttack;
+    private bool startJump, stopJump;
     private bool isAnimation, isAttack;
     private Rigidbody rb;
     private float flyTime = 0;
@@ -56,11 +55,8 @@ public class Player : MonoBehaviour
     {
         animator.SetBool("OnGround", onGround);
         animator.SetBool("JumpButton", inputActions.Player.Jump.ReadValue<float>() == 1 ? true : false);
-        if(!startAnimation)
+        if(isAnimation == false)
             animator.SetBool("AttackButton", inputActions.Player.Attack.ReadValue<float>() == 1 ? true : false);
-        animator.SetBool("EndAttack", endAttack);
-        //animator.SetBool("StartAnimation", startAnimation);
-        //animator.SetBool("EndAnimation", endAnimation);
 
         if (!onGround) flyTime += Time.deltaTime;
         animator.SetFloat("FlyTime", flyTime);
@@ -70,44 +66,18 @@ public class Player : MonoBehaviour
             attackComboTime += Time.deltaTime;
         animator.SetFloat("ComboTime", attackComboTime);
 
+        animator.SetBool("isAttack", isAttack);
+        animator.SetBool("isAnimation", isAnimation);
         #region Attack States
-        if (firstAttack)
-        {
-            attackPhase++;
-            //Debug.Log("Attack" + attackPhase);
-            firstAttack = false;
-        }
-        if (startAttack)
-        {
-            attackPhase++;
-            //Debug.Log("Attack" + attackPhase);
-            isComboTime = false;
-            startAnimation = true;
-            startAttack = false;
-        }
-        if (endAttack)
-        {            
-            isComboTime = true;
-            attackComboTime = 0f;
-            endAttack = false;
-        }
-        if (stopAttack)
-        {
-            attackComboTime = 0f;
-            attackPhase = 0;
-            isComboTime = false;
-            stopAttack = false;
-        }
-        if (startAnimation)
+        if (isAttack)
         {
             animator.SetTrigger("StartAnimation");
-            startAnimation = false;
+            isComboTime = false;
+            attackComboTime = 0;
         }
-        if (endAnimation)
+        else
         {
-            animator.SetTrigger("EndAnimation");            
-            endAttack = true;
-            endAnimation = false;
+            isComboTime = true;
         }
         #endregion
     }
@@ -176,7 +146,7 @@ public class Player : MonoBehaviour
     }
     private void ChangeFace()
     {
-        if (endAnimation)
+        if (isAnimation == false)
         {
             if (playerFaceDir > 0)
             {
@@ -192,7 +162,7 @@ public class Player : MonoBehaviour
     {
         switch (functionName)
         {
-            case "StartJump" :
+            case "StartJump":
                 startJump = true;
                 break;
             case "StopJump":
@@ -201,24 +171,23 @@ public class Player : MonoBehaviour
             case "OnGround":
                 flyTime = 0;
                 break;
-            case "FirstAttack":
-                firstAttack = true;
-                break;
             case "StartAttack":
-                startAttack = true;
+                isAttack = true;
                 break;
-            case "EndAttack" :
-                endAttack = true;
+            case "EndAttack":
+                isAttack = false;
                 break;
             case "StopAttack":
-                stopAttack = true;
+                attackComboTime = 0;
                 break;
             case "StartAnimation":
-                startAnimation = true;
+                isAnimation = true;
                 break;
-            case "EndAniamtion":
-                endAnimation = true;
+            case "EndAnimation":
+                animator.SetTrigger("EndAnimation");
+                isAnimation = false;
                 break;
+            
         }
     }
 }
