@@ -37,6 +37,9 @@ public class Player : MonoBehaviour
     private Animator animator;
     private bool startJump, stopJump;
     private bool isAnimation, isAttack;
+    [SerializeField]
+    private bool isIdle = true;
+    private bool attackButton;
     private Rigidbody rb;
     private float flyTime = 0;
     private float playerFaceDir;
@@ -55,8 +58,9 @@ public class Player : MonoBehaviour
     {
         animator.SetBool("OnGround", onGround);
         animator.SetBool("JumpButton", inputActions.Player.Jump.ReadValue<float>() == 1 ? true : false);
-        if(isAnimation == false)
-            animator.SetBool("AttackButton", inputActions.Player.Attack.ReadValue<float>() == 1 ? true : false);
+        attackButton = inputActions.Player.Attack.ReadValue<float>() == 1 ? true : false;
+        if (isAnimation == false)
+            animator.SetBool("AttackButton", attackButton);
 
         if (!onGround) flyTime += Time.deltaTime;
         animator.SetFloat("FlyTime", flyTime);
@@ -69,13 +73,14 @@ public class Player : MonoBehaviour
         animator.SetBool("isAttack", isAttack);
         animator.SetBool("isAnimation", isAnimation);
         #region Attack States
-        if (isAttack)
+        if (isAttack && attackButton)
         {
+            isIdle = false;
             animator.SetTrigger("StartAnimation");
             isComboTime = false;
             attackComboTime = 0;
         }
-        else
+        else if(isIdle == false)
         {
             isComboTime = true;
         }
@@ -179,6 +184,8 @@ public class Player : MonoBehaviour
                 break;
             case "StopAttack":
                 attackComboTime = 0;
+                isComboTime = false;
+                isIdle = true;
                 break;
             case "StartAnimation":
                 isAnimation = true;
