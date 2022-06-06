@@ -20,6 +20,8 @@ public class Player : MonoBehaviour
     [SerializeField]
     private float moveRadius = 0.1f;
     [SerializeField]
+    private float moveHeight = 1f;
+    [SerializeField]
     private float moveDistance = 0.5f;
     [SerializeField]
     private float moveVelocity = 1f;
@@ -72,19 +74,7 @@ public class Player : MonoBehaviour
 
         animator.SetBool("isAttack", isAttack);
         animator.SetBool("isAnimation", isAnimation);
-        #region Attack States
-        if (isAttack && attackButton)
-        {
-            isIdle = false;
-            animator.SetTrigger("StartAnimation");
-            isComboTime = false;
-            attackComboTime = 0;
-        }
-        else if(isIdle == false)
-        {
-            isComboTime = true;
-        }
-        #endregion
+        
     }
 
     void FixedUpdate()
@@ -112,7 +102,7 @@ public class Player : MonoBehaviour
 
         //touchWall = Physics.SphereCast(transform.position, moveRadius, new Vector3(playerFaceDir, 0, 0).normalized,
         //    out RaycastHit hitWall, faceDistance, LayerMask.GetMask("Wall"));
-        touchWall = Physics.BoxCast(transform.position, new Vector3(moveRadius/2, 0.95f/2, 1), new Vector3(playerFaceDir, 0, 0).normalized,
+        touchWall = Physics.BoxCast(transform.position, new Vector3(moveRadius/2, moveHeight / 2, 1), new Vector3(playerFaceDir, 0, 0).normalized,
             out RaycastHit hitWall, Quaternion.identity, moveDistance, LayerMask.GetMask("Wall"));
         if (touchWall)
         {
@@ -127,7 +117,19 @@ public class Player : MonoBehaviour
         }
         #endregion
 
-        
+        #region Attack States
+        if (isAttack && attackButton)
+        {
+            isIdle = false;
+            animator.SetTrigger("StartAnimation");
+            isComboTime = false;
+            attackComboTime = 0;
+        }
+        else if (isIdle == false)
+        {
+            isComboTime = true;
+        }
+        #endregion
 
         if (onGround)
             currentDistance = hitGround.distance;
@@ -147,7 +149,7 @@ public class Player : MonoBehaviour
 
         // Show "Move" BoxCast
         Gizmos.color = Color.red;
-        Gizmos.DrawCube(transform.position + new Vector3(playerFaceDir, 0, 0).normalized * moveDistance, new Vector3(moveRadius, 0.95f,1));
+        Gizmos.DrawCube(transform.position + new Vector3(playerFaceDir, 0, 0).normalized * moveDistance, new Vector3(moveRadius, moveHeight, 1));
     }
     private void ChangeFace()
     {
