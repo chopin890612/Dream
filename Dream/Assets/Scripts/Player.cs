@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Spine.Unity;
+using Spine;
 
 public class Player : MonoBehaviour
 {
@@ -8,6 +10,8 @@ public class Player : MonoBehaviour
     private bool onGround;
     [SerializeField]
     private bool touchWall;
+    [SerializeField]
+    private float heightOffset = 0f;
 
     [Header("Jump")]
     [SerializeField]
@@ -34,6 +38,12 @@ public class Player : MonoBehaviour
     [SerializeField]
     private bool isComboTime;
 
+    [Header("Aniamtion")]
+    public AnimationReferenceAsset walk;
+    public AnimationReferenceAsset attack;
+    public AnimationReferenceAsset idle;
+    public AnimationReferenceAsset jump;
+
 
     private InputMaster inputActions;
     private Animator animator;
@@ -46,6 +56,12 @@ public class Player : MonoBehaviour
     private float flyTime = 0;
     private float playerFaceDir;
     private int attackPhase = 0;
+    private SkeletonAnimation skeletonAnimation;
+    private Spine.EventData endAttEvent;
+    private Spine.EventData onStepEvenet;
+    private PlayerState playerState = PlayerState.Idle;
+
+    
     private void Awake()
     {
         inputActions = new InputMaster();
@@ -55,6 +71,10 @@ public class Player : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
+        skeletonAnimation = GetComponent<SkeletonAnimation>();
+        skeletonAnimation.AnimationState.Event += AnimationEventHandler;
+        endAttEvent = skeletonAnimation.skeleton.Data.FindEvent("EndAttack");
+        onStepEvenet = skeletonAnimation.skeleton.Data.FindEvent("OnStep");
     }
     void Update()
     {
@@ -80,8 +100,9 @@ public class Player : MonoBehaviour
     void FixedUpdate()
     {
         #region Move States
-        onGround = Physics.SphereCast(transform.position, jumpRadius, Vector3.down, 
+        onGround = Physics.SphereCast(transform.position + new Vector3(0, heightOffset, 0), jumpRadius, Vector3.down, 
             out RaycastHit hitGround, jumpDistance, LayerMask.GetMask("Ground"));
+
         if (startJump)
         {
             // 產生向上的力道來抵銷玩家角色任何向下的動量
@@ -102,7 +123,7 @@ public class Player : MonoBehaviour
 
         //touchWall = Physics.SphereCast(transform.position, moveRadius, new Vector3(playerFaceDir, 0, 0).normalized,
         //    out RaycastHit hitWall, faceDistance, LayerMask.GetMask("Wall"));
-        touchWall = Physics.BoxCast(transform.position, new Vector3(moveRadius/2, moveHeight / 2, 1), new Vector3(playerFaceDir, 0, 0).normalized,
+        touchWall = Physics.BoxCast(transform.position + new Vector3(0, heightOffset, 0), new Vector3(moveRadius/2, moveHeight / 2, 1), new Vector3(playerFaceDir, 0, 0).normalized,
             out RaycastHit hitWall, Quaternion.identity, moveDistance, LayerMask.GetMask("Wall"));
         if (touchWall)
         {
@@ -122,12 +143,34 @@ public class Player : MonoBehaviour
         {
             isIdle = false;
             animator.SetTrigger("StartAnimation");
+            if (skeletonAnimation.AnimationState.GetCurrent(0).Animation != attack.Animation)
+                skeletonAnimation.AnimationState.SetAnimation(0, attack, false);
             isComboTime = false;
             attackComboTime = 0;
         }
         else if (isIdle == false)
         {
             isComboTime = true;
+        }
+        #endregion
+
+        #region Animation
+        if (onGround)
+        {
+            if (playerFaceDir == 0f)
+            {
+                if (skeletonAnimation.AnimationState.GetCurrent(0).Animation != idle.Animation)
+                    skeletonAnimation.AnimationState.SetAnimation(0, idle, true);
+            }
+            else
+            {
+                if (skeletonAnimation.AnimationState.GetCurrent(0).Animation != walk.Animation)
+                    skeletonAnimation.AnimationState.SetAnimation(0, walk, true);
+            }
+        }
+        if(isAttack && attackButton)
+        {
+            //skeletonAnimation.AnimationState.SetAnimation(0, attack, false);
         }
         #endregion
 
@@ -141,7 +184,7 @@ public class Player : MonoBehaviour
     {
         // Show "Jump" SphereCast
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position + Vector3.down * currentDistance, jumpRadius);
+        Gizmos.DrawWireSphere(transform.position + Vector3.down * currentDistance + new Vector3(0, heightOffset, 0), jumpRadius);
 
         // Show "Move" SphereCast
         //Gizmos.color = Color.cyan;
@@ -149,7 +192,7 @@ public class Player : MonoBehaviour
 
         // Show "Move" BoxCast
         Gizmos.color = Color.red;
-        Gizmos.DrawCube(transform.position + new Vector3(playerFaceDir, 0, 0).normalized * moveDistance, new Vector3(moveRadius, moveHeight, 1));
+        Gizmos.DrawCube(transform.position + new Vector3(playerFaceDir, 0, 0).normalized * moveDistance + new Vector3(0, heightOffset, 0), new Vector3(moveRadius, moveHeight, 1));
     }
     private void ChangeFace()
     {
@@ -157,12 +200,19 @@ public class Player : MonoBehaviour
         {
             if (playerFaceDir > 0)
             {
-                transform.localScale = Vector3.one;
+                transform.localScale = new Vector3(-1, 1, 1);
             }
             if (playerFaceDir < 0)
             {
-                transform.localScale = new Vector3(-1, 1, 1);
+                transform.localScale = Vector3.one;
             }
+        }
+    }
+    private void AnimationEventHandler(TrackEntry trackEntry, Spine.Event e)
+    {
+        if(e.Data == endAttEvent)
+        {
+            FunctionHandler("EndAnimation");
         }
     }
     public void FunctionHandler(string functionName)
@@ -198,5 +248,10 @@ public class Player : MonoBehaviour
                 break;
             
         }
+    }
+    public enum PlayerState
+    {
+        Idle = 0,
+        Attack =1
     }
 }
