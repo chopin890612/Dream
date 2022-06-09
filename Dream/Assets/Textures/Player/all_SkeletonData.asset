@@ -24,8 +24,11 @@ MonoBehaviour:
     multiplyMaterials: []
     screenMaterials: []
   skeletonDataModifiers: []
-  fromAnimation: []
-  toAnimation: []
-  duration: []
+  fromAnimation:
+  - "\u5F85\u6A5F"
+  toAnimation:
+  - "\u653B\u64CA"
+  duration:
+  - 0
   defaultMix: 0.2
   controller: {fileID: 0}

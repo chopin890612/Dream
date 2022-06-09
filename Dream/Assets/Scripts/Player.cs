@@ -6,37 +6,28 @@ using Spine;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField]
-    private bool onGround;
-    [SerializeField]
-    private bool touchWall;
-    [SerializeField]
-    private float heightOffset = 0f;
+    [Header("X Axis Movement")]
+    [SerializeField] float walkSpeed = 25f;
+    [Space(5)]
 
-    [Header("Jump")]
-    [SerializeField]
-    private float jumpRadius = 0.1f;
-    [SerializeField]
-    private float jumpDistance = 0.5f;
-    [SerializeField]
-    private float jumpVelocity = 1f;
-    [Header("Move")]
-    [SerializeField]
-    private float moveRadius = 0.1f;
-    [SerializeField]
-    private float moveHeight = 1f;
-    [SerializeField]
-    private float moveDistance = 0.5f;
-    [SerializeField]
-    private float moveVelocity = 1f;
+    [Header("Y Axis Movement")]
+    [SerializeField] float jumpSpeed = 45f;
+    [SerializeField] float fallSpeed = 45f;
+    [SerializeField] int jumpSteps = 20;
+    [SerializeField] int jumpThreshold = 7;
+    [Space(5)]
 
-    [Header("Debug")]
-    [SerializeField]
-    private float currentDistance;
-    [SerializeField]
-    private float attackComboTime;
-    [SerializeField]
-    private bool isComboTime;
+    [Header("Ground Setting")]
+    [SerializeField] float anchorOffset = 1f;
+    [SerializeField] float detectSphereRadius = 0.2f;
+    [SerializeField] float detectSphereDistance = 0.5f;
+    [SerializeField] bool onGround = false;
+    [SerializeField] bool onWall = false;
+    [Space(5)]
+
+    [Header("Debugger")]
+    [SerializeField] float currentSphereDistance;
+    [Space(5)]
 
     [Header("Aniamtion")]
     public AnimationReferenceAsset walk;
@@ -45,213 +36,98 @@ public class Player : MonoBehaviour
     public AnimationReferenceAsset jump;
 
 
-    private InputMaster inputActions;
-    private Animator animator;
-    private bool startJump, stopJump;
-    private bool isAnimation, isAttack;
-    [SerializeField]
-    private bool isIdle = true;
-    private bool attackButton;
-    private Rigidbody rb;
-    private float flyTime = 0;
-    private float playerFaceDir;
-    private int attackPhase = 0;
-    private SkeletonAnimation skeletonAnimation;
-    private Spine.EventData endAttEvent;
-    private Spine.EventData onStepEvenet;
-    private PlayerState playerState = PlayerState.Idle;
+    private bool _attackButton;
+    private Vector3 _gravity = new Vector3(0, -50f, 0);
+    private InputMaster _inputActions;
+    private Animator _animator;
+    private Rigidbody _rb;
+    private SkeletonAnimation _skeletonAnimation;
+    private Spine.EventData _endAttEvent;
+    private Spine.EventData _onStepEvenet;
 
     
     private void Awake()
     {
-        inputActions = new InputMaster();
-        inputActions.Enable();
+        _inputActions = new InputMaster();
+        _inputActions.Enable();
     }
     private void Start()
     {
-        animator = GetComponent<Animator>();
-        rb = GetComponent<Rigidbody>();
-        skeletonAnimation = GetComponent<SkeletonAnimation>();
-        skeletonAnimation.AnimationState.Event += AnimationEventHandler;
-        endAttEvent = skeletonAnimation.skeleton.Data.FindEvent("EndAttack");
-        onStepEvenet = skeletonAnimation.skeleton.Data.FindEvent("OnStep");
+        _animator = GetComponent<Animator>();
+        _rb = GetComponent<Rigidbody>();
+        _skeletonAnimation = GetComponent<SkeletonAnimation>();
     }
-    void Update()
+    private void Update()
     {
-        animator.SetBool("OnGround", onGround);
-        animator.SetBool("JumpButton", inputActions.Player.Jump.ReadValue<float>() == 1 ? true : false);
-        attackButton = inputActions.Player.Attack.ReadValue<float>() == 1 ? true : false;
-        if (isAnimation == false)
-            animator.SetBool("AttackButton", attackButton);
-
-        if (!onGround) flyTime += Time.deltaTime;
-        animator.SetFloat("FlyTime", flyTime);
-        playerFaceDir = inputActions.Player.Movment.ReadValue<float>();
-        
-        if (isComboTime)
-            attackComboTime += Time.deltaTime;
-        animator.SetFloat("ComboTime", attackComboTime);
-
-        animator.SetBool("isAttack", isAttack);
-        animator.SetBool("isAnimation", isAnimation);
-        
+        _animator.SetBool("OnGround", onGround);
+        _attackButton = _inputActions.Player.Jump.ReadValue<float>() == 1f ? true : false;
+        _animator.SetBool("JumpButton", _attackButton);
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
-        #region Move States
-        onGround = Physics.SphereCast(transform.position + new Vector3(0, heightOffset, 0), jumpRadius, Vector3.down, 
-            out RaycastHit hitGround, jumpDistance, LayerMask.GetMask("Ground"));
+        _rb.AddForce(_gravity, ForceMode.Acceleration);
 
-        if (startJump)
-        {
-            // 產生向上的力道來抵銷玩家角色任何向下的動量
-            // 以讓玩家角色向上跳躍，未來二段跳需要用
-            var downVelocity = Mathf.Min(rb.velocity.y, 0);
-            var deltaVelocity = new Vector3(0, jumpVelocity - downVelocity, 0);
-            rb.AddForce(deltaVelocity, ForceMode.VelocityChange);
-            startJump = false;
-        }
-        if (stopJump)
-        {
-            // 產生剛好的力道來抵銷上升的動量
-            var upVelocity = Mathf.Max(rb.velocity.y, 0);
-            var deltaVelocity = new Vector3(0, -upVelocity, 0);
-            rb.AddForce(deltaVelocity, ForceMode.VelocityChange);
-            stopJump = false;
-        }
+        onGround = Physics.SphereCast(transform.position + new Vector3(0, anchorOffset, 0), detectSphereRadius, Vector3.down,
+            out RaycastHit hitGround, detectSphereDistance, LayerMask.GetMask("Ground"));
 
-        //touchWall = Physics.SphereCast(transform.position, moveRadius, new Vector3(playerFaceDir, 0, 0).normalized,
-        //    out RaycastHit hitWall, faceDistance, LayerMask.GetMask("Wall"));
-        touchWall = Physics.BoxCast(transform.position + new Vector3(0, heightOffset, 0), new Vector3(moveRadius/2, moveHeight / 2, 1), new Vector3(playerFaceDir, 0, 0).normalized,
-            out RaycastHit hitWall, Quaternion.identity, moveDistance, LayerMask.GetMask("Wall"));
-        if (touchWall)
-        {
-            var moveVelocity = rb.velocity.x;
-            rb.AddForce(new Vector3(-moveVelocity, 0, 0), ForceMode.VelocityChange);
-        }
+
+        if (currentSphereDistance < detectSphereDistance)
+            currentSphereDistance = hitGround.distance;
         else
-        {
-            ChangeFace();
-            var moveSpeed = playerFaceDir * moveVelocity;
-            rb.velocity = new Vector3(moveSpeed, rb.velocity.y, 0);
-        }
-        #endregion
-
-        #region Attack States
-        if (isAttack && attackButton)
-        {
-            isIdle = false;
-            animator.SetTrigger("StartAnimation");
-            if (skeletonAnimation.AnimationState.GetCurrent(0).Animation != attack.Animation)
-                skeletonAnimation.AnimationState.SetAnimation(0, attack, false);
-            isComboTime = false;
-            attackComboTime = 0;
-        }
-        else if (isIdle == false)
-        {
-            isComboTime = true;
-        }
-        #endregion
-
-        #region Animation
-        if (onGround)
-        {
-            if (playerFaceDir == 0f)
-            {
-                if (skeletonAnimation.AnimationState.GetCurrent(0).Animation != idle.Animation)
-                    skeletonAnimation.AnimationState.SetAnimation(0, idle, true);
-            }
-            else
-            {
-                if (skeletonAnimation.AnimationState.GetCurrent(0).Animation != walk.Animation)
-                    skeletonAnimation.AnimationState.SetAnimation(0, walk, true);
-            }
-        }
-        if(isAttack && attackButton)
-        {
-            //skeletonAnimation.AnimationState.SetAnimation(0, attack, false);
-        }
-        #endregion
-
-        if (onGround)
-            currentDistance = hitGround.distance;
-        else
-            currentDistance = jumpDistance;
-
+            currentSphereDistance = detectSphereDistance;
     }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.transform.CompareTag("Wall"))
+        {
+            Debug.Log("Wall");
+            onWall = true;
+        }
+    }
+
     private void OnDrawGizmosSelected()
     {
-        // Show "Jump" SphereCast
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position + Vector3.down * currentDistance + new Vector3(0, heightOffset, 0), jumpRadius);
-
-        // Show "Move" SphereCast
-        //Gizmos.color = Color.cyan;
-        //Gizmos.DrawWireSphere(transform.position + new Vector3(playerFaceDir, 0, 0).normalized * moveDistance, moveRadius);
-
-        // Show "Move" BoxCast
-        Gizmos.color = Color.red;
-        Gizmos.DrawCube(transform.position + new Vector3(playerFaceDir, 0, 0).normalized * moveDistance + new Vector3(0, heightOffset, 0), new Vector3(moveRadius, moveHeight, 1));
+        Gizmos.DrawWireSphere(transform.position + new Vector3(0, -currentSphereDistance + anchorOffset, 0), detectSphereRadius);
     }
-    private void ChangeFace()
+    public void StateCallback(string stateName)
     {
-        if (isAnimation == false)
-        {
-            if (playerFaceDir > 0)
-            {
-                transform.localScale = new Vector3(-1, 1, 1);
-            }
-            if (playerFaceDir < 0)
-            {
-                transform.localScale = Vector3.one;
-            }
-        }
-    }
-    private void AnimationEventHandler(TrackEntry trackEntry, Spine.Event e)
-    {
-        if(e.Data == endAttEvent)
-        {
-            FunctionHandler("EndAnimation");
-        }
-    }
-    public void FunctionHandler(string functionName)
-    {
-        switch (functionName)
+        switch (stateName)
         {
             case "StartJump":
-                startJump = true;
+                StartJump();
                 break;
-            case "StopJump":
-                stopJump = true;
+            case "EndJump":
+                EndJump();
                 break;
-            case "OnGround":
-                flyTime = 0;
-                break;
-            case "StartAttack":
-                isAttack = true;
-                break;
-            case "EndAttack":
-                isAttack = false;
-                break;
-            case "StopAttack":
-                attackComboTime = 0;
-                isComboTime = false;
-                isIdle = true;
-                break;
-            case "StartAnimation":
-                isAnimation = true;
-                break;
-            case "EndAnimation":
-                animator.SetTrigger("EndAnimation");
-                isAnimation = false;
-                break;
-            
         }
     }
-    public enum PlayerState
+
+    //####################################################################################
+
+    #region State Callbacks
+
+    #region Jump
+
+    private void StartJump()
     {
-        Idle = 0,
-        Attack =1
+        // 產生向上的力道來抵銷玩家角色任何向下的動量
+        // 以讓玩家角色向上跳躍
+        var downVelocity = Mathf.Min(_rb.velocity.y, 0);
+        var deltaVelocity = new Vector3(0, jumpSpeed - downVelocity, 0);
+        _rb.AddForce(deltaVelocity, ForceMode.VelocityChange);
     }
+    private void EndJump()
+    {
+        // 產生剛好的力道來抵銷上升的動量
+        var upVelocity = Mathf.Max(_rb.velocity.y, 0);
+        var deltaVelocity = new Vector3(0, -upVelocity, 0);
+        _rb.AddForce(deltaVelocity, ForceMode.VelocityChange);
+    }
+
+    #endregion
+
+    #endregion
 }
