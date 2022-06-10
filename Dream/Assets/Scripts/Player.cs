@@ -7,7 +7,7 @@ using Spine;
 public class Player : MonoBehaviour
 {
     [Header("X Axis Movement")]
-    [SerializeField] float walkSpeed = 25f;
+    [SerializeField] float moveSpeed = 25f;
     [Space(5)]
 
     [Header("Y Axis Movement")]
@@ -21,6 +21,7 @@ public class Player : MonoBehaviour
     [SerializeField] float anchorOffset = 1f;
     [SerializeField] float detectSphereRadius = 0.2f;
     [SerializeField] float detectSphereDistance = 0.5f;
+    [SerializeField] bool isWalking = false;
     [SerializeField] bool onGround = false;
     [SerializeField] bool onWall = false;
     [Space(5)]
@@ -44,6 +45,8 @@ public class Player : MonoBehaviour
     private SkeletonAnimation _skeletonAnimation;
     private Spine.EventData _endAttEvent;
     private Spine.EventData _onStepEvenet;
+    private float _flyTime = 0f;
+    private float _playerDirection;
 
     
     private void Awake()
@@ -62,6 +65,12 @@ public class Player : MonoBehaviour
         _animator.SetBool("OnGround", onGround);
         _attackButton = _inputActions.Player.Jump.ReadValue<float>() == 1f ? true : false;
         _animator.SetBool("JumpButton", _attackButton);
+        
+        _animator.SetFloat("FlyTime", _flyTime);
+        _playerDirection = _inputActions.Player.Movment.ReadValue<float>();
+
+        isWalking = _playerDirection != 0f;
+        _animator.SetBool("IsWalking", isWalking);
     }
 
     private void FixedUpdate()
@@ -71,11 +80,17 @@ public class Player : MonoBehaviour
         onGround = Physics.SphereCast(transform.position + new Vector3(0, anchorOffset, 0), detectSphereRadius, Vector3.down,
             out RaycastHit hitGround, detectSphereDistance, LayerMask.GetMask("Ground"));
 
+        _rb.velocity = new Vector3(_playerDirection * moveSpeed, _rb.velocity.y);
 
-        if (currentSphereDistance < detectSphereDistance)
-            currentSphereDistance = hitGround.distance;
-        else
-            currentSphereDistance = detectSphereDistance;
+        if (onGround == false)
+            _flyTime += Time.deltaTime;
+
+        if (isWalking)
+            _skeletonAnimation.timeScale = Mathf.Abs(_playerDirection);
+
+        PlayerFlip();
+
+        currentSphereDistance = Mathf.Min(detectSphereDistance, hitGround.distance);
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -102,6 +117,15 @@ public class Player : MonoBehaviour
             case "EndJump":
                 EndJump();
                 break;
+            case "StartIdle":
+                StartIdle();
+                break;
+            case "StartWalk":
+                StartWalk();
+                break;
+            case "EndWalk":
+                EndWalk();
+                break;
         }
     }
 
@@ -118,9 +142,12 @@ public class Player : MonoBehaviour
         var downVelocity = Mathf.Min(_rb.velocity.y, 0);
         var deltaVelocity = new Vector3(0, jumpSpeed - downVelocity, 0);
         _rb.AddForce(deltaVelocity, ForceMode.VelocityChange);
+
+        _flyTime = 0f;
     }
     private void EndJump()
     {
+        GameManager.instance.WaitForSeconds(0.2f);
         // 產生剛好的力道來抵銷上升的動量
         var upVelocity = Mathf.Max(_rb.velocity.y, 0);
         var deltaVelocity = new Vector3(0, -upVelocity, 0);
@@ -129,5 +156,49 @@ public class Player : MonoBehaviour
 
     #endregion
 
+    #region Idle
+
+    private void StartIdle()
+    {
+        _skeletonAnimation.AnimationState.SetAnimation(0, idle, true);
+    }
+
     #endregion
+
+    #region Walk
+
+    private void StartWalk()
+    {
+        _skeletonAnimation.AnimationState.SetAnimation(0, walk, true);
+        
+    }
+    private void EndWalk()
+    {
+        _skeletonAnimation.timeScale = 1f;
+    }
+
+    #endregion
+
+    #region Climb
+
+    private void StartClimb()
+    {
+
+    }
+
+    #endregion
+
+    #endregion
+
+    private void PlayerFlip()
+    {
+        if(_playerDirection > 0)
+        {
+            transform.localScale = new Vector3(-1, 1, 1);
+        }
+        else if(_playerDirection < 0)
+        {
+            transform.localScale = Vector3.one;
+        }
+    }
 }

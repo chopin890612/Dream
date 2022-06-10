@@ -4,7 +4,14 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    // Start is called before the first frame update
+    public static GameManager instance;
+    private void Awake()
+    {
+        if (instance == null)
+            instance = this;
+        else
+            Destroy(gameObject);
+    }
     void Start()
     {
         
@@ -14,5 +21,15 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void WaitForSeconds(float seconds)
+    {
+        StartCoroutine(WaitSecondsCoroutine(seconds));          
+    }
+    private IEnumerator WaitSecondsCoroutine(float seconds)
+    {
+        for(float i = 0; i < seconds; i+= Time.deltaTime)
+            yield return 0;
     }
 }
