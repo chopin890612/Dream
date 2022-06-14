@@ -8,13 +8,14 @@ public class Player : MonoBehaviour
 {
     [Header("X Axis Movement")]
     [SerializeField] float moveSpeed = 25f;
+    [SerializeField] float wallDetectorDistance = 1f;
+    [SerializeField] bool faceRight = true;
     [Space(5)]
 
     [Header("Y Axis Movement")]
     [SerializeField] float jumpSpeed = 45f;
+    [SerializeField] float climbSpeed = 45f;
     [SerializeField] float fallSpeed = 45f;
-    [SerializeField] int jumpSteps = 20;
-    [SerializeField] int jumpThreshold = 7;
     [Space(5)]
 
     [Header("Ground Setting")]
@@ -31,14 +32,15 @@ public class Player : MonoBehaviour
     [Space(5)]
 
     [Header("Aniamtion")]
-    public AnimationReferenceAsset walk;
-    public AnimationReferenceAsset attack;
-    public AnimationReferenceAsset idle;
-    public AnimationReferenceAsset jump;
+    [SerializeField] AnimationReferenceAsset walk;
+    [SerializeField] AnimationReferenceAsset attack;
+    [SerializeField] AnimationReferenceAsset idle;
+    [SerializeField] AnimationReferenceAsset jump;
 
 
-    private bool _attackButton;
+    private bool _jumpButton;
     private Vector3 _gravity = new Vector3(0, -50f, 0);
+    private float _gravityScale = 1f;
     private InputMaster _inputActions;
     private Animator _animator;
     private Rigidbody _rb;
@@ -47,6 +49,7 @@ public class Player : MonoBehaviour
     private Spine.EventData _onStepEvenet;
     private float _flyTime = 0f;
     private float _playerDirection;
+    private GameObject _spineRenderer;
 
     
     private void Awake()
@@ -56,31 +59,36 @@ public class Player : MonoBehaviour
     }
     private void Start()
     {
+        _spineRenderer = transform.GetChild(0).gameObject;
         _animator = GetComponent<Animator>();
         _rb = GetComponent<Rigidbody>();
-        _skeletonAnimation = GetComponent<SkeletonAnimation>();
+        _skeletonAnimation = _spineRenderer.GetComponent<SkeletonAnimation>();
     }
     private void Update()
     {
         _animator.SetBool("OnGround", onGround);
-        _attackButton = _inputActions.Player.Jump.ReadValue<float>() == 1f ? true : false;
-        _animator.SetBool("JumpButton", _attackButton);
+        _jumpButton = _inputActions.Player.Jump.ReadValue<float>() == 1f ? true : false;
+        _animator.SetBool("JumpButton", _jumpButton);
         
         _animator.SetFloat("FlyTime", _flyTime);
         _playerDirection = _inputActions.Player.Movment.ReadValue<float>();
 
         isWalking = _playerDirection != 0f;
         _animator.SetBool("IsWalking", isWalking);
+
+        _animator.SetBool("OnWall", onWall);
     }
 
     private void FixedUpdate()
     {
-        _rb.AddForce(_gravity, ForceMode.Acceleration);
+        _rb.AddForce(_gravity * _gravityScale, ForceMode.Acceleration);
+        if (_rb.velocity.y < fallSpeed)
+            _rb.velocity = new Vector2(_rb.velocity.x, fallSpeed);
 
         onGround = Physics.SphereCast(transform.position + new Vector3(0, anchorOffset, 0), detectSphereRadius, Vector3.down,
             out RaycastHit hitGround, detectSphereDistance, LayerMask.GetMask("Ground"));
-
-        _rb.velocity = new Vector3(_playerDirection * moveSpeed, _rb.velocity.y);
+        if(!onWall && (faceRight == _playerDirection >= 0))
+            _rb.velocity = new Vector3(_playerDirection * moveSpeed, _rb.velocity.y);
 
         if (onGround == false)
             _flyTime += Time.deltaTime;
@@ -97,8 +105,24 @@ public class Player : MonoBehaviour
     {
         if (collision.transform.CompareTag("Wall"))
         {
-            Debug.Log("Wall");
+           // Debug.Log("Wall");
             onWall = true;
+        }
+    }
+    private void OnCollisionStay(Collision collision)
+    {
+        if (collision.transform.CompareTag("Wall"))
+        {
+            // Debug.Log("Wall");
+            onWall = true;
+        }
+    }
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.transform.CompareTag("Wall"))
+        {
+            //Debug.Log("Leave Wall");
+            onWall = false;
         }
     }
 
@@ -126,6 +150,21 @@ public class Player : MonoBehaviour
             case "EndWalk":
                 EndWalk();
                 break;
+            case "StartClimb":
+                StartClimb();
+                break;
+            case "EndClimb":
+                EndClimb();
+                break;
+            case "StartClimbJump":
+                StartClimbJump();
+                break;
+            case "EndClimbJump":
+                EndClimbJump();
+                break;
+            case "Falling":
+                Falling();
+                break;
         }
     }
 
@@ -142,12 +181,12 @@ public class Player : MonoBehaviour
         var downVelocity = Mathf.Min(_rb.velocity.y, 0);
         var deltaVelocity = new Vector3(0, jumpSpeed - downVelocity, 0);
         _rb.AddForce(deltaVelocity, ForceMode.VelocityChange);
+        _skeletonAnimation.AnimationState.SetAnimation(0, jump, false);
 
         _flyTime = 0f;
     }
     private void EndJump()
     {
-        GameManager.instance.WaitForSeconds(0.2f);
         // 產生剛好的力道來抵銷上升的動量
         var upVelocity = Mathf.Max(_rb.velocity.y, 0);
         var deltaVelocity = new Vector3(0, -upVelocity, 0);
@@ -183,10 +222,40 @@ public class Player : MonoBehaviour
 
     private void StartClimb()
     {
+        _gravityScale = 0;
+        _rb.velocity = new Vector2(0, climbSpeed);
+    }
+    private void EndClimb() 
+    {
+
+    }
+    private void StartClimbJump()
+    {
+        _gravityScale = 1f;
+        _rb.AddForce(new Vector2(10f * (faceRight == true ? -1 : 1), 10f), ForceMode.VelocityChange);
+        StartCoroutine(ClimbJumpCoroutine(0.2f));        
+    }
+    private IEnumerator ClimbJumpCoroutine(float sec) 
+    {
+        yield return new WaitForSeconds(sec);
+
+        var downVelocity = Mathf.Min(_rb.velocity.y, 0);
+        var deltaVelocity = new Vector3(0, jumpSpeed - downVelocity, 0);
+        _rb.AddForce(deltaVelocity, ForceMode.VelocityChange);
+        _flyTime = 0f;
+    }
+    private void EndClimbJump()
+    {
 
     }
 
     #endregion
+
+    private void Falling()
+    {
+        _gravityScale = 1f;
+        //_rb.AddForce(new Vector2(0, fallSpeed), ForceMode.VelocityChange);
+    }
 
     #endregion
 
@@ -194,11 +263,13 @@ public class Player : MonoBehaviour
     {
         if(_playerDirection > 0)
         {
-            transform.localScale = new Vector3(-1, 1, 1);
+            _spineRenderer.transform.localScale = new Vector3(-1, 1, 1);
+            faceRight = true;
         }
         else if(_playerDirection < 0)
         {
-            transform.localScale = Vector3.one;
+            _spineRenderer.transform.localScale = Vector3.one;
+            faceRight = false;
         }
     }
 }

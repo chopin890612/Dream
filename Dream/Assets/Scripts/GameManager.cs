@@ -23,13 +23,13 @@ public class GameManager : MonoBehaviour
         
     }
 
-    public void WaitForSeconds(float seconds)
+    public void WaitForSeconds(float seconds, System.Action callback)
     {
-        StartCoroutine(WaitSecondsCoroutine(seconds));          
+        StartCoroutine(WaitSecondsCoroutine(seconds, callback));          
     }
-    private IEnumerator WaitSecondsCoroutine(float seconds)
+    private IEnumerator WaitSecondsCoroutine(float seconds, System.Action callback)
     {
-        for(float i = 0; i < seconds; i+= Time.deltaTime)
-            yield return 0;
+        yield return new WaitForSeconds(seconds);
+        callback();
     }
 }
