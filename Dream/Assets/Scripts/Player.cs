@@ -8,7 +8,6 @@ public class Player : MonoBehaviour
 {
     [Header("X Axis Movement")]
     [SerializeField] float moveSpeed = 25f;
-    [SerializeField] float wallDetectorDistance = 1f;
     [SerializeField] bool faceRight = true;
     [Space(5)]
 
@@ -18,17 +17,26 @@ public class Player : MonoBehaviour
     [SerializeField] float fallSpeed = 45f;
     [Space(5)]
 
-    [Header("Ground Setting")]
+    [Header("Ground Settings")]
     [SerializeField] float anchorOffset = 1f;
-    [SerializeField] float detectSphereRadius = 0.2f;
-    [SerializeField] float detectSphereDistance = 0.5f;
+    [SerializeField] float groundDetectRadius = 0.2f;
+    [SerializeField] float groundDetectDistance = 0.5f;
     [SerializeField] bool isWalking = false;
     [SerializeField] bool onGround = false;
+    [Space(5)]
+
+    [Header("Wall Settings")]
+    [SerializeField] float wallDetectDistance = 1f;
+    [SerializeField] Vector3 wallDetectRadius = new Vector3(1,1,1);
     [SerializeField] bool onWall = false;
+    [SerializeField] bool isWallJumping = false;
+    [SerializeField] float wallJumpSpeedx;
+    [SerializeField] float wallJumpSpeedy;
     [Space(5)]
 
     [Header("Debugger")]
     [SerializeField] float currentSphereDistance;
+    [SerializeField] float currentBoxDistance;
     [Space(5)]
 
     [Header("Aniamtion")]
@@ -40,7 +48,7 @@ public class Player : MonoBehaviour
 
     private bool _jumpButton;
     private Vector3 _gravity = new Vector3(0, -50f, 0);
-    private float _gravityScale = 1f;
+    public float _gravityScale = 1f;
     private InputMaster _inputActions;
     private Animator _animator;
     private Rigidbody _rb;
@@ -50,6 +58,7 @@ public class Player : MonoBehaviour
     private float _flyTime = 0f;
     private float _playerDirection;
     private GameObject _spineRenderer;
+    private bool _isWallOnRight =true;
 
     
     private void Awake()
@@ -77,6 +86,10 @@ public class Player : MonoBehaviour
         _animator.SetBool("IsWalking", isWalking);
 
         _animator.SetBool("OnWall", onWall);
+
+        _animator.SetBool("IsWallJumping", isWallJumping);
+
+        _animator.SetBool("IsMoveToWall", _isWallOnRight == faceRight);
     }
 
     private void FixedUpdate()
@@ -85,51 +98,52 @@ public class Player : MonoBehaviour
         if (_rb.velocity.y < fallSpeed)
             _rb.velocity = new Vector2(_rb.velocity.x, fallSpeed);
 
-        onGround = Physics.SphereCast(transform.position + new Vector3(0, anchorOffset, 0), detectSphereRadius, Vector3.down,
-            out RaycastHit hitGround, detectSphereDistance, LayerMask.GetMask("Ground"));
-        if(!onWall && (faceRight == _playerDirection >= 0))
+        onGround = Physics.SphereCast(transform.position + new Vector3(0, anchorOffset, 0), groundDetectRadius, Vector3.down,
+            out RaycastHit hitGround, groundDetectDistance, LayerMask.GetMask("Ground"));
+
+        onWall = Physics.BoxCast(transform.position + new Vector3(0, anchorOffset, 0), wallDetectRadius / 2, faceRight? Vector3.right : Vector3.left,
+                 out RaycastHit hitwall, Quaternion.identity, wallDetectDistance, LayerMask.GetMask("Wall"));
+        if (onWall)
+            _isWallOnRight = faceRight;
+
+        if(!isWallJumping)
             _rb.velocity = new Vector3(_playerDirection * moveSpeed, _rb.velocity.y);
+        if (isWalking)
+            _skeletonAnimation.timeScale = Mathf.Abs(_playerDirection);
 
         if (onGround == false)
             _flyTime += Time.deltaTime;
 
-        if (isWalking)
-            _skeletonAnimation.timeScale = Mathf.Abs(_playerDirection);
+        //if (isUpdateClimbJump)
+        //{
+        //    var downVelocity = Mathf.Min(_rb.velocity.y, 0);
+        //    var deltaVelocity = new Vector3(0, jumpSpeed - downVelocity, 0);
+        //    _rb.AddForce(deltaVelocity, ForceMode.VelocityChange);
+        //}
+
+
 
         PlayerFlip();
 
-        currentSphereDistance = Mathf.Min(detectSphereDistance, hitGround.distance);
-    }
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.transform.CompareTag("Wall"))
-        {
-           // Debug.Log("Wall");
-            onWall = true;
-        }
-    }
-    private void OnCollisionStay(Collision collision)
-    {
-        if (collision.transform.CompareTag("Wall"))
-        {
-            // Debug.Log("Wall");
-            onWall = true;
-        }
-    }
-    private void OnCollisionExit(Collision collision)
-    {
-        if (collision.transform.CompareTag("Wall"))
-        {
-            //Debug.Log("Leave Wall");
-            onWall = false;
-        }
+        //Debugger
+        if (hitGround.distance == 0f)
+            currentSphereDistance = groundDetectDistance;
+        else
+            currentSphereDistance = hitGround.distance;
+
+        if (hitwall.distance == 0f)
+            currentBoxDistance = wallDetectDistance;
+        else
+            currentBoxDistance = hitwall.distance;
     }
 
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position + new Vector3(0, -currentSphereDistance + anchorOffset, 0), detectSphereRadius);
+        Gizmos.DrawWireSphere(transform.position + new Vector3(0, -currentSphereDistance + anchorOffset, 0), groundDetectRadius);
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireCube(transform.position + new Vector3(faceRight? currentBoxDistance : -currentBoxDistance, anchorOffset), wallDetectRadius);
     }
     public void StateCallback(string stateName)
     {
@@ -161,6 +175,12 @@ public class Player : MonoBehaviour
                 break;
             case "EndClimbJump":
                 EndClimbJump();
+                break;
+            case "KeepClimbJumpPhase":
+                KeepClimbJumpPhase();
+                break;
+            case "EndKCJPhase":
+                EndKCJPhase();
                 break;
             case "Falling":
                 Falling();
@@ -227,24 +247,30 @@ public class Player : MonoBehaviour
     }
     private void EndClimb() 
     {
-
+        
     }
     private void StartClimbJump()
     {
-        _gravityScale = 1f;
-        _rb.AddForce(new Vector2(10f * (faceRight == true ? -1 : 1), 10f), ForceMode.VelocityChange);
-        StartCoroutine(ClimbJumpCoroutine(0.2f));        
-    }
-    private IEnumerator ClimbJumpCoroutine(float sec) 
-    {
-        yield return new WaitForSeconds(sec);
-
-        var downVelocity = Mathf.Min(_rb.velocity.y, 0);
-        var deltaVelocity = new Vector3(0, jumpSpeed - downVelocity, 0);
-        _rb.AddForce(deltaVelocity, ForceMode.VelocityChange);
+        _rb.velocity = Vector3.zero;
+        _rb.AddForce(new Vector3(wallJumpSpeedx * (faceRight == true ? -1 : 1),wallJumpSpeedy,0), ForceMode.Impulse);
+        isWallJumping = true;
+        Invoke("SetIsWallJumpingFalse", 0.1f);
         _flyTime = 0f;
+        _gravityScale = 1;
     }
     private void EndClimbJump()
+    {
+        _gravityScale = 1f;
+    }
+    private void SetIsWallJumpingFalse()
+    {
+        isWallJumping = false;
+    }
+    private void KeepClimbJumpPhase()
+    {
+
+    }
+    private void EndKCJPhase()
     {
 
     }
@@ -263,12 +289,12 @@ public class Player : MonoBehaviour
     {
         if(_playerDirection > 0)
         {
-            _spineRenderer.transform.localScale = new Vector3(-1, 1, 1);
+            transform.localScale = new Vector3(-1, 1, 1);
             faceRight = true;
         }
         else if(_playerDirection < 0)
         {
-            _spineRenderer.transform.localScale = Vector3.one;
+            transform.localScale = Vector3.one;
             faceRight = false;
         }
     }

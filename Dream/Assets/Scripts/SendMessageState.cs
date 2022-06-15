@@ -7,7 +7,7 @@ public class SendMessageState : StateMachineBehaviour
     public string onEnter, onExit;
 
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    {
+    { 
         if (!string.IsNullOrEmpty(onEnter)) animator.gameObject.GetComponent<Player>().StateCallback(onEnter);
     }
 
