@@ -33,6 +33,12 @@ public class Player : MonoBehaviour
     [SerializeField] float wallJumpSpeedx;
     [Space(5)]
 
+    [Header("Dash Settings")]
+    [SerializeField] float dashCooldown = 1f;
+    [SerializeField] float dashSpeed = 50f;
+    [SerializeField] bool isDashing = false;
+    [Space(5)]
+
     [Header("Debugger")]
     [SerializeField] float currentSphereDistance;
     [SerializeField] float currentBoxDistance;
@@ -43,7 +49,6 @@ public class Player : MonoBehaviour
     [SerializeField] AnimationReferenceAsset attack;
     [SerializeField] AnimationReferenceAsset idle;
     [SerializeField] AnimationReferenceAsset jump;
-
 
     private bool _jumpButton;
     private Vector3 _gravity = new Vector3(0, -50f, 0);
@@ -59,6 +64,7 @@ public class Player : MonoBehaviour
     private GameObject _spineRenderer;
     private bool _isWallOnRight =true;
     private Transform _wallTransform;
+    private bool _dashButton;
 
     
     private void Awake()
@@ -90,14 +96,19 @@ public class Player : MonoBehaviour
         _animator.SetBool("IsWallJumping", isWallJumping);
 
         _animator.SetBool("IsMoveToWall", _isWallOnRight);
+
+        _dashButton = _inputActions.Player.Dash.ReadValue<float>() == 1f ? true : false;
+        _animator.SetBool("DashButton", _dashButton);
+
+        _animator.SetBool("IsDashing", isDashing);
     }
 
     private void FixedUpdate()
     {
         //Custom Gravity
         _rb.AddForce(_gravity * _gravityScale, ForceMode.Acceleration);
-        if (_rb.velocity.y < fallSpeedLimiter)
-            _rb.velocity = new Vector2(_rb.velocity.x, fallSpeedLimiter);
+        //if (_rb.velocity.y < fallSpeedLimiter)
+          //  _rb.velocity = new Vector2(_rb.velocity.x, fallSpeedLimiter);
         
         //Ground Update
         onGround = Physics.SphereCast(transform.position + new Vector3(0, anchorOffset, 0), groundDetectRadius, Vector3.down,
@@ -213,6 +224,14 @@ public class Player : MonoBehaviour
             case "EndClimbWall":
                 EndClimbWall();
                 break;
+            //#################### Dash ############################
+            case "StartDash":
+                StartDash();
+                break;
+
+
+            //#################### Attack ##########################
+
 
             //#################### Fall ############################
             case "Falling":
@@ -280,7 +299,6 @@ public class Player : MonoBehaviour
     {
         _gravityScale = 0;
         _rb.velocity = new Vector2(0, climbSpeed);
-        Debug.Log("Slide Wall");
     }
     private void EndClimb() 
     {
@@ -330,6 +348,23 @@ public class Player : MonoBehaviour
     {
         EndJump();
     }
+
+    #endregion
+
+    #region Dash
+
+    private void StartDash()
+    {
+        _gravityScale = 0f;
+        _rb.AddForce(new Vector3(dashSpeed * (faceRight ? 1 : -1), 0, 0), ForceMode.VelocityChange);
+        isDashing = true;
+    }
+
+    #endregion
+
+    #region Attack
+
+
 
     #endregion
 
