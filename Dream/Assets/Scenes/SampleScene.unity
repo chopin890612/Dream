@@ -338,6 +338,9 @@ MonoBehaviour:
   dashCooldown: 1
   dashSpeed: 50
   isDashing: 0
+  dashTime: 0.5
+  canDash: 0
+  nextDashTime: 0
   currentSphereDistance: 0
   currentBoxDistance: 0
   walk: {fileID: 0}
@@ -6213,9 +6216,12 @@ MonoBehaviour:
   onWall: 0
   isWallJumping: 0
   wallJumpSpeedx: 15
-  dashCooldown: 1
-  dashSpeed: 50
+  dashCooldown: 0.5
+  dashSpeed: 30
   isDashing: 0
+  dashTime: 0.2
+  canDash: 0
+  nextDashTime: 0
   currentSphereDistance: 0
   currentBoxDistance: 0
   walk: {fileID: 11400000, guid: 01ccafddc6c362c4c8eef6fe3500d868, type: 2}

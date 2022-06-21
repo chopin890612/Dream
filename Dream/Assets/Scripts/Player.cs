@@ -34,9 +34,12 @@ public class Player : MonoBehaviour
     [Space(5)]
 
     [Header("Dash Settings")]
-    [SerializeField] float dashCooldown = 1f;
+    [SerializeField] float dashCooldown = 0.5f;
     [SerializeField] float dashSpeed = 50f;
     [SerializeField] bool isDashing = false;
+    [SerializeField] float dashTime = 0.5f;
+    [SerializeField] bool canDash = false;
+    [SerializeField] float nextDashTime;
     [Space(5)]
 
     [Header("Debugger")]
@@ -101,6 +104,8 @@ public class Player : MonoBehaviour
         _animator.SetBool("DashButton", _dashButton);
 
         _animator.SetBool("IsDashing", isDashing);
+
+        _animator.SetBool("CanDash", canDash);
     }
 
     private void FixedUpdate()
@@ -115,10 +120,17 @@ public class Player : MonoBehaviour
             out RaycastHit hitGround, groundDetectDistance, LayerMask.GetMask("Ground"));
         if (onGround == false)
             _flyTime += Time.deltaTime;
-        if (isWalking)
-            _skeletonAnimation.timeScale = Mathf.Abs(_playerDirection);
-        if (!isWallJumping)
-            _rb.velocity = new Vector3(_playerDirection * moveSpeed, _rb.velocity.y);
+        if(onGround || onWall)
+            if (!_dashButton)
+                canDash = Time.time > nextDashTime;
+        if (!isDashing)
+        {
+            if (isWalking)
+                _skeletonAnimation.timeScale = Mathf.Abs(_playerDirection);
+            if (!isWallJumping)
+                _rb.velocity = new Vector3(_playerDirection * moveSpeed, _rb.velocity.y);
+            PlayerFlip();
+        }
 
         //Wall Update
         onWall = Physics.BoxCast(transform.position + new Vector3(0, anchorOffset, 0), wallDetectRadius / 2, faceRight? Vector3.right : Vector3.left,
@@ -129,7 +141,6 @@ public class Player : MonoBehaviour
             WallFace();
         }
 
-        PlayerFlip();
 
         //Debugger
         if (hitGround.distance == 0f)
@@ -224,11 +235,14 @@ public class Player : MonoBehaviour
             case "EndClimbWall":
                 EndClimbWall();
                 break;
+
             //#################### Dash ############################
             case "StartDash":
                 StartDash();
                 break;
-
+            case "EndDash":
+                EndDash();
+                break;
 
             //#################### Attack ##########################
 
@@ -236,6 +250,13 @@ public class Player : MonoBehaviour
             //#################### Fall ############################
             case "Falling":
                 Falling();
+                break;
+            case "OnGround":
+                //OnGround();
+                break;
+
+            default:
+                Debug.LogError("Can't found state " + stateName);
                 break;
         }
     }
@@ -356,8 +377,24 @@ public class Player : MonoBehaviour
     private void StartDash()
     {
         _gravityScale = 0f;
-        _rb.AddForce(new Vector3(dashSpeed * (faceRight ? 1 : -1), 0, 0), ForceMode.VelocityChange);
+        _rb.AddForce(Vector3.zero, ForceMode.VelocityChange);
+        if (!onWall)
+            _rb.AddForce(new Vector3(dashSpeed * (faceRight ? 1 : -1), 0, 0), ForceMode.VelocityChange);
+        else
+            _rb.AddForce(new Vector3(dashSpeed * (!faceRight ? 1 : -1), 0, 0), ForceMode.VelocityChange);
         isDashing = true;
+        canDash = false;
+        nextDashTime = Time.time + dashCooldown;
+        Invoke("SetDashingFalse", dashTime);
+    }
+    private void SetDashingFalse()
+    {
+        isDashing = false;
+    }
+    private void EndDash()
+    {
+        _gravityScale = 1f;
+        _rb.AddForce(Vector3.zero, ForceMode.VelocityChange);
     }
 
     #endregion
@@ -372,7 +409,11 @@ public class Player : MonoBehaviour
 
     private void Falling()
     {
-        _gravityScale = 1f;
+        //_gravityScale = 1f;
+    }
+    private void OnGround()
+    {
+
     }
 
     #endregion
