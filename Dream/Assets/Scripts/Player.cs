@@ -100,7 +100,7 @@ public class Player : MonoBehaviour
         _dashButton = _inputActions.Player.Dash.ReadValue<float>() == 1f ? true : false;
         _animator.SetBool("DashButton", _dashButton);
 
-        //_animator.SetBool("IsDashing", isDashing);
+        _animator.SetBool("IsDashing", isDashing);
     }
 
     private void FixedUpdate()
