@@ -1,27 +1,45 @@
+using System.Collections;
 using System.Collections.Generic;
-using System;
 
-namespace Bang.State
+namespace Bang.StateMachine
 {
-    public class State
+    /// <summary>
+    /// Base State
+    /// </summary>
+    /// <typeparam name="T">The class have states.</typeparam>
+    /// <typeparam name="T2">The class store condition params.</typeparam>
+    public abstract class State<T, T2>
     {
-        public List<StateTransition> transitions = new List<StateTransition>();
+        protected T obj;
+        protected StateMachine<T, T2> stateMachine;
+        protected T2 objData;
 
-        public Action EnterState;
-        public Action UpdateState;
-        public Action ExitState;
-
-        public State(Action enterState, Action updateState, Action exitState)
+        public State(T obj, StateMachine<T, T2> stateMachine, T2 objData)
         {
-            this.EnterState = enterState; 
-            this.UpdateState = updateState;
-            this.ExitState = exitState;
+            this.obj = obj;
+            this.stateMachine = stateMachine;
+            this.objData = objData;
         }
 
-        public void When(Func<bool> condi, State TState, Action action)
+        public virtual void EnterState()
         {
-            StateTransition stateTransition = new StateTransition(condi, TState, action);
-            transitions.Add(stateTransition);
+            DoCheck();
+        }
+        public virtual void ExitState()
+        {
+
+        }
+        public virtual void LogicUpdate()
+        {
+
+        }
+        public virtual void PhysicsUpdate()
+        {
+            DoCheck();
+        }
+        public void DoCheck()
+        {
+
         }
     }
 }

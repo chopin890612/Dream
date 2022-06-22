@@ -1,82 +1,29 @@
-using System;
-using System.Collections.Generic;
+﻿using System.Collections;
 
-namespace Bang.State
+namespace Bang.StateMachine
 {
-    public class StateMachine
+    /// <summary>
+    /// Base StateMachine
+    /// </summary>
+    /// <typeparam name="T">The class have states.</typeparam>
+    /// <typeparam name="T2">The class store condition params.</typeparam>
+    public class StateMachine<T, T2>
     {
-        private List<State> states = new List<State>();
-        private State initalState;
-        private State currenState;
+        public State<T, T2> currentState { get; private set; }
 
-        //Logic
-        private StateTransition triggeredTransition;
-        private Queue<Action> actions = new Queue<Action>();
-
-
-        public StateMachine(State initState)
+        public void Initalize(State<T,T2> startState)
         {
-            initalState = initState;
-
-            currenState = initState;
-            AddAction(initState.EnterState);
+            currentState = startState;
+            currentState.EnterState();
+        }
+        public void ChangeState(State<T,T2> tartgetState)
+        {
+            currentState.ExitState();
+            currentState = tartgetState;
+            currentState.EnterState();
         }
 
-        public void AddState(State state)
-        {
-            states.Add(state);
-        }
-        public void AddStates(params State[] stateArray)
-        {
-            for (int i = 0; i < stateArray.Length; i++) states.Add(stateArray[i]);
-        }
 
-        public Queue<Action> Tick()
-        {
-            triggeredTransition = null;
 
-            foreach(StateTransition transition in currenState.transitions)
-            {
-                if (transition.IsTriggered())
-                {
-                    triggeredTransition = transition;
-                    break;
-                }
-            }
-
-            if(triggeredTransition != null)
-            {
-                State targetState = triggeredTransition.targetState;
-
-                AddAction(currenState.ExitState);
-                AddAction(triggeredTransition.aciton);
-                AddAction(targetState.EnterState);
-
-                currenState = targetState;
-            }
-            else
-            {
-                AddAction(currenState.UpdateState);
-            }
-
-            return actions;
-        }
-
-        private void AddAction(Action a)
-        {
-            this.actions.Enqueue(a);
-        }
-
-        public void ExcuteActions(Queue<Action> actions)
-        {
-            if (actions == null) return;
-
-            Action a;
-            while(actions.Count > 0)
-            {
-                a = actions.Dequeue();
-                a();
-            }
-        }
     }
 }
