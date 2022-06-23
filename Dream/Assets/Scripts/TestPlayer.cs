@@ -7,38 +7,32 @@ using Bang.StateMachine.PlayerMachine;
 
 public class TestPlayer : MonoBehaviour
 {
-    [Header("Jump")]
-    [SerializeField] float jumpSpeed = 20f;
-    [SerializeField] float anchorOffset = 0.5f;
-    [SerializeField] float groundDetectRadius;
-    [SerializeField] float groundDetectDistance;
-    [Space(5)]
-
     [Header("PlayerData")]
-    [SerializeField] ObjectData playerData;
+    public ObjectData playerData;
+
+    public int faceDirection = 1;
+
 
     public StateMachine<TestPlayer, ObjectData> stateMachine { get; private set; }
     public IdleState idleState { get; private set; }
     public MoveState moveState { get; private set; }
 
 
-    private InputMaster _inputActions;
-    private Rigidbody _rb;
+    public InputHandler inputActions { get; private set; }
+    public Rigidbody _rb;
     private float _flyTime = 0f;
     private Vector3 _gravity = new Vector3(0, -50f, 0);
     private float _gravityScale = 1f;
 
     private void Awake()
     {
-        _inputActions = new InputMaster();
-        _inputActions.Enable();
-
         stateMachine = new StateMachine<TestPlayer, ObjectData>();
         idleState = new IdleState(this, stateMachine, playerData);
         moveState = new MoveState(this, stateMachine, playerData);
     }
     private void Start()
     {
+        inputActions = GetComponent<InputHandler>();
         _rb = GetComponent<Rigidbody>();
         stateMachine.Initalize(idleState);
     }
@@ -51,43 +45,22 @@ public class TestPlayer : MonoBehaviour
         stateMachine.currentState.PhysicsUpdate();
     }
 
-    #region State Callbacks
-
-    #region Idle
-    private void EnterIdle()
+    private void OnDrawGizmosSelected()
     {
-        Debug.Log("Play Idle Animation.");
-    }
-    #endregion
-
-    #region Jump
-    private void EnterJump()
-    {
-        var downVelocity = Mathf.Min(_rb.velocity.y, 0);
-        var deltaVelocity = new Vector3(0, jumpSpeed - downVelocity, 0);
-        _rb.AddForce(deltaVelocity, ForceMode.VelocityChange);
-        _flyTime = 0f;
-    }
-    private void UpdateJump()
-    {
-        _flyTime += Time.deltaTime;
-    }
-    private void ExitJump()
-    {
-        // 產生剛好的力道來抵銷上升的動量
-        var upVelocity = Mathf.Max(_rb.velocity.y, 0);
-        var deltaVelocity = new Vector3(0, -upVelocity, 0);
-        _rb.AddForce(deltaVelocity, ForceMode.VelocityChange);
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position + new Vector3(0, playerData.GetData("anchorOffset").GetValue<float>(), 0), playerData.GetData("groundDetectRadius").GetValue<float>());
     }
 
-    #endregion
-
-    #region Fall
-    private void EnterFall()
+    public void CheckIfShouldFlip()
     {
-        Debug.Log("Falling.");
+        if (inputActions.NormInputX != 0 && inputActions.NormInputX != faceDirection)
+            Flip();
     }
-    #endregion
 
-    #endregion
+    private void Flip()
+    {
+        faceDirection *= -1;
+        transform.Rotate(0f, 180f, 0f);
+    }
 }
+    

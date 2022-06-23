@@ -136,7 +136,7 @@ public partial class @InputMaster : IInputActionCollection2, IDisposable
                     ""id"": ""d976f59c-a7a5-4b2b-a4c8-2f5acb46a6a9"",
                     ""path"": ""<Gamepad>/leftStick/x"",
                     ""interactions"": """",
-                    ""processors"": """",
+                    ""processors"": ""AxisDeadzone"",
                     ""groups"": ""Gamepad"",
                     ""action"": ""Movment"",
                     ""isComposite"": false,
