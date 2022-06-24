@@ -5,17 +5,15 @@ using Bang.StateMachine;
 
 namespace Bang.StateMachine.PlayerMachine
 {
-    public class IdleState : OnGroundState
+    public class MoveState : OnGroundState
     {
-        public IdleState(TestPlayer obj, StateMachine<TestPlayer, ObjectData> stateMachine, ObjectData objData) : base(obj, stateMachine, objData)
+        public MoveState(TestPlayer player, StateMachine<TestPlayer, PlayerData> stateMachine, PlayerData playerData) : base(player, stateMachine, playerData)
         {
-
         }
 
         public override void EnterState()
         {
             base.EnterState();
-            Debug.Log("IdleState");
         }
 
         public override void ExitState()
@@ -26,14 +24,15 @@ namespace Bang.StateMachine.PlayerMachine
         public override void LogicUpdate()
         {
             base.LogicUpdate();
-            if (isWalking)
-                stateMachine.ChangeState(obj.moveState);
-            //Debug.Log(moveDirection);
+            if (!isWalking)
+                stateMachine.ChangeState(obj.idleState);            
+            obj.CheckIfShouldFlip();
         }
 
         public override void PhysicsUpdate()
         {
             base.PhysicsUpdate();
+            obj.XMovement(obj._inputActions.rawMove);
         }
     }
 }

@@ -7,32 +7,42 @@ using Bang.StateMachine.PlayerMachine;
 
 public class TestPlayer : MonoBehaviour
 {
-    [Header("PlayerData")]
-    public ObjectData playerData;
+    #region State Variables
 
-    public int faceDirection = 1;
-
-
-    public StateMachine<TestPlayer, ObjectData> stateMachine { get; private set; }
+    public StateMachine<TestPlayer, PlayerData> stateMachine { get; private set; }
     public IdleState idleState { get; private set; }
     public MoveState moveState { get; private set; }
+    public JumpState jumpState { get; private set; }
+    public AirState airState { get; private set; }
+    public LandState landState { get; private set; }
 
+    [SerializeField] PlayerData playerData;
+    #endregion
 
-    public InputHandler inputActions { get; private set; }
-    public Rigidbody _rb;
-    private float _flyTime = 0f;
-    private Vector3 _gravity = new Vector3(0, -50f, 0);
-    private float _gravityScale = 1f;
+    #region Components
+    public InputHandler _inputActions { get; private set; }
+    public Rigidbody _rb { get; private set; }
+    #endregion
+
+    public int _faceDirection = 1;
+    public float _gravityScale = 1f;
+    public bool G;
+    private float groundDistance;
+
+    #region Unity LifeCycle
 
     private void Awake()
     {
-        stateMachine = new StateMachine<TestPlayer, ObjectData>();
+        stateMachine = new StateMachine<TestPlayer, PlayerData>();
         idleState = new IdleState(this, stateMachine, playerData);
         moveState = new MoveState(this, stateMachine, playerData);
+        jumpState = new JumpState(this, stateMachine, playerData);
+        airState = new AirState(this, stateMachine, playerData);
+        landState = new LandState(this, stateMachine, playerData);
     }
     private void Start()
     {
-        inputActions = GetComponent<InputHandler>();
+        _inputActions = GetComponent<InputHandler>();
         _rb = GetComponent<Rigidbody>();
         stateMachine.Initalize(idleState);
     }
@@ -42,24 +52,59 @@ public class TestPlayer : MonoBehaviour
     }
     private void FixedUpdate()
     {
+        UseGravity(_gravityScale);
         stateMachine.currentState.PhysicsUpdate();
+        
     }
+
+    #endregion
 
     private void OnDrawGizmosSelected()
     {
+        G = CheckOnGround();
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position + new Vector3(0, playerData.GetData("anchorOffset").GetValue<float>(), 0), playerData.GetData("groundDetectRadius").GetValue<float>());
+        if(groundDistance > 0f && groundDistance < playerData.groundDetectDistance)
+            Gizmos.DrawWireSphere(transform.position + new Vector3(0, playerData.anchorOffset + -groundDistance, 0), playerData.groundDetectRadius);
+        else
+            Gizmos.DrawWireSphere(transform.position + new Vector3(0, playerData.anchorOffset + -playerData.groundDetectDistance, 0), playerData.groundDetectRadius);
     }
 
+    public void Jump()
+    {
+        var downVelocity = Mathf.Min(_rb.velocity.y, 0);
+        var deltaVelocity = new Vector3(0, playerData.jumpSpeed - downVelocity, 0);
+        _rb.velocity = deltaVelocity;
+    }
+    public void EndJump()
+    {
+        var upVelocity = Mathf.Max(_rb.velocity.y, 0);
+        var deltaVelocity = new Vector3(0, -upVelocity, 0);
+        _rb.AddForce(deltaVelocity, ForceMode.VelocityChange);
+    }
+    public void XMovement(float xMove)
+    {
+        _rb.velocity = new Vector2(xMove * playerData.moveSpeed, _rb.velocity.y);
+    }
+    public void UseGravity(float gravityScale)
+    {
+        _rb.AddForce(playerData.gravity * gravityScale, ForceMode.Acceleration);
+    }
     public void CheckIfShouldFlip()
     {
-        if (inputActions.NormInputX != 0 && inputActions.NormInputX != faceDirection)
+        if (_inputActions.NormInputX != 0 && _inputActions.NormInputX != _faceDirection)
             Flip();
     }
+    public bool CheckOnGround()
+    {
+        var onGround = Physics.SphereCast(transform.position + new Vector3(0, playerData.anchorOffset, 0), playerData.groundDetectRadius, Vector3.down,
+                out RaycastHit hitGround, playerData.groundDetectDistance, LayerMask.GetMask("Ground"));
+        groundDistance = hitGround.distance;
 
+        return onGround;
+    }
     private void Flip()
     {
-        faceDirection *= -1;
+        _faceDirection *= -1;
         transform.Rotate(0f, 180f, 0f);
     }
 }

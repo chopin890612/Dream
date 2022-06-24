@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class JumpState : StateMachineBehaviour
+public class JumpToState : StateMachineBehaviour
 {
     public string toState;
 

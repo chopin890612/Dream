@@ -3,18 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using Bang.StateMachine;
 
-namespace Bang.StateMachine.PlayerMachine
-{
-    public class MoveState : OnGroundState
+namespace Bang.StateMachine.PlayerMachine {
+    public class LandState : OnGroundState
     {
-        public MoveState(TestPlayer obj, StateMachine<TestPlayer, ObjectData> stateMachine, ObjectData objData) : base(obj, stateMachine, objData)
+        public LandState(TestPlayer player, StateMachine<TestPlayer, PlayerData> stateMachine, PlayerData playerData) : base(player, stateMachine, playerData)
         {
+        }
+
+        public override void DoCheck()
+        {
+            base.DoCheck();
         }
 
         public override void EnterState()
         {
             base.EnterState();
-            Debug.Log("MoveState");
         }
 
         public override void ExitState()
@@ -25,11 +28,10 @@ namespace Bang.StateMachine.PlayerMachine
         public override void LogicUpdate()
         {
             base.LogicUpdate();
-            if (!isWalking)
+            if (isWalking)
+                stateMachine.ChangeState(obj.moveState);
+            else
                 stateMachine.ChangeState(obj.idleState);
-
-            obj._rb.velocity = new Vector2(moveDirection * objData.GetData("moveSpeed").GetValue<float>(), obj._rb.velocity.y);
-            obj.CheckIfShouldFlip();
         }
 
         public override void PhysicsUpdate()

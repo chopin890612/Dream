@@ -5,7 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "newObjectData", menuName = "Bang's Things/ScriptObjects/ObjectData")]
 public class ObjectData : ScriptableObject
 {
-    public List<CustomData> datas= new List<CustomData>();
+    [SerializeField] List<CustomData> datas= new List<CustomData>();
 
     public void AddVariable()
     {
@@ -40,12 +40,12 @@ public class CustomData
     public string name;
     public DataType dataType;
 
-    public string string_v;
-    public int int_v;
-    public float float_v;
-    public Vector2 vector2_v;
-    public Vector3 vector3_v;
-    public bool bool_v;
+    [SerializeField] string string_v;
+    [SerializeField] int int_v;
+    [SerializeField] float float_v;
+    [SerializeField] Vector2 vector2_v;
+    [SerializeField] Vector3 vector3_v;
+    [SerializeField] bool bool_v;
     
     public dynamic GetValue<T>()
     {

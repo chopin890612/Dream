@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using UnityEngine;
 
 namespace Bang.StateMachine
 {
@@ -21,6 +22,7 @@ namespace Bang.StateMachine
             currentState.ExitState();
             currentState = tartgetState;
             currentState.EnterState();
+            Debug.Log(currentState.ToString());
         }
 
 

@@ -13,6 +13,7 @@ namespace Bang.StateMachine
         protected T obj;
         protected StateMachine<T, T2> stateMachine;
         protected T2 objData;
+        protected bool isExitingState;
 
         public State(T obj, StateMachine<T, T2> stateMachine, T2 objData)
         {
@@ -24,10 +25,11 @@ namespace Bang.StateMachine
         public virtual void EnterState()
         {
             DoCheck();
+            isExitingState = false;
         }
         public virtual void ExitState()
         {
-
+            isExitingState = true;
         }
         public virtual void LogicUpdate()
         {
@@ -37,7 +39,7 @@ namespace Bang.StateMachine
         {
             DoCheck();
         }
-        public void DoCheck()
+        public virtual void DoCheck()
         {
 
         }
