@@ -279,6 +279,7 @@ public class Player : MonoBehaviour
         var downVelocity = Mathf.Min(_rb.velocity.y, 0);
         var deltaVelocity = new Vector3(0, jumpSpeed - downVelocity, 0);
         _rb.AddForce(deltaVelocity, ForceMode.VelocityChange);
+        //_rb.velocity = deltaVelocity;
         _skeletonAnimation.AnimationState.SetAnimation(0, jump, false);
     }
     private void EndJump()
@@ -287,6 +288,7 @@ public class Player : MonoBehaviour
         var upVelocity = Mathf.Max(_rb.velocity.y, 0);
         var deltaVelocity = new Vector3(0, -upVelocity, 0);
         _rb.AddForce(deltaVelocity, ForceMode.VelocityChange);
+        //_rb.velocity = deltaVelocity;
     }
 
     #endregion
@@ -319,7 +321,8 @@ public class Player : MonoBehaviour
     private void StartClimb()
     {
         _gravityScale = 0;
-        _rb.velocity = new Vector2(0, climbSpeed);
+        _rb.AddForce(new Vector2(0, climbSpeed), ForceMode.VelocityChange);
+        //_rb.velocity = new Vector2(0, climbSpeed);
     }
     private void EndClimb() 
     {
@@ -377,11 +380,11 @@ public class Player : MonoBehaviour
     private void StartDash()
     {
         _gravityScale = 0f;
-        _rb.AddForce(Vector3.zero, ForceMode.VelocityChange);
+        _rb.velocity = Vector3.zero;
         if (!onWall)
-            _rb.AddForce(new Vector3(dashSpeed * (faceRight ? 1 : -1), 0, 0), ForceMode.VelocityChange);
+            _rb.velocity = new Vector3(dashSpeed * (faceRight ? 1 : -1), 0, 0);
         else
-            _rb.AddForce(new Vector3(dashSpeed * (!faceRight ? 1 : -1), 0, 0), ForceMode.VelocityChange);
+            _rb.velocity = new Vector3(dashSpeed * (!faceRight ? 1 : -1), 0, 0);
         isDashing = true;
         canDash = false;
         nextDashTime = Time.time + dashCooldown;
@@ -394,7 +397,7 @@ public class Player : MonoBehaviour
     private void EndDash()
     {
         _gravityScale = 1f;
-        _rb.AddForce(Vector3.zero, ForceMode.VelocityChange);
+        _rb.velocity = Vector3.zero;
     }
 
     #endregion
@@ -409,7 +412,7 @@ public class Player : MonoBehaviour
 
     private void Falling()
     {
-        //_gravityScale = 1f;
+        _gravityScale = 1f;
     }
     private void OnGround()
     {
