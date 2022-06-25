@@ -7,18 +7,34 @@ namespace Bang.StateMachine.PlayerMachine
 {
     public class JumpState : AbilityState
     {
+        private int jumpAmount;
 
-        public bool holdJump = false;
         public JumpState(TestPlayer player, StateMachine<TestPlayer, PlayerData> stateMachine, PlayerData playerData) : base(player, stateMachine, playerData)
         {
+            jumpAmount = objData.jumpAmount;
         }
 
         public override void EnterState()
         {
             base.EnterState();
-            obj.Jump();
-            holdJump = true;
+            jumpAmount--;
+            obj.airState.SetIsJumping();
+        }
+        public override void PhysicsUpdate()
+        {
+            base.PhysicsUpdate();
+            obj.Jump(objData.jumpSpeed);
             isAbilityDone = true;
         }
+        public bool CanJump()
+        {
+            if (jumpAmount > 0)
+            {
+                return true;
+            }
+            else
+                return false;
+        }
+        public void ResetJumpAmout() => jumpAmount = objData.jumpAmount;
     }
 }

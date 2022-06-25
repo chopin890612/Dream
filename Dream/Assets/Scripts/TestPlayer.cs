@@ -26,8 +26,11 @@ public class TestPlayer : MonoBehaviour
 
     public int _faceDirection = 1;
     public float _gravityScale = 1f;
-    public bool G;
+
+    #region Debugger
     private float groundDistance;
+    private float wallDistance;
+    #endregion
 
     #region Unity LifeCycle
 
@@ -61,19 +64,27 @@ public class TestPlayer : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
-        G = CheckOnGround();
+        CheckOnGround();
+        CheckOnWall();
         Gizmos.color = Color.yellow;
         if(groundDistance > 0f && groundDistance < playerData.groundDetectDistance)
             Gizmos.DrawWireSphere(transform.position + new Vector3(0, playerData.anchorOffset + -groundDistance, 0), playerData.groundDetectRadius);
         else
             Gizmos.DrawWireSphere(transform.position + new Vector3(0, playerData.anchorOffset + -playerData.groundDetectDistance, 0), playerData.groundDetectRadius);
+
+        Gizmos.color = Color.red;
+        if(wallDistance > 0f && wallDistance < playerData.wallDetectDistance)
+            Gizmos.DrawRay(transform.position, _faceDirection * Vector2.right * wallDistance);
+        else
+            Gizmos.DrawRay(transform.position, _faceDirection * Vector2.right * playerData.wallDetectDistance);
     }
 
-    public void Jump()
+    public void Jump(float jumpSpeed)
     {
         var downVelocity = Mathf.Min(_rb.velocity.y, 0);
-        var deltaVelocity = new Vector3(0, playerData.jumpSpeed - downVelocity, 0);
-        _rb.velocity = deltaVelocity;
+        var deltaVelocity = new Vector3(0, jumpSpeed - downVelocity, 0);
+        //_rb.velocity = deltaVelocity;
+        _rb.AddForce(deltaVelocity, ForceMode.VelocityChange);
     }
     public void EndJump()
     {
@@ -101,6 +112,13 @@ public class TestPlayer : MonoBehaviour
         groundDistance = hitGround.distance;
 
         return onGround;
+    }
+    public bool CheckOnWall()
+    {
+        var onWall = Physics.Raycast(transform.position, _faceDirection * Vector2.right, 
+            out RaycastHit hitWall, playerData.wallDetectDistance, LayerMask.GetMask("Wall"));
+        wallDistance = hitWall.distance;
+        return onWall;
     }
     private void Flip()
     {

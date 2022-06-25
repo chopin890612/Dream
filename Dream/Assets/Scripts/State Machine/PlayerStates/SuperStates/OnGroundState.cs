@@ -10,13 +10,22 @@ namespace Bang.StateMachine.PlayerMachine
         protected bool isWalking;
         protected float moveDirection;
         private bool jumpButton;
+        protected bool isOnWall;
+
         public OnGroundState(TestPlayer player, StateMachine<TestPlayer, PlayerData> stateMachine, PlayerData playerData) : base(player, stateMachine, playerData)
         {
+        }
+
+        public override void DoCheck()
+        {
+            base.DoCheck();
+            isOnWall = obj.CheckOnWall();
         }
 
         public override void EnterState()
         {
             base.EnterState();
+            obj.jumpState.ResetJumpAmout();
         }
 
         public override void ExitState()
@@ -35,21 +44,14 @@ namespace Bang.StateMachine.PlayerMachine
 
             jumpButton = obj._inputActions.JumpButton;
 
-            if(jumpButton == false && obj.jumpState.holdJump == true)
-                obj.jumpState.holdJump = false;
-
-            if (jumpButton == true && obj.jumpState.holdJump == false)
-                stateMachine.ChangeState(obj.jumpState);
+            //Change State
+            if (jumpButton == true && obj._inputActions.isJumped == false)
+                stateMachine.ChangeState(obj.jumpState);            
         }
 
         public override void PhysicsUpdate()
         {
             base.PhysicsUpdate();
-        }
-
-        public void ResetIsJumped()
-        {
-
         }
     }
 }

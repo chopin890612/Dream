@@ -9,38 +9,39 @@ public class InputHandler : MonoBehaviour
     public float rawMove { get; private set; }
     public int NormInputX { get; private set; }
     public bool JumpButton { get; private set; }
+    public float JumpButtonStartTime { get; private set; }
 
     private InputMaster inputActions;
-
 
     private void Awake()
     {
         inputActions = new InputMaster();
         inputActions.Enable();
     }
+    private void Start()
+    {
+        inputActions.Player.Jump.started += StartJump;
+        inputActions.Player.Jump.canceled += CanceledJump;
+        inputActions.Player.Jump.performed += PerformedJump;
+    }
     private void Update()
     {
         rawMove = inputActions.Player.Movment.ReadValue<float>();
         NormInputX = (int)(rawMove * Vector2.right).normalized.x;
-
-        JumpButton = inputActions.Player.Jump.ReadValue<float>() == 1f ? true : false;
+        //
+        //JumpButton = inputActions.Player.Jump.ReadValue<float>() == 1f ? true : false;
     }
-
-    public void OnMovement(InputAction.CallbackContext context)
+    private void StartJump(InputAction.CallbackContext context)
     {
-        rawMove = context.ReadValue<float>();
-        NormInputX = Mathf.RoundToInt(rawMove);
-        Debug.Log("123");
+        JumpButtonStartTime = Time.time;
+        JumpButton = true;
     }
-    public void OnJump(InputAction.CallbackContext context)
+    private void CanceledJump(InputAction.CallbackContext context)
     {
-        if (context.started)
-        {
-            JumpButton = true;
-        }
-        if (context.canceled)
-        {
-            JumpButton = false;
-        }
+        JumpButton = false;
+    }
+    private void PerformedJump(InputAction.CallbackContext context)
+    {
+        //isJumped = true;
     }
 }
