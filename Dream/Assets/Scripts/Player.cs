@@ -4,8 +4,11 @@ using UnityEngine;
 using Spine.Unity;
 using Spine;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IStateMachine
 {
+    #region Variables
+
+    #region Setting Variables
     [Header("X Axis Movement")]
     [SerializeField] float moveSpeed = 25f;
     [SerializeField] bool faceRight = true;
@@ -41,21 +44,27 @@ public class Player : MonoBehaviour
     [SerializeField] bool canDash = false;
     [SerializeField] float nextDashTime;
     [Space(5)]
+    #endregion
 
+    #region Degugger
     [Header("Debugger")]
     [SerializeField] float currentSphereDistance;
     [SerializeField] float currentBoxDistance;
     [Space(5)]
+    #endregion
 
+    #region Animation
     [Header("Aniamtion")]
     [SerializeField] AnimationReferenceAsset walk;
     [SerializeField] AnimationReferenceAsset attack;
     [SerializeField] AnimationReferenceAsset idle;
     [SerializeField] AnimationReferenceAsset jump;
+    #endregion
 
+    #region Other Variables
     private bool _jumpButton;
     private Vector3 _gravity = new Vector3(0, -50f, 0);
-    public float _gravityScale = 1f;
+    private float _gravityScale = 1f;
     private InputMaster _inputActions;
     private Animator _animator;
     private Rigidbody _rb;
@@ -68,8 +77,11 @@ public class Player : MonoBehaviour
     private bool _isWallOnRight =true;
     private Transform _wallTransform;
     private bool _dashButton;
+    #endregion
 
-    
+    #endregion
+
+    #region Unity Functions
     private void Awake()
     {
         _inputActions = new InputMaster();
@@ -106,6 +118,22 @@ public class Player : MonoBehaviour
         _animator.SetBool("IsDashing", isDashing);
 
         _animator.SetBool("CanDash", canDash);
+
+        if (onGround == false)
+            _flyTime += Time.deltaTime;
+        if (onGround || onWall)
+            if (!_dashButton)
+                canDash = Time.time > nextDashTime;
+        if (!isDashing)
+        {
+            if (isWalking)
+                _skeletonAnimation.timeScale = Mathf.Abs(_playerDirection);
+            if (!isWallJumping)
+                _rb.velocity = new Vector3(_playerDirection * moveSpeed, _rb.velocity.y);
+            PlayerFlip();
+        }
+
+        
     }
 
     private void FixedUpdate()
@@ -118,25 +146,13 @@ public class Player : MonoBehaviour
         //Ground Update
         onGround = Physics.SphereCast(transform.position + new Vector3(0, anchorOffset, 0), groundDetectRadius, Vector3.down,
             out RaycastHit hitGround, groundDetectDistance, LayerMask.GetMask("Ground"));
-        if (onGround == false)
-            _flyTime += Time.deltaTime;
-        if(onGround || onWall)
-            if (!_dashButton)
-                canDash = Time.time > nextDashTime;
-        if (!isDashing)
-        {
-            if (isWalking)
-                _skeletonAnimation.timeScale = Mathf.Abs(_playerDirection);
-            if (!isWallJumping)
-                _rb.velocity = new Vector3(_playerDirection * moveSpeed, _rb.velocity.y);
-            PlayerFlip();
-        }
+        
 
         //Wall Update
         onWall = Physics.BoxCast(transform.position + new Vector3(0, anchorOffset, 0), wallDetectRadius / 2, faceRight? Vector3.right : Vector3.left,
                  out RaycastHit hitwall, Quaternion.identity, wallDetectDistance, LayerMask.GetMask("Wall"));
         if (onWall)
-        {            
+        {
             _wallTransform = hitwall.transform;
             WallFace();
         }
@@ -153,6 +169,17 @@ public class Player : MonoBehaviour
         else
             currentBoxDistance = hitwall.distance;
     }
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position + new Vector3(0, -currentSphereDistance + anchorOffset, 0), groundDetectRadius);
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireCube(transform.position + new Vector3(faceRight ? currentBoxDistance : -currentBoxDistance, anchorOffset), wallDetectRadius);
+    }
+
+    #endregion
+
+    #region Other Function
     private void WallFace()
     {
         if ((_wallTransform.position - transform.position).x > 0)
@@ -162,25 +189,20 @@ public class Player : MonoBehaviour
     }
     private void PlayerFlip()
     {
-        if (_playerDirection > 0)
+        if (_playerDirection > 0 && faceRight == false)
         {
-            transform.localScale = new Vector3(-1, 1, 1);
+            transform.Rotate(0, 180f, 0);
             faceRight = true;
         }
-        else if (_playerDirection < 0)
+        else if (_playerDirection < 0 && faceRight == true)
         {
-            transform.localScale = Vector3.one;
+            transform.Rotate(0, -180f, 0);
             faceRight = false;
         }
     }
+    #endregion
 
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position + new Vector3(0, -currentSphereDistance + anchorOffset, 0), groundDetectRadius);
-        Gizmos.color = Color.blue;
-        Gizmos.DrawWireCube(transform.position + new Vector3(faceRight? currentBoxDistance : -currentBoxDistance, anchorOffset), wallDetectRadius);
-    }
+    #region State Control
     public void StateCallback(string stateName)
     {
         switch (stateName)
@@ -284,11 +306,14 @@ public class Player : MonoBehaviour
     }
     private void EndJump()
     {
-        // 產生剛好的力道來抵銷上升的動量
-        var upVelocity = Mathf.Max(_rb.velocity.y, 0);
-        var deltaVelocity = new Vector3(0, -upVelocity, 0);
-        _rb.AddForce(deltaVelocity, ForceMode.VelocityChange);
-        //_rb.velocity = deltaVelocity;
+        if (!_dashButton)
+        {
+            // 產生剛好的力道來抵銷上升的動量
+            var upVelocity = Mathf.Max(_rb.velocity.y, 0);
+            var deltaVelocity = new Vector3(0, -upVelocity, 0);
+            _rb.AddForce(deltaVelocity, ForceMode.VelocityChange);
+            //_rb.velocity = deltaVelocity;
+        }
     }
 
     #endregion
@@ -321,8 +346,8 @@ public class Player : MonoBehaviour
     private void StartClimb()
     {
         _gravityScale = 0;
-        _rb.AddForce(new Vector2(0, climbSpeed), ForceMode.VelocityChange);
-        //_rb.velocity = new Vector2(0, climbSpeed);
+        //_rb.AddForce(new Vector2(0, climbSpeed), ForceMode.VelocityChange);
+        _rb.velocity = new Vector2(0, climbSpeed);
     }
     private void EndClimb() 
     {
@@ -353,7 +378,7 @@ public class Player : MonoBehaviour
     private void StartClimbWall()
     {
         _rb.velocity = Vector3.zero;
-        _rb.AddForce(new Vector3(wallJumpSpeedx * (_isWallOnRight == true ? -1 : 1), 0, 0), ForceMode.Impulse);
+        _rb.AddForce(new Vector3(wallJumpSpeedx * (_isWallOnRight == true ? -1 : 1), 0, 0), ForceMode.VelocityChange);
         isWallJumping = true;
         Invoke("ClimbWallCallback", 0.1f);
         _flyTime = 0f;
@@ -418,6 +443,8 @@ public class Player : MonoBehaviour
     {
 
     }
+
+    #endregion
 
     #endregion
 

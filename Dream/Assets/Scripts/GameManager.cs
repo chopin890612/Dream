@@ -22,14 +22,4 @@ public class GameManager : MonoBehaviour
     {
         
     }
-
-    public void WaitForSeconds(float seconds, System.Action callback)
-    {
-        StartCoroutine(WaitSecondsCoroutine(seconds, callback));          
-    }
-    private IEnumerator WaitSecondsCoroutine(float seconds, System.Action callback)
-    {
-        yield return new WaitForSeconds(seconds);
-        callback();
-    }
 }
