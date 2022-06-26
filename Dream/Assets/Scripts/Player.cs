@@ -67,7 +67,7 @@ public class Player : MonoBehaviour, IStateMachine
     private float _gravityScale = 1f;
     private InputMaster _inputActions;
     private Animator _animator;
-    private Rigidbody _rb;
+    [SerializeField] private Rigidbody _rb;
     private SkeletonAnimation _skeletonAnimation;
     private Spine.EventData _endAttEvent;
     private Spine.EventData _onStepEvenet;
@@ -91,7 +91,7 @@ public class Player : MonoBehaviour, IStateMachine
     {
         _spineRenderer = transform.GetChild(0).gameObject;
         _animator = GetComponent<Animator>();
-        _rb = GetComponent<Rigidbody>();
+        //_rb = GetComponent<Rigidbody>();
         _skeletonAnimation = _spineRenderer.GetComponent<SkeletonAnimation>();
     }
     private void Update()
@@ -146,7 +146,10 @@ public class Player : MonoBehaviour, IStateMachine
         //Ground Update
         onGround = Physics.SphereCast(transform.position + new Vector3(0, anchorOffset, 0), groundDetectRadius, Vector3.down,
             out RaycastHit hitGround, groundDetectDistance, LayerMask.GetMask("Ground"));
-        
+        if (!isDashing && !isWallJumping)
+        {
+            _rb.velocity = new Vector3(_playerDirection * moveSpeed, _rb.velocity.y);
+        }
 
         //Wall Update
         onWall = Physics.BoxCast(transform.position + new Vector3(0, anchorOffset, 0), wallDetectRadius / 2, faceRight? Vector3.right : Vector3.left,

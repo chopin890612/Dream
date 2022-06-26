@@ -34,26 +34,168 @@ public class Snake : MonoBehaviour, IStateMachine
     [Space(5)]
 
     private InputMaster _inputActions;
-    private Rigidbody _rb;
+    private bool _jumpButton;
+    [SerializeField]private Rigidbody _rb;
     private SkeletonAnimation _skeletonAnimation;
-    private bool _isWallOnRight = true;
+    private Animator _animator;
+    [SerializeField] private bool _isWallOnRight = true;
     private Transform _wallTransform;
+    private float _playerDirection;
+    private float _climbDirection;
+    private Vector3 _gravity = new Vector3(0, -50f, 0);
+    private float _gravityScale = 1f;
+
+    private float currentSphereDistance;
+    private float currentBoxDistance;
 
     private void Start()
     {
-        _inputActions = GetComponent<InputMaster>();
-        _rb = GetComponent<Rigidbody>();
-        _skeletonAnimation = GetComponent<SkeletonAnimation>();
+        _inputActions = new InputMaster();
+        _inputActions.Enable();
+        _animator = GetComponent<Animator>();
+        //_rb = GetComponent<Rigidbody>();
+        //_skeletonAnimation = GetComponent<SkeletonAnimation>();
     }
+    private void Update()
+    {
+        PlayerFlip();
+        _playerDirection = _inputActions.Player.Movment.ReadValue<float>();
+        _climbDirection = _inputActions.Player.Climb.ReadValue<float>();
 
+        _animator.SetBool("OnWall", onWall);
+
+        _jumpButton = _inputActions.Player.Jump.ReadValue<float>() == 1f ? true : false;
+        _animator.SetBool("JumpButton", _jumpButton);
+
+        _animator.SetBool("IsWallJumping", isWallJumping);
+    }
+    private void FixedUpdate()
+    {
+        _rb.AddForce(_gravity * _gravityScale, ForceMode.Acceleration);
+
+        //Ground Update
+        onGround = Physics.SphereCast(transform.position + new Vector3(0, anchorOffset, 0), groundDetectRadius, Vector3.down,
+            out RaycastHit hitGround, groundDetectDistance, LayerMask.GetMask("Ground"));
+        if (!isWallJumping)
+        {
+            _rb.velocity = new Vector2(_playerDirection * moveSpeed, _rb.velocity.y);
+        }
+
+        //Wall Update
+        onWall = Physics.BoxCast(transform.position + new Vector3(0, anchorOffset, 0), wallDetectRadius / 2, faceRight ? Vector3.right : Vector3.left,
+                 out RaycastHit hitwall, Quaternion.identity, wallDetectDistance, LayerMask.GetMask("Wall"));
+        if (onWall)
+        {
+            _wallTransform = hitwall.transform;
+            WallFace();
+            _rb.velocity = new Vector2(0, _climbDirection * climbSpeed);
+        }
+
+        //Debugger
+        if (hitGround.distance == 0f)
+            currentSphereDistance = groundDetectDistance;
+        else
+            currentSphereDistance = hitGround.distance;
+
+        if (hitwall.distance == 0f)
+            currentBoxDistance = wallDetectDistance;
+        else
+            currentBoxDistance = hitwall.distance;
+    }
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position + new Vector3(0, -currentSphereDistance + anchorOffset, 0), groundDetectRadius);
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireCube(transform.position + new Vector3(faceRight ? currentBoxDistance : -currentBoxDistance, anchorOffset), wallDetectRadius);
+    }
+    private void WallFace()
+    {
+        if ((_wallTransform.position - transform.position).x > 0)
+            _isWallOnRight = true;
+        else if ((_wallTransform.position - transform.position).x < 0)
+            _isWallOnRight = false;
+    }
+    private void PlayerFlip()
+    {
+        if (_playerDirection > 0 && faceRight == false)
+        {
+            transform.Rotate(0, 180f, 0);
+            faceRight = true;
+        }
+        else if (_playerDirection < 0 && faceRight == true)
+        {
+            transform.Rotate(0, -180f, 0);
+            faceRight = false;
+        }
+    }
     public void StateCallback(string stateName)
     {
         switch (stateName)
         {
+            case "OnWall":
+                OnWall();
+                break;
+            case "ExitWall":
+                ExitWall();
+                break;
+            case "StartClimbJump":
+                StartClimbJump();
+                break;
+            case "EndClimbJump":
+                EndClimbJump();
+                break;
+            case "ClimbJump":
+                ClimbJump();
+                break;
             default:
                 Debug.LogWarning("Wrong state state name: " + stateName);
                 break;
         }
     }
 
+    //###################################################################################
+
+    private void Jump()
+    {
+        var downVelocity = Mathf.Min(_rb.velocity.y, 0);
+        var deltaVelocity = new Vector3(0, jumpSpeed - downVelocity, 0);
+        _rb.AddForce(deltaVelocity, ForceMode.VelocityChange);
+    }
+    private void EndJump()
+    {   
+        // 產生剛好的力道來抵銷上升的動量
+        var upVelocity = Mathf.Max(_rb.velocity.y, 0);
+        var deltaVelocity = new Vector3(0, -upVelocity, 0);
+        _rb.AddForce(deltaVelocity, ForceMode.VelocityChange);
+    }
+    private void OnWall()
+    {
+        _gravityScale = 0;
+        _rb.velocity = Vector2.zero;
+    }
+    private void ExitWall()
+    {
+        _gravityScale = 1f;
+    }
+    private void StartClimbJump()
+    {
+        _rb.velocity = Vector3.zero;
+        _rb.AddForce(new Vector3(wallJumpSpeedx * (_isWallOnRight == true ? -1 : 1), 0, 0), ForceMode.Impulse);
+        isWallJumping = true;
+        Invoke("SetIsWallJumpingFalse", 0.15f);
+        _gravityScale = 1;
+    }
+    private void ClimbJump()
+    {
+        Jump();
+    }
+    private void SetIsWallJumpingFalse()
+    {
+        isWallJumping = false;
+    }
+    private void EndClimbJump()
+    {
+        EndJump();
+    }
 }
