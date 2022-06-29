@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Spine.Unity;
 using Spine;
+using XInputDotNetPure;
 
 public class Player : MonoBehaviour, IStateMachine
 {
@@ -44,6 +45,11 @@ public class Player : MonoBehaviour, IStateMachine
     [SerializeField] bool canDash = false;
     [SerializeField] float nextDashTime;
     [Space(5)]
+
+    [Header("Controller")]
+    PlayerIndex playerIndex = PlayerIndex.One;
+    GamePadState state;
+    GamePadState prevState;
     #endregion
 
     #region Degugger
@@ -133,7 +139,7 @@ public class Player : MonoBehaviour, IStateMachine
             PlayerFlip();
         }
 
-        
+        state = GamePad.GetState(playerIndex);
     }
 
     private void FixedUpdate()
@@ -171,6 +177,9 @@ public class Player : MonoBehaviour, IStateMachine
             currentBoxDistance = wallDetectDistance;
         else
             currentBoxDistance = hitwall.distance;
+
+
+        
     }
     private void OnDrawGizmosSelected()
     {
@@ -306,6 +315,7 @@ public class Player : MonoBehaviour, IStateMachine
         _rb.AddForce(deltaVelocity, ForceMode.VelocityChange);
         //_rb.velocity = deltaVelocity;
         _skeletonAnimation.AnimationState.SetAnimation(0, jump, false);
+        GameManager.instance.SetControllerVibration(0.3f, 0.3f, 0.1f);
     }
     private void EndJump()
     {
@@ -417,10 +427,12 @@ public class Player : MonoBehaviour, IStateMachine
         canDash = false;
         nextDashTime = Time.time + dashCooldown;
         Invoke("SetDashingFalse", dashTime);
+        GameManager.instance.SetControllerVibration(0.2f, 0.5f, 0.3f);
     }
     private void SetDashingFalse()
     {
         isDashing = false;
+
     }
     private void EndDash()
     {

@@ -33,6 +33,7 @@ public class SwitchShape : MonoBehaviour
     {
         isBeingSnake = !isBeingSnake;
         EventManager.eventManager.SwitchShapeEvent.Invoke(isBeingSnake);
+        GameManager.instance.SetControllerVibration(0.5f, 0.3f, 0.2f);
     }
 
     private void Dash(InputAction.CallbackContext context)
@@ -60,6 +61,7 @@ public class SwitchShape : MonoBehaviour
     }
     private void OnTriggerExit(Collider other)
     {
+        Debug.Log("Trigger Exit.");
         if (other.CompareTag("NPC"))
         {
             chatWindow.SetActive(false);

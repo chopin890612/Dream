@@ -97,6 +97,10 @@ public class Snake : MonoBehaviour, IStateMachine
             _wallTransform = hitwall.transform;
             WallFace();
             _rb.velocity = new Vector2(0, _climbDirection * climbSpeed);
+            if(_rb.velocity.y != 0f)
+            {
+                GameManager.instance.SetControllerVibration(0.2f, 0.5f, 0.1f);
+            }
         }
 
         //Debugger
