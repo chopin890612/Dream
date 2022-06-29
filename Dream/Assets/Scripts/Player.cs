@@ -140,9 +140,9 @@ public class Player : MonoBehaviour, IStateMachine
     {
         //Custom Gravity
         _rb.AddForce(_gravity * _gravityScale, ForceMode.Acceleration);
-        //if (_rb.velocity.y < fallSpeedLimiter)
-          //  _rb.velocity = new Vector2(_rb.velocity.x, fallSpeedLimiter);
-        
+        if (_rb.velocity.y < fallSpeedLimiter)
+            _rb.velocity = new Vector2(_rb.velocity.x, fallSpeedLimiter);
+
         //Ground Update
         onGround = Physics.SphereCast(transform.position + new Vector3(0, anchorOffset, 0), groundDetectRadius, Vector3.down,
             out RaycastHit hitGround, groundDetectDistance, LayerMask.GetMask("Ground"));

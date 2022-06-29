@@ -33,6 +33,9 @@ public class Snake : MonoBehaviour, IStateMachine
     [SerializeField] float wallJumpSpeedx;
     [Space(5)]
 
+    [Header("Dialogue")]
+    [SerializeField] GameObject chatWindow;
+
     private InputMaster _inputActions;
     private bool _jumpButton;
     [SerializeField]private Rigidbody _rb;
@@ -44,6 +47,7 @@ public class Snake : MonoBehaviour, IStateMachine
     private float _climbDirection;
     private Vector3 _gravity = new Vector3(0, -50f, 0);
     private float _gravityScale = 1f;
+    private bool _dashButton;
 
     private float currentSphereDistance;
     private float currentBoxDistance;
@@ -68,10 +72,14 @@ public class Snake : MonoBehaviour, IStateMachine
         _animator.SetBool("JumpButton", _jumpButton);
 
         _animator.SetBool("IsWallJumping", isWallJumping);
+        
+        _dashButton = _inputActions.Player.Dash.ReadValue<float>() == 1f ? true : false;
     }
     private void FixedUpdate()
     {
         _rb.AddForce(_gravity * _gravityScale, ForceMode.Acceleration);
+        if (_rb.velocity.y < fallSpeedLimiter)
+            _rb.velocity = new Vector2(_rb.velocity.x, fallSpeedLimiter);
 
         //Ground Update
         onGround = Physics.SphereCast(transform.position + new Vector3(0, anchorOffset, 0), groundDetectRadius, Vector3.down,

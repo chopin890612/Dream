@@ -350,11 +350,50 @@ public partial class @InputMaster : IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""4525bce5-bb1e-4e18-b36e-91360ac37ca1"",
-                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
                     ""action"": ""ShapeShift"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""04085fc7-fe03-4730-82bd-fbaca0a210d3"",
+                    ""path"": ""<Keyboard>/x"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""ShapeShift"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""Mouse"",
+            ""id"": ""f11fcd44-03d4-41d9-8a7b-516d3e67f707"",
+            ""actions"": [
+                {
+                    ""name"": ""Postion"",
+                    ""type"": ""Value"",
+                    ""id"": ""23990021-ffa0-46de-abb6-9b4d1bae2830"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""c9b58132-d27f-4cf3-b9c1-35dfc2b71d31"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Postion"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -382,6 +421,9 @@ public partial class @InputMaster : IInputActionCollection2, IDisposable
         m_Player_Dash = m_Player.FindAction("Dash", throwIfNotFound: true);
         m_Player_Climb = m_Player.FindAction("Climb", throwIfNotFound: true);
         m_Player_ShapeShift = m_Player.FindAction("ShapeShift", throwIfNotFound: true);
+        // Mouse
+        m_Mouse = asset.FindActionMap("Mouse", throwIfNotFound: true);
+        m_Mouse_Postion = m_Mouse.FindAction("Postion", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -510,6 +552,39 @@ public partial class @InputMaster : IInputActionCollection2, IDisposable
         }
     }
     public PlayerActions @Player => new PlayerActions(this);
+
+    // Mouse
+    private readonly InputActionMap m_Mouse;
+    private IMouseActions m_MouseActionsCallbackInterface;
+    private readonly InputAction m_Mouse_Postion;
+    public struct MouseActions
+    {
+        private @InputMaster m_Wrapper;
+        public MouseActions(@InputMaster wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Postion => m_Wrapper.m_Mouse_Postion;
+        public InputActionMap Get() { return m_Wrapper.m_Mouse; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(MouseActions set) { return set.Get(); }
+        public void SetCallbacks(IMouseActions instance)
+        {
+            if (m_Wrapper.m_MouseActionsCallbackInterface != null)
+            {
+                @Postion.started -= m_Wrapper.m_MouseActionsCallbackInterface.OnPostion;
+                @Postion.performed -= m_Wrapper.m_MouseActionsCallbackInterface.OnPostion;
+                @Postion.canceled -= m_Wrapper.m_MouseActionsCallbackInterface.OnPostion;
+            }
+            m_Wrapper.m_MouseActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @Postion.started += instance.OnPostion;
+                @Postion.performed += instance.OnPostion;
+                @Postion.canceled += instance.OnPostion;
+            }
+        }
+    }
+    public MouseActions @Mouse => new MouseActions(this);
     private int m_KeyboardSchemeIndex = -1;
     public InputControlScheme KeyboardScheme
     {
@@ -536,5 +611,9 @@ public partial class @InputMaster : IInputActionCollection2, IDisposable
         void OnDash(InputAction.CallbackContext context);
         void OnClimb(InputAction.CallbackContext context);
         void OnShapeShift(InputAction.CallbackContext context);
+    }
+    public interface IMouseActions
+    {
+        void OnPostion(InputAction.CallbackContext context);
     }
 }

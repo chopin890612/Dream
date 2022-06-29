@@ -4,8 +4,12 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Wall
-  - Ground
+  - NPC
+  - Platform
+  - PlatformOutline
+  - SnakePlatform
+  - HumanPlatform
+  - PlatformGroup
   layers:
   - Default
   - TransparentFX
@@ -42,6 +46,18 @@ TagManager:
   m_SortingLayers:
   - name: Background
     uniqueID: 3883093863
+    locked: 0
+  - name: Platform
+    uniqueID: 356381961
+    locked: 0
+  - name: Player
+    uniqueID: 1855073761
+    locked: 0
+  - name: FrontView
+    uniqueID: 3068700911
+    locked: 0
+  - name: Mask
+    uniqueID: 1837056117
     locked: 0
   - name: Default
     uniqueID: 0
