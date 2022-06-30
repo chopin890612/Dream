@@ -12,10 +12,11 @@ public class PlatformController : MonoBehaviour
 
     void Start()
     {
-        //EventManager.eventManager.SwitchShapeEvent.AddListener(HumanPlatformEnable);
-        //EventManager.eventManager.SwitchShapeEvent.AddListener(SnakePlatformEnable);
-        EventManager.eventManager.SwitchShapeEvent.AddListener(OutlineEnable);
-        
+        EventManager.eventManager.SwitchShapeEvent.AddListener(HumanPlatformEnable);
+        EventManager.eventManager.SwitchShapeEvent.AddListener(SnakePlatformEnable);
+        //EventManager.eventManager.SwitchShapeEvent.AddListener(OutlineEnable);
+
+
         AssignPlatforms(fatherPlatform);
 
     }
@@ -31,18 +32,34 @@ public class PlatformController : MonoBehaviour
             go.gameObject.SetActive(isSnake);
         }
     }
+    //Old Version
+    //private void SnakePlatformEnable(bool isSnake)
+    //{
+    //    foreach(Transform pf in snakePlatform)
+    //    {
+    //        pf.gameObject.SetActive(isSnake);
+    //    }
+    //}
+    //private void HumanPlatformEnable(bool isSnake)
+    //{
+    //    foreach (Transform pf in humanPlatform)
+    //    {
+    //        pf.gameObject.SetActive(!isSnake);
+    //    }
+    //}
+
     private void SnakePlatformEnable(bool isSnake)
     {
-        foreach(Transform pf in snakePlatform)
+        foreach (Transform pf in snakePlatform)
         {
-            pf.gameObject.SetActive(isSnake);
+            pf.Find("View").gameObject.SetActive(isSnake);
         }
     }
     private void HumanPlatformEnable(bool isSnake)
     {
-        foreach (Transform pf in humanPlatform)
+        foreach(Transform pf in humanPlatform)
         {
-            pf.gameObject.SetActive(!isSnake);
+            pf.Find("View").gameObject.SetActive(!isSnake);
         }
     }
     private void AssignPlatforms(Transform father)

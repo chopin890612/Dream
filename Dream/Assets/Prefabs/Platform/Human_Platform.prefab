@@ -41,6 +41,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7439102443526817254}
+  - component: {fileID: 8080813161063009626}
   m_Layer: 10
   m_Name: Collider
   m_TagString: Untagged
@@ -62,6 +63,19 @@ Transform:
   m_Father: {fileID: 7439102443252037358}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &8080813161063009626
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7439102443526817255}
+  m_Material: {fileID: 13400000, guid: 94c82ba49368429439ec12a5ab464f3d, type: 2}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &7439102444750707954
 GameObject:
   m_ObjectHideFlags: 0
@@ -75,7 +89,7 @@ GameObject:
   - component: {fileID: 7439102444750707951}
   - component: {fileID: 7439102444750707952}
   m_Layer: 10
-  m_Name: TIlemap
+  m_Name: View
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
