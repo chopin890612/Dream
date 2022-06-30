@@ -23,6 +23,7 @@ public class Snake : MonoBehaviour, IStateMachine
     [SerializeField] float groundDetectDistance = 0.5f;
     [SerializeField] bool isWalking = false;
     [SerializeField] bool onGround = false;
+    [SerializeField] LayerMask groundDetectLayer;
     [Space(5)]
 
     [Header("Wall Settings")]
@@ -31,6 +32,7 @@ public class Snake : MonoBehaviour, IStateMachine
     [SerializeField] bool onWall = false;
     [SerializeField] bool isWallJumping = false;
     [SerializeField] float wallJumpSpeedx;
+    [SerializeField] LayerMask wallDetectLayer;
     [Space(5)]
 
     [Header("Dialogue")]
@@ -83,7 +85,7 @@ public class Snake : MonoBehaviour, IStateMachine
 
         //Ground Update
         onGround = Physics.SphereCast(transform.position + new Vector3(0, anchorOffset, 0), groundDetectRadius, Vector3.down,
-            out RaycastHit hitGround, groundDetectDistance, LayerMask.GetMask("Ground"));
+            out RaycastHit hitGround, groundDetectDistance, groundDetectLayer);
         if (!isWallJumping)
         {
             _rb.velocity = new Vector2(_playerDirection * moveSpeed, _rb.velocity.y);
@@ -91,7 +93,7 @@ public class Snake : MonoBehaviour, IStateMachine
 
         //Wall Update
         onWall = Physics.BoxCast(transform.position + new Vector3(0, anchorOffset, 0), wallDetectRadius / 2, faceRight ? Vector3.right : Vector3.left,
-                 out RaycastHit hitwall, Quaternion.identity, wallDetectDistance, LayerMask.GetMask("Wall"));
+                 out RaycastHit hitwall, Quaternion.identity, wallDetectDistance, wallDetectLayer);
         if (onWall)
         {
             _wallTransform = hitwall.transform;

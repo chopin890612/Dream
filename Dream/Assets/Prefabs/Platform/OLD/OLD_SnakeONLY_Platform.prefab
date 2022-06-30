@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8190842380711975843}
   - component: {fileID: 8190842380711975840}
-  m_Layer: 6
+  m_Layer: 9
   m_Name: Outline
   m_TagString: PlatformOutline
   m_Icon: {fileID: 0}
@@ -92,7 +92,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8190842380794389916}
   - component: {fileID: 8190842380794389917}
-  m_Layer: 6
+  m_Layer: 9
   m_Name: MaskInsideView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -175,8 +175,8 @@ GameObject:
   - component: {fileID: 8190842382297857206}
   - component: {fileID: 8190842382297857193}
   - component: {fileID: 8190842382297857192}
-  m_Layer: 6
-  m_Name: SnakeONLY_Platform
+  m_Layer: 9
+  m_Name: OLD_SnakeONLY_Platform
   m_TagString: SnakePlatform
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

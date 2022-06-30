@@ -27,6 +27,7 @@ public class Player : MonoBehaviour, IStateMachine
     [SerializeField] float groundDetectDistance = 0.5f;
     [SerializeField] bool isWalking = false;
     [SerializeField] bool onGround = false;
+    [SerializeField] LayerMask groundDetectLayers;
     [Space(5)]
 
     [Header("Wall Settings")]
@@ -35,6 +36,7 @@ public class Player : MonoBehaviour, IStateMachine
     [SerializeField] bool onWall = false;
     [SerializeField] bool isWallJumping = false;
     [SerializeField] float wallJumpSpeedx;
+    [SerializeField] LayerMask wallDetectLayers;
     [Space(5)]
 
     [Header("Dash Settings")]
@@ -151,7 +153,7 @@ public class Player : MonoBehaviour, IStateMachine
 
         //Ground Update
         onGround = Physics.SphereCast(transform.position + new Vector3(0, anchorOffset, 0), groundDetectRadius, Vector3.down,
-            out RaycastHit hitGround, groundDetectDistance, LayerMask.GetMask("Ground"));
+            out RaycastHit hitGround, groundDetectDistance, groundDetectLayers);
         if (!isDashing && !isWallJumping)
         {
             _rb.velocity = new Vector3(_playerDirection * moveSpeed, _rb.velocity.y);
@@ -159,7 +161,7 @@ public class Player : MonoBehaviour, IStateMachine
 
         //Wall Update
         onWall = Physics.BoxCast(transform.position + new Vector3(0, anchorOffset, 0), wallDetectRadius / 2, faceRight? Vector3.right : Vector3.left,
-                 out RaycastHit hitwall, Quaternion.identity, wallDetectDistance, LayerMask.GetMask("Wall"));
+                 out RaycastHit hitwall, Quaternion.identity, wallDetectDistance, wallDetectLayers);
         if (onWall)
         {
             _wallTransform = hitwall.transform;
@@ -210,6 +212,14 @@ public class Player : MonoBehaviour, IStateMachine
         {
             transform.Rotate(0, -180f, 0);
             faceRight = false;
+        }
+    }
+
+    private void ShapeSwitchEvent(bool isSnake)
+    {
+        if (isSnake)
+        {
+
         }
     }
     #endregion

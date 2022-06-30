@@ -12,8 +12,8 @@ public class PlatformController : MonoBehaviour
 
     void Start()
     {
-        EventManager.eventManager.SwitchShapeEvent.AddListener(HumanPlatformEnable);
-        EventManager.eventManager.SwitchShapeEvent.AddListener(SnakePlatformEnable);
+        //EventManager.eventManager.SwitchShapeEvent.AddListener(HumanPlatformEnable);
+        //EventManager.eventManager.SwitchShapeEvent.AddListener(SnakePlatformEnable);
         EventManager.eventManager.SwitchShapeEvent.AddListener(OutlineEnable);
         
         AssignPlatforms(fatherPlatform);
