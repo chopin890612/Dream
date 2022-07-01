@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class SwitchShape : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class SwitchShape : MonoBehaviour
     [SerializeField] ParticleSystem pp;
     [SerializeField] GameObject chatWindow;
     [SerializeField] bool isBeingSnake = true;
+    [SerializeField] Transform checkPoint;
     private InputMaster _inputAction;
 
     private bool _dashButton;
@@ -21,6 +23,7 @@ public class SwitchShape : MonoBehaviour
         _inputAction = new InputMaster();
         _inputAction.Enable();
         EventManager.eventManager.SwitchShapeEvent.AddListener(ShapeShift) ;
+        EventManager.eventManager.PlayerDeadEvent.AddListener(PlayerDeadCallback);
         _inputAction.Player.ShapeShift.started += SwitchShapeEvent;
         _inputAction.Player.Dash.started += Dash;
     }
@@ -53,11 +56,26 @@ public class SwitchShape : MonoBehaviour
         Snake.SetActive(isSnake);
         pp.Play();
     }
+    private void PlayerDeadCallback()
+    {
+        transform.position = checkPoint.position;
+    }
     private void OnTriggerEnter(Collider other)
     {
         Debug.Log("Trigger Enter.");
-        if(other.gameObject.CompareTag("NPC"))
+        if (other.CompareTag("NPC"))
+        {
             _npcCanTalk = true;
+            chatWindow.GetComponentInChildren<Text>().text = other.gameObject.name;
+        }
+        if (other.CompareTag("Trap"))
+        {
+            EventManager.eventManager.PlayerDeadEvent.Invoke();
+        }
+        if (other.CompareTag("CheckPoint"))
+        {
+            checkPoint = other.transform;
+        }
     }
     private void OnTriggerExit(Collider other)
     {
