@@ -41,12 +41,16 @@ public class SwitchShape : MonoBehaviour
 
     private void Dash(InputAction.CallbackContext context)
     {
-        if (_npcCanTalk)
+        if (_npcCanTalk && isBeingSnake)
         {
             if (chatWindow.activeSelf == false)
                 chatWindow.SetActive(true);
             else
                 chatWindow.SetActive(false);
+        }
+        else
+        {
+            chatWindow.SetActive(false);
         }
     }
 
@@ -59,6 +63,7 @@ public class SwitchShape : MonoBehaviour
     private void PlayerDeadCallback()
     {
         transform.position = checkPoint.position;
+        GameManager.instance.SetControllerVibration(0.8f, 0.7f, 0.5f);
     }
     private void OnTriggerEnter(Collider other)
     {
