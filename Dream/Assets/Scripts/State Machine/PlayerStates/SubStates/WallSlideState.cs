@@ -4,11 +4,12 @@ using Bang.StateMachine;
 
 namespace Bang.StateMachine.PlayerMachine
 {
-    public class OnWallState : State<TestPlayer, PlayerData>
+    public class WallSlideState : OnWallState
     {
-        public OnWallState(TestPlayer obj, StateMachine<TestPlayer, PlayerData> stateMachine, PlayerData objData) : base(obj, stateMachine, objData)
+        public WallSlideState(TestPlayer obj, StateMachine<TestPlayer, PlayerData> stateMachine, PlayerData objData) : base(obj, stateMachine, objData)
         {
         }
+
         public override void EnterState()
         {
             base.EnterState();
@@ -23,15 +24,11 @@ namespace Bang.StateMachine.PlayerMachine
         {
             base.LogicUpdate();
 
-            if (obj.LastPressedDashTime > 0 && obj.dashState.CanDash())
+            if (obj.LastPressedJumpTime > 0)
             {
-                obj.stateMachine.ChangeState(obj.dashState);
+                obj.stateMachine.ChangeState(obj.wallJumpState);
             }
-            else if (obj.LastOnGroundTime > 0)
-            {
-                obj.stateMachine.ChangeState(obj.idleState);
-            }
-            else if (obj.LastOnWallTime <= 0)
+            else if ((obj.LastOnWallLeftTime > 0 && InputHandler.instance.Movement.x >= 0) || (obj.LastOnWallRightTime > 0 && InputHandler.instance.Movement.x <= 0))
             {
                 obj.stateMachine.ChangeState(obj.onAirState);
             }
@@ -40,6 +37,9 @@ namespace Bang.StateMachine.PlayerMachine
         public override void PhysicsUpdate()
         {
             base.PhysicsUpdate();
+
+            obj.Drag(objData.dragAmount);
+            obj.Slide();
         }
     }
 }

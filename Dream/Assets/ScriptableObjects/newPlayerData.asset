@@ -14,34 +14,35 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gravity: {x: 0, y: -30, z: 0}
   gravityScale: 1
-  fallGravityMult: 1.35
+  fallGravityMult: 1.7
   quickFallGravityMult: 2.2
   dragAmount: 0.22
   frictionAmount: 0.55
   coyoteTime: 0.1
   runMaxSpeed: 9.5
   runAccel: 9.3
-  runDeccel: 15
+  runDeccel: 25
   accelInAir: 0.65
   deccelInAir: 0.65
   accelPower: 1.05
   stopPower: 1.23
   turnPower: 1.13
-  jumpForce: 30
+  jumpAmount: 1
+  jumpForce: 20
   jumpCutMultiplier: 0.2
-  jumpBufferTime: 0.1
-  wallJumpForce: {x: 0, y: 0}
-  wallJumpRunLerp: 0
-  wallJumpTime: 0
-  slideAccel: 0
-  slidePower: 0
-  dashAmount: 0
-  dashSpeed: 0
-  dashAttackTime: 0
-  dashAttackDragAmount: 0
-  dashEndTime: 0
-  dashUpEndMult: 0
-  dashEndRunLerp: 0
-  dashBufferTime: 0
+  jumpBufferTime: 0.08
+  wallJumpForce: {x: 9, y: 15}
+  wallJumpRunLerp: 0.3
+  wallJumpTime: 0.35
+  slideAccel: 0.8
+  slidePower: 0.95
+  dashAmount: 1
+  dashSpeed: 25
+  dashAttackTime: 0.1
+  dashAttackDragAmount: 0.22
+  dashEndTime: 0.1
+  dashUpEndMult: 0.6
+  dashEndRunLerp: 0.3
+  dashBufferTime: 0.05
   doKeepRunMomentum: 0
   doTurnOnWallJump: 0

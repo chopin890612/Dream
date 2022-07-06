@@ -25,10 +25,25 @@ namespace Bang.StateMachine.PlayerMachine
         public override void LogicUpdate()
         {
             base.LogicUpdate();
-
-            if(obj.LastOnGroundTime > 0)
+            if (obj.LastPressedDashTime > 0 && obj.dashState.CanDash())
+            {
+                obj.stateMachine.ChangeState(obj.dashState);
+            }
+            else if (obj.LastPressedJumpTime > 0 && obj.jumpState.CanJump())
+            {
+                stateMachine.ChangeState(obj.jumpState);
+            }
+            else if(obj.LastOnGroundTime > 0)
             {
                 stateMachine.ChangeState(obj.idleState);
+            }
+            else if (obj.LastPressedJumpTime > 0 && obj.LastOnWallTime > 0)
+            {
+                obj.stateMachine.ChangeState(obj.wallJumpState);
+            }
+            else if ((obj.LastOnWallLeftTime > 0 && InputHandler.instance.Movement.x < 0) || (obj.LastOnWallRightTime > 0 && InputHandler.instance.Movement.x > 0))
+            {
+                obj.stateMachine.ChangeState(obj.wallSlideState);
             }
             else if (obj._rb.velocity.y < 0)
             {

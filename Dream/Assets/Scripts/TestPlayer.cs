@@ -14,6 +14,10 @@ public class TestPlayer : MonoBehaviour
     public RunState runState { get; private set; }
     public JumpState jumpState { get; private set; }
     public OnAirState onAirState { get; private set; }
+    public DashState dashState { get; private set; }
+    public WallSlideState wallSlideState { get; private set; }
+    public WallJumpState wallJumpState { get; private set; }
+    public AttackState attackState { get; private set; }
 
     [SerializeField] private PlayerData playerData;
     #endregion
@@ -25,7 +29,7 @@ public class TestPlayer : MonoBehaviour
 
     #region STATE PARAMETERS
     public bool IsFacingRight { get; private set; }
-    public float LastOnGroundTime { get; private set; }
+    public float LastOnGroundTime;
     public float LastOnWallTime { get; private set; }
     public float LastOnWallRightTime { get; private set; }
     public float LastOnWallLeftTime { get; private set; }
@@ -49,6 +53,7 @@ public class TestPlayer : MonoBehaviour
     #region LAYERS & TAGS
     [Header("Layers & Tags")]
     [SerializeField] private LayerMask _groundLayer;
+    [SerializeField] private LayerMask _wallLayer;
     #endregion
 
     #region Debugger
@@ -67,6 +72,10 @@ public class TestPlayer : MonoBehaviour
         runState = new RunState(this, stateMachine, playerData);
         jumpState = new JumpState(this, stateMachine, playerData);
         onAirState = new OnAirState(this, stateMachine, playerData);
+        dashState = new DashState(this, stateMachine, playerData);
+        wallSlideState = new WallSlideState(this, stateMachine, playerData);
+        wallJumpState = new WallJumpState(this, stateMachine, playerData);
+        attackState = new AttackState(this, stateMachine, playerData);
 
         _rb = GetComponent<Rigidbody>();
     }
@@ -100,13 +109,13 @@ public class TestPlayer : MonoBehaviour
             LastOnGroundTime = playerData.coyoteTime; //if so sets the lastGrounded to coyoteTime
 
         //Right Wall Check
-        if ((Physics.CheckBox(_frontWallCheckPoint.position, _wallCheckSize, Quaternion.identity, _groundLayer) && IsFacingRight)
-                || (Physics.CheckBox(_backWallCheckPoint.position, _wallCheckSize, Quaternion.identity, _groundLayer) && !IsFacingRight))
+        if ((Physics.CheckBox(_frontWallCheckPoint.position, _wallCheckSize, Quaternion.identity, _wallLayer) && IsFacingRight)
+                || (Physics.CheckBox(_backWallCheckPoint.position, _wallCheckSize, Quaternion.identity, _wallLayer) && !IsFacingRight))
             LastOnWallRightTime = playerData.coyoteTime;
 
         //Right Wall Check
-        if ((Physics.CheckBox(_frontWallCheckPoint.position, _wallCheckSize, Quaternion.identity, _groundLayer) && !IsFacingRight)
-            || (Physics.CheckBox(_backWallCheckPoint.position, _wallCheckSize, Quaternion.identity, _groundLayer) && IsFacingRight))
+        if ((Physics.CheckBox(_frontWallCheckPoint.position, _wallCheckSize, Quaternion.identity, _wallLayer) && !IsFacingRight)
+            || (Physics.CheckBox(_backWallCheckPoint.position, _wallCheckSize, Quaternion.identity, _wallLayer) && IsFacingRight))
             LastOnWallLeftTime = playerData.coyoteTime;
 
         LastOnWallTime = Mathf.Max(LastOnWallLeftTime, LastOnWallRightTime);
@@ -127,15 +136,20 @@ public class TestPlayer : MonoBehaviour
     {
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(_groundCheckPoint.position, _groundCheckSize);
+
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireCube(_frontWallCheckPoint.position, _wallCheckSize * 2);
     }
 
     
 
     private void Turn()
     {
-        Vector3 scale = transform.localScale; //stores scale and flips x axis, "flipping" the entire gameObject around. (could rotate the player instead)
-        scale.x *= -1;
-        transform.localScale = scale;
+        //Vector3 scale = transform.localScale; //stores scale and flips x axis, "flipping" the entire gameObject around. (could rotate the player instead)
+        //scale.x *= -1;
+        //transform.localScale = scale;
+
+        transform.Rotate(0, 180, 0);
 
         IsFacingRight = !IsFacingRight;
     }
@@ -158,13 +172,11 @@ public class TestPlayer : MonoBehaviour
     //These functions are called when an even is triggered in my InputHandler. You could call these methods through a if(Input.GetKeyDown) in Update
     public void OnJump(InputHandler.InputArgs args)
     {
-        Debug.Log("PressJump");
         LastPressedJumpTime = playerData.jumpBufferTime;
     }
 
     public void OnJumpUp(InputHandler.InputArgs args)
     {
-        Debug.Log("ReleaseJump");
         if (jumpState.CanJumpCut())
             JumpCut();
     }
@@ -252,9 +264,47 @@ public class TestPlayer : MonoBehaviour
     }
     private void JumpCut()
     {
-        Debug.Log("JumpCut");
         //applies force downward when the jump button is released. Allowing the player to control jump height
         _rb.AddForce(Vector2.down * _rb.velocity.y * (1 - playerData.jumpCutMultiplier), ForceMode.Impulse);
+    }
+    public void Dash(Vector2 dir)
+    {
+        LastOnGroundTime = 0;
+        LastPressedDashTime = 0;
+
+        _rb.velocity = dir.normalized * playerData.dashSpeed;
+
+        SetGravityScale(0);
+    }
+    public void Slide()
+    {
+        //works the same as the Run but only in the y-axis
+        float targetSpeed = 0;
+        float speedDif = targetSpeed - _rb.velocity.y;
+
+        float movement = Mathf.Pow(Mathf.Abs(speedDif) * playerData.slideAccel, playerData.slidePower) * Mathf.Sign(speedDif);
+        _rb.AddForce(movement * Vector2.up, ForceMode.Force);
+    }
+    public void WallJump(int dir)
+    {
+        //ensures we can't call a jump multiple times from one press
+        LastPressedJumpTime = 0;
+        LastOnGroundTime = 0;
+        LastOnWallRightTime = 0;
+        LastOnWallLeftTime = 0;
+
+        #region Perform Wall Jump
+        Vector2 force = new Vector2(playerData.wallJumpForce.x, playerData.wallJumpForce.y);
+        force.x *= dir; //apply force in opposite direction of wall
+
+        if (Mathf.Sign(_rb.velocity.x) != Mathf.Sign(force.x))
+            force.x -= _rb.velocity.x;
+
+        if (_rb.velocity.y < 0) //checks whether player is falling, if so we subtract the velocity.y (counteracting force of gravity). This ensures the player always reaches our desired jump force or greater
+            force.y -= _rb.velocity.y;
+
+        _rb.AddForce(force, ForceMode.Impulse);
+        #endregion
     }
     #endregion
 }

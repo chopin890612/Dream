@@ -36,6 +36,7 @@ public class PlayerData : ScriptableObject
 
 	//JUMP
 	[Header("Jump")]
+	public int jumpAmount;
 	public float jumpForce;
 	[Range(0, 1)] public float jumpCutMultiplier;
 	[Space(10)]

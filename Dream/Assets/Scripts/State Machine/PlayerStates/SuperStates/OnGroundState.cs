@@ -14,6 +14,9 @@ namespace Bang.StateMachine.PlayerMachine
         public override void EnterState()
         {
             base.EnterState();
+
+            obj.dashState.ResetDashes();
+            obj.jumpState.ResetJumps();
         }
 
         public override void ExitState()
@@ -23,14 +26,19 @@ namespace Bang.StateMachine.PlayerMachine
 
         public override void LogicUpdate()
         {
-            base.LogicUpdate(); 
+            base.LogicUpdate();
 
-            if(obj.LastPressedJumpTime > 0)
+            if (obj.LastPressedDashTime > 0 && obj.dashState.CanDash())
+            {
+                obj.stateMachine.ChangeState(obj.dashState);
+            }
+            else if (obj.LastPressedJumpTime > 0 && obj.jumpState.CanJump())
             {
                 stateMachine.ChangeState(obj.jumpState);
             }
             else if(obj.LastOnGroundTime <= 0)
             {
+                obj.jumpState.Jumped();
                 stateMachine.ChangeState(obj.onAirState);
             }
         }

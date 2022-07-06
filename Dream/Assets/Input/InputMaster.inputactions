@@ -53,61 +53,6 @@
             ],
             "bindings": [
                 {
-                    "name": "Keyboard_WASD",
-                    "id": "965ac463-9ec8-4e29-9c33-e7c44ec8b3eb",
-                    "path": "2DVector",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Movment",
-                    "isComposite": true,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "Up",
-                    "id": "87dd6638-b1cc-42a9-9974-70970f2d0856",
-                    "path": "<Keyboard>/w",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard",
-                    "action": "Movment",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "Down",
-                    "id": "14e3636d-bc9e-4e44-87bf-31c0e57872c6",
-                    "path": "<Keyboard>/s",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard",
-                    "action": "Movment",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "Left",
-                    "id": "f700d609-5a11-4031-8b81-50c9bca8f102",
-                    "path": "<Keyboard>/a",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Movment",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "Right",
-                    "id": "76f14612-c12d-43e3-9e1d-8f6bafe1299d",
-                    "path": "<Keyboard>/d",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Movment",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
                     "name": "Keyboard_ArrowKey",
                     "id": "c289ee48-f81a-4d6b-8870-b86e35af67e4",
                     "path": "2DVector",
@@ -197,17 +142,6 @@
                 },
                 {
                     "name": "",
-                    "id": "3def8433-991b-4d3f-9271-12a61fd88fc6",
-                    "path": "<Keyboard>/z",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard",
-                    "action": "Jump",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "da08496c-eb41-4fdf-8bff-4cc066f73cae",
                     "path": "<Keyboard>/x",
                     "interactions": "",
@@ -290,17 +224,6 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
-                    "action": "JumpUp",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "5a80d036-4d7e-4d28-9668-0165a0047c0c",
-                    "path": "<Keyboard>/z",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard",
                     "action": "JumpUp",
                     "isComposite": false,
                     "isPartOfComposite": false
