@@ -7,25 +7,13 @@ namespace Bang.StateMachine.PlayerMachine
 {
     public class OnGroundState : State<TestPlayer, PlayerData>
     {
-        protected bool isWalking;
-        protected float moveDirection;
-        private bool jumpButton;
-        protected bool isOnWall;
-
         public OnGroundState(TestPlayer player, StateMachine<TestPlayer, PlayerData> stateMachine, PlayerData playerData) : base(player, stateMachine, playerData)
         {
-        }
-
-        public override void DoCheck()
-        {
-            base.DoCheck();
-            isOnWall = obj.CheckOnWall();
         }
 
         public override void EnterState()
         {
             base.EnterState();
-            obj.jumpState.ResetJumpAmout();
         }
 
         public override void ExitState()
@@ -35,23 +23,23 @@ namespace Bang.StateMachine.PlayerMachine
 
         public override void LogicUpdate()
         {
-            base.LogicUpdate();
-            moveDirection = obj._inputActions.rawMove;
-            if (moveDirection != 0f)
-                isWalking = true;
-            else
-                isWalking = false;
+            base.LogicUpdate(); 
 
-            jumpButton = obj._inputActions.JumpButton;
-
-            //Change State
-            if (jumpButton == true && obj._inputActions.isJumped == false)
-                stateMachine.ChangeState(obj.jumpState);            
+            if(obj.LastPressedJumpTime > 0)
+            {
+                stateMachine.ChangeState(obj.jumpState);
+            }
+            else if(obj.LastOnGroundTime <= 0)
+            {
+                stateMachine.ChangeState(obj.onAirState);
+            }
         }
 
         public override void PhysicsUpdate()
         {
             base.PhysicsUpdate();
+
+            obj.Drag(objData.frictionAmount);
         }
     }
 }

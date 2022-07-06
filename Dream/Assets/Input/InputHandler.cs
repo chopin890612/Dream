@@ -6,42 +6,55 @@ using UnityEngine.InputSystem;
 
 public class InputHandler : MonoBehaviour
 {
-    public float rawMove { get; private set; }
-    public int NormInputX { get; private set; }
-    public bool JumpButton { get; private set; }
-    public float JumpButtonStartTime { get; private set; }
+    public static InputHandler instance;
+    public Vector2 Movement { get; private set; }
+
+    public Action<InputArgs> OnJumpPressed;
+    public Action<InputArgs> OnJumpReleased;
+    public Action<InputArgs> OnDash;
+    public Action<InputArgs> OnAttack;
 
     private InputMaster inputActions;
 
     private void Awake()
     {
+        #region Singleton
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+        #endregion
+
         inputActions = new InputMaster();
+
+        #region Assign Input
+        inputActions.Player.Movment.performed += ctx => Movement = ctx.ReadValue<Vector2>();
+        inputActions.Player.Movment.canceled += ctx => Movement = Vector2.zero;
+
+        inputActions.Player.Jump.performed += ctx => OnJumpPressed(new InputArgs { context = ctx});
+        inputActions.Player.JumpUp.performed += ctx => OnJumpReleased(new InputArgs { context = ctx });
+        inputActions.Player.Dash.performed += ctx => OnDash(new InputArgs { context = ctx });
+        inputActions.Player.Attack.performed += ctx => OnAttack(new InputArgs { context = ctx });
+        #endregion
+    }
+
+    public class InputArgs
+    {
+        public InputAction.CallbackContext context;
+    }
+
+    private void OnEnable()
+    {
         inputActions.Enable();
     }
-    private void Start()
+    private void OnDisable()
     {
-        inputActions.Player.Jump.started += StartJump;
-        inputActions.Player.Jump.canceled += CanceledJump;
-        inputActions.Player.Jump.performed += PerformedJump;
-    }
-    private void Update()
-    {
-        rawMove = inputActions.Player.Movment.ReadValue<float>();
-        NormInputX = (int)(rawMove * Vector2.right).normalized.x;
-        //
-        //JumpButton = inputActions.Player.Jump.ReadValue<float>() == 1f ? true : false;
-    }
-    private void StartJump(InputAction.CallbackContext context)
-    {
-        JumpButtonStartTime = Time.time;
-        JumpButton = true;
-    }
-    private void CanceledJump(InputAction.CallbackContext context)
-    {
-        JumpButton = false;
-    }
-    private void PerformedJump(InputAction.CallbackContext context)
-    {
-        //isJumped = true;
+        inputActions.Disable();
     }
 }

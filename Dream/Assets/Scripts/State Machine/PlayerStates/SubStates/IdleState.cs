@@ -9,13 +9,11 @@ namespace Bang.StateMachine.PlayerMachine
     {
         public IdleState(TestPlayer player, StateMachine<TestPlayer, PlayerData> stateMachine, PlayerData playerData) : base(player, stateMachine, playerData)
         {
-
         }
 
         public override void EnterState()
         {
             base.EnterState();
-            obj.XMovement(obj._inputActions.rawMove);
         }
 
         public override void ExitState()
@@ -26,13 +24,17 @@ namespace Bang.StateMachine.PlayerMachine
         public override void LogicUpdate()
         {
             base.LogicUpdate();
-            if (isWalking)
-                stateMachine.ChangeState(obj.moveState);
+
+            if(InputHandler.instance.Movement.x != 0)
+            {
+                stateMachine.ChangeState(obj.runState);
+            }
         }
 
         public override void PhysicsUpdate()
         {
             base.PhysicsUpdate();
+            obj.Run(1);
         }
     }
 }

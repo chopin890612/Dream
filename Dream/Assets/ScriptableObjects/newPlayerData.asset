@@ -12,10 +12,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8d8ecf66aefbc44c87f8d67a18d5048, type: 3}
   m_Name: newPlayerData
   m_EditorClassIdentifier: 
-  moveSpeed: 10
-  jumpSpeed: 15
-  maxJumpTime: 0.5
-  anchorOffset: 0
-  groundDetectRadius: 0.3
-  groundDetectDistance: 0.5
-  gravity: {x: 0, y: -50}
+  gravity: {x: 0, y: -30, z: 0}
+  gravityScale: 1
+  fallGravityMult: 1.35
+  quickFallGravityMult: 2.2
+  dragAmount: 0.22
+  frictionAmount: 0.55
+  coyoteTime: 0.1
+  runMaxSpeed: 9.5
+  runAccel: 9.3
+  runDeccel: 15
+  accelInAir: 0.65
+  deccelInAir: 0.65
+  accelPower: 1.05
+  stopPower: 1.23
+  turnPower: 1.13
+  jumpForce: 30
+  jumpCutMultiplier: 0.2
+  jumpBufferTime: 0.1
+  wallJumpForce: {x: 0, y: 0}
+  wallJumpRunLerp: 0
+  wallJumpTime: 0
+  slideAccel: 0
+  slidePower: 0
+  dashAmount: 0
+  dashSpeed: 0
+  dashAttackTime: 0
+  dashAttackDragAmount: 0
+  dashEndTime: 0
+  dashUpEndMult: 0
+  dashEndRunLerp: 0
+  dashBufferTime: 0
+  doKeepRunMomentum: 0
+  doTurnOnWallJump: 0

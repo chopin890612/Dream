@@ -9,13 +9,6 @@ namespace Bang.StateMachine.PlayerMachine
         public OnWallState(TestPlayer obj, StateMachine<TestPlayer, PlayerData> stateMachine, PlayerData objData) : base(obj, stateMachine, objData)
         {
         }
-
-        public override void DoCheck()
-        {
-            base.DoCheck();
-            obj.CheckOnWall();
-        }
-
         public override void EnterState()
         {
             base.EnterState();

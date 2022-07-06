@@ -5,9 +5,10 @@ using Bang.StateMachine;
 
 namespace Bang.StateMachine.PlayerMachine
 {
-    public class MoveState : OnGroundState
+
+    public class RunState : OnGroundState
     {
-        public MoveState(TestPlayer player, StateMachine<TestPlayer, PlayerData> stateMachine, PlayerData playerData) : base(player, stateMachine, playerData)
+        public RunState(TestPlayer player, StateMachine<TestPlayer, PlayerData> stateMachine, PlayerData playerData) : base(player, stateMachine, playerData)
         {
         }
 
@@ -24,15 +25,17 @@ namespace Bang.StateMachine.PlayerMachine
         public override void LogicUpdate()
         {
             base.LogicUpdate();
-            if (!isWalking)
-                stateMachine.ChangeState(obj.idleState);            
-            obj.CheckIfShouldFlip();
+
+            if(InputHandler.instance.Movement.x == 0)
+            {
+                stateMachine.ChangeState(obj.idleState);
+            }
         }
 
         public override void PhysicsUpdate()
         {
             base.PhysicsUpdate();
-            obj.XMovement(obj._inputActions.rawMove);
+            obj.Run(1);
         }
     }
 }

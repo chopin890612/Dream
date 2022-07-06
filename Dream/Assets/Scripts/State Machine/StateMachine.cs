@@ -1,13 +1,10 @@
-﻿using System.Collections;
-using UnityEngine;
-
-namespace Bang.StateMachine
+﻿namespace Bang.StateMachine
 {
     /// <summary>
     /// Base StateMachine
     /// </summary>
     /// <typeparam name="T">The class have states.</typeparam>
-    /// <typeparam name="T2">The class store condition params.</typeparam>
+    /// <typeparam name="T2">The class store needed datas.</typeparam>
     public class StateMachine<T, T2>
     {
         public State<T, T2> currentState { get; private set; }
@@ -19,13 +16,13 @@ namespace Bang.StateMachine
         }
         public void ChangeState(State<T,T2> tartgetState)
         {
+            if (currentState.isExitingState)
+                return;
+
             currentState.ExitState();
             currentState = tartgetState;
             currentState.EnterState();
             //Debug.Log(currentState.ToString());
         }
-
-
-
     }
 }
