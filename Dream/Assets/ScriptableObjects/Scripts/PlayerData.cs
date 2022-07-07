@@ -69,6 +69,11 @@ public class PlayerData : ScriptableObject
 	[Space(5)]
 	[Range(0, 0.5f)] public float dashBufferTime;
 
+	//COMBAT
+	[Header("Combat")]
+	public float invincibleTime;
+	public Vector2 knockBackForce;
+
 
 	//OTHER
 	[Header("Other Settings")]

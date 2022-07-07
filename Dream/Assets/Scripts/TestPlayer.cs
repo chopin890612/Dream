@@ -307,4 +307,11 @@ public class TestPlayer : MonoBehaviour
         #endregion
     }
     #endregion
+
+    #region Combat Methods
+    public void Attack()
+    {
+
+    }
+    #endregion
 }
