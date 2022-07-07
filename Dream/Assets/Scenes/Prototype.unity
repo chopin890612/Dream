@@ -27644,7 +27644,7 @@ MonoBehaviour:
   onGround: 0
   groundDetectLayers:
     serializedVersion: 2
-    m_Bits: 1088
+    m_Bits: 0
   wallDetectDistance: 0.5
   wallDetectRadius: {x: 0.2, y: 1.37, z: 1}
   onWall: 0
@@ -27652,11 +27652,11 @@ MonoBehaviour:
   wallJumpSpeedx: 15
   wallDetectLayers:
     serializedVersion: 2
-    m_Bits: 1152
+    m_Bits: 0
   dashCooldown: 0.5
   dashSpeed: 30
   isDashing: 0
-  dashTime: 0.2
+  dashTime: 0.5
   canDash: 0
   nextDashTime: 0
   currentSphereDistance: 0
@@ -27665,7 +27665,7 @@ MonoBehaviour:
   attack: {fileID: 11400000, guid: a734cb7243ec05845b3b3a0fc69698d5, type: 2}
   idle: {fileID: 11400000, guid: 2f4e18ef4bcbf58409aa4d7cab03513e, type: 2}
   jump: {fileID: 11400000, guid: 17d08fe94465084408bad4aa1bdd4ff3, type: 2}
-  _rb: {fileID: 146616896}
+  _rb: {fileID: 0}
 --- !u!95 &1305635139
 Animator:
   serializedVersion: 3

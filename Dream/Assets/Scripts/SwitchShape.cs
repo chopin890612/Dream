@@ -24,8 +24,8 @@ public class SwitchShape : MonoBehaviour
         _inputAction.Enable();
         EventManager.eventManager.SwitchShapeEvent.AddListener(ShapeShift) ;
         EventManager.eventManager.PlayerDeadEvent.AddListener(PlayerDeadCallback);
-        _inputAction.Player.ShapeShift.started += SwitchShapeEvent;
-        _inputAction.Player.Dash.started += Dash;
+        _inputAction.ShapeShifter.ChangeShape.started += SwitchShapeEvent;
+        _inputAction.ShapeShifter.ChangeShape.started += Dash;
     }
 
     // Update is called once per frame

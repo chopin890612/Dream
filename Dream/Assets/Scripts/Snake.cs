@@ -65,17 +65,17 @@ public class Snake : MonoBehaviour, IStateMachine
     private void Update()
     {
         PlayerFlip();
-        _playerDirection = _inputActions.Player.Movment.ReadValue<float>();
-        _climbDirection = _inputActions.Player.Climb.ReadValue<float>();
+        _playerDirection = _inputActions.ShapeShifter.Movment.ReadValue<float>();
+        _climbDirection = _inputActions.ShapeShifter.Climb.ReadValue<float>();
 
         _animator.SetBool("OnWall", onWall);
 
-        _jumpButton = _inputActions.Player.Jump.ReadValue<float>() == 1f ? true : false;
+        _jumpButton = _inputActions.ShapeShifter.Jump.ReadValue<float>() == 1f ? true : false;
         _animator.SetBool("JumpButton", _jumpButton);
 
         _animator.SetBool("IsWallJumping", isWallJumping);
         
-        _dashButton = _inputActions.Player.Dash.ReadValue<float>() == 1f ? true : false;
+        _dashButton = _inputActions.ShapeShifter.ChangeShape.ReadValue<float>() == 1f ? true : false;
     }
     private void FixedUpdate()
     {

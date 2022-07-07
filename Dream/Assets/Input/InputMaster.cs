@@ -229,6 +229,182 @@ public partial class @InputMaster : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""ShapeShifter"",
+            ""id"": ""5b1e0b80-eb83-48a6-8f1f-c8ef30b8319c"",
+            ""actions"": [
+                {
+                    ""name"": ""Movment"",
+                    ""type"": ""Value"",
+                    ""id"": ""8e3e3c59-4a79-4436-90e5-66aa846e43b7"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Jump"",
+                    ""type"": ""Button"",
+                    ""id"": ""365601b1-e5d2-450c-8699-52b50a92a85e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Press(behavior=2)"",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ChangeShape"",
+                    ""type"": ""Button"",
+                    ""id"": ""fad8d92e-3a91-4927-a5bf-4a0b69db7701"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Press"",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Climb"",
+                    ""type"": ""Value"",
+                    ""id"": ""653c09a5-db27-49c8-ad47-3f39915cc15b"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": ""Keyboard_ArrowKey"",
+                    ""id"": ""8293302d-7d50-4a2a-b6d1-d9635bf09e3d"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Movment"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""7ddd2f86-c343-4d97-bfa4-0b262986ffca"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Movment"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""cf9d2e7e-7b2b-472d-88b6-8fff37d0b4ca"",
+                    ""path"": ""<Keyboard>/downArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Movment"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2c352d85-931e-4116-a64d-a423a68224df"",
+                    ""path"": ""<Gamepad>/leftStick/y"",
+                    ""interactions"": """",
+                    ""processors"": ""AxisDeadzone"",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Movment"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0aed2298-99b0-43f4-8f1f-3e811ee5dbc6"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""66521631-cb21-4dfe-b05c-2164823c3750"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d2799cd2-5c0b-41ad-8a82-ed5652cd58e3"",
+                    ""path"": ""<Keyboard>/c"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""ChangeShape"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""54b89af4-8085-4782-a061-1019964b8318"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""ChangeShape"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""Up/Down"",
+                    ""id"": ""fb22ba67-27a0-4219-b824-438b55c81251"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Climb"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""b734b9e0-4d34-4d17-949b-0b48cfb58b02"",
+                    ""path"": ""<Keyboard>/downArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Climb"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""92c0232b-dcfd-44ee-932a-60f621386c89"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Climb"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b3ab55f5-574f-4dc2-b2fe-9a702f994238"",
+                    ""path"": ""<Gamepad>/leftStick/y"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Climb"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -251,6 +427,12 @@ public partial class @InputMaster : IInputActionCollection2, IDisposable
         m_Player_JumpUp = m_Player.FindAction("JumpUp", throwIfNotFound: true);
         m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
         m_Player_Dash = m_Player.FindAction("Dash", throwIfNotFound: true);
+        // ShapeShifter
+        m_ShapeShifter = asset.FindActionMap("ShapeShifter", throwIfNotFound: true);
+        m_ShapeShifter_Movment = m_ShapeShifter.FindAction("Movment", throwIfNotFound: true);
+        m_ShapeShifter_Jump = m_ShapeShifter.FindAction("Jump", throwIfNotFound: true);
+        m_ShapeShifter_ChangeShape = m_ShapeShifter.FindAction("ChangeShape", throwIfNotFound: true);
+        m_ShapeShifter_Climb = m_ShapeShifter.FindAction("Climb", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -371,6 +553,63 @@ public partial class @InputMaster : IInputActionCollection2, IDisposable
         }
     }
     public PlayerActions @Player => new PlayerActions(this);
+
+    // ShapeShifter
+    private readonly InputActionMap m_ShapeShifter;
+    private IShapeShifterActions m_ShapeShifterActionsCallbackInterface;
+    private readonly InputAction m_ShapeShifter_Movment;
+    private readonly InputAction m_ShapeShifter_Jump;
+    private readonly InputAction m_ShapeShifter_ChangeShape;
+    private readonly InputAction m_ShapeShifter_Climb;
+    public struct ShapeShifterActions
+    {
+        private @InputMaster m_Wrapper;
+        public ShapeShifterActions(@InputMaster wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Movment => m_Wrapper.m_ShapeShifter_Movment;
+        public InputAction @Jump => m_Wrapper.m_ShapeShifter_Jump;
+        public InputAction @ChangeShape => m_Wrapper.m_ShapeShifter_ChangeShape;
+        public InputAction @Climb => m_Wrapper.m_ShapeShifter_Climb;
+        public InputActionMap Get() { return m_Wrapper.m_ShapeShifter; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(ShapeShifterActions set) { return set.Get(); }
+        public void SetCallbacks(IShapeShifterActions instance)
+        {
+            if (m_Wrapper.m_ShapeShifterActionsCallbackInterface != null)
+            {
+                @Movment.started -= m_Wrapper.m_ShapeShifterActionsCallbackInterface.OnMovment;
+                @Movment.performed -= m_Wrapper.m_ShapeShifterActionsCallbackInterface.OnMovment;
+                @Movment.canceled -= m_Wrapper.m_ShapeShifterActionsCallbackInterface.OnMovment;
+                @Jump.started -= m_Wrapper.m_ShapeShifterActionsCallbackInterface.OnJump;
+                @Jump.performed -= m_Wrapper.m_ShapeShifterActionsCallbackInterface.OnJump;
+                @Jump.canceled -= m_Wrapper.m_ShapeShifterActionsCallbackInterface.OnJump;
+                @ChangeShape.started -= m_Wrapper.m_ShapeShifterActionsCallbackInterface.OnChangeShape;
+                @ChangeShape.performed -= m_Wrapper.m_ShapeShifterActionsCallbackInterface.OnChangeShape;
+                @ChangeShape.canceled -= m_Wrapper.m_ShapeShifterActionsCallbackInterface.OnChangeShape;
+                @Climb.started -= m_Wrapper.m_ShapeShifterActionsCallbackInterface.OnClimb;
+                @Climb.performed -= m_Wrapper.m_ShapeShifterActionsCallbackInterface.OnClimb;
+                @Climb.canceled -= m_Wrapper.m_ShapeShifterActionsCallbackInterface.OnClimb;
+            }
+            m_Wrapper.m_ShapeShifterActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @Movment.started += instance.OnMovment;
+                @Movment.performed += instance.OnMovment;
+                @Movment.canceled += instance.OnMovment;
+                @Jump.started += instance.OnJump;
+                @Jump.performed += instance.OnJump;
+                @Jump.canceled += instance.OnJump;
+                @ChangeShape.started += instance.OnChangeShape;
+                @ChangeShape.performed += instance.OnChangeShape;
+                @ChangeShape.canceled += instance.OnChangeShape;
+                @Climb.started += instance.OnClimb;
+                @Climb.performed += instance.OnClimb;
+                @Climb.canceled += instance.OnClimb;
+            }
+        }
+    }
+    public ShapeShifterActions @ShapeShifter => new ShapeShifterActions(this);
     private int m_KeyboardSchemeIndex = -1;
     public InputControlScheme KeyboardScheme
     {
@@ -396,5 +635,12 @@ public partial class @InputMaster : IInputActionCollection2, IDisposable
         void OnJumpUp(InputAction.CallbackContext context);
         void OnAttack(InputAction.CallbackContext context);
         void OnDash(InputAction.CallbackContext context);
+    }
+    public interface IShapeShifterActions
+    {
+        void OnMovment(InputAction.CallbackContext context);
+        void OnJump(InputAction.CallbackContext context);
+        void OnChangeShape(InputAction.CallbackContext context);
+        void OnClimb(InputAction.CallbackContext context);
     }
 }

@@ -105,11 +105,11 @@ public class Player : MonoBehaviour, IStateMachine
     private void Update()
     {
         _animator.SetBool("OnGround", onGround);
-        _jumpButton = _inputActions.Player.Jump.ReadValue<float>() == 1f ? true : false;
+        _jumpButton = _inputActions.ShapeShifter.Jump.ReadValue<float>() == 1f ? true : false;
         _animator.SetBool("JumpButton", _jumpButton);
         
         _animator.SetFloat("FlyTime", _flyTime);
-        _playerDirection = _inputActions.Player.Movment.ReadValue<float>();
+        _playerDirection = _inputActions.ShapeShifter.Movment.ReadValue<float>();
 
         isWalking = _playerDirection != 0f;
         _animator.SetBool("IsWalking", isWalking);
@@ -120,7 +120,7 @@ public class Player : MonoBehaviour, IStateMachine
 
         _animator.SetBool("IsMoveToWall", _isWallOnRight);
 
-        _dashButton = _inputActions.Player.Dash.ReadValue<float>() == 1f ? true : false;
+        _dashButton = _inputActions.ShapeShifter.ChangeShape.ReadValue<float>() == 1f ? true : false;
         _animator.SetBool("DashButton", _dashButton);
 
         _animator.SetBool("IsDashing", isDashing);
