@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using XInputDotNetPure;
 
 public class GameManager : MonoBehaviour
 {
+    private PlayerIndex playerIndex = PlayerIndex.One;
     public static GameManager instance;
     private void Awake()
     {
@@ -22,14 +24,18 @@ public class GameManager : MonoBehaviour
     {
         
     }
-
-    public void WaitForSeconds(float seconds, System.Action callback)
+    public void DoForSeconds(System.Action action ,float seconds)
     {
-        StartCoroutine(WaitSecondsCoroutine(seconds, callback));          
+        StartCoroutine(WaitCoroutin(action, seconds));
     }
-    private IEnumerator WaitSecondsCoroutine(float seconds, System.Action callback)
+    private IEnumerator WaitCoroutin(System.Action action, float secconds)
     {
-        yield return new WaitForSeconds(seconds);
-        callback();
+        yield return new WaitForSeconds(secconds);
+        action();
+    }
+    public void SetControllerVibration(float LMotor, float RMotor, float seconds)
+    {
+        GamePad.SetVibration(playerIndex, LMotor, RMotor);
+        DoForSeconds(() => GamePad.SetVibration(playerIndex, 0, 0), seconds);
     }
 }

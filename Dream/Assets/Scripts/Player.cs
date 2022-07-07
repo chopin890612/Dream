@@ -3,9 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using Spine.Unity;
 using Spine;
+using XInputDotNetPure;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IStateMachine
 {
+    #region Variables
+
+    #region Setting Variables
     [Header("X Axis Movement")]
     [SerializeField] float moveSpeed = 25f;
     [SerializeField] bool faceRight = true;
@@ -23,6 +27,7 @@ public class Player : MonoBehaviour
     [SerializeField] float groundDetectDistance = 0.5f;
     [SerializeField] bool isWalking = false;
     [SerializeField] bool onGround = false;
+    [SerializeField] LayerMask groundDetectLayers;
     [Space(5)]
 
     [Header("Wall Settings")]
@@ -31,31 +36,46 @@ public class Player : MonoBehaviour
     [SerializeField] bool onWall = false;
     [SerializeField] bool isWallJumping = false;
     [SerializeField] float wallJumpSpeedx;
+    [SerializeField] LayerMask wallDetectLayers;
     [Space(5)]
 
     [Header("Dash Settings")]
-    [SerializeField] float dashCooldown = 1f;
+    [SerializeField] float dashCooldown = 0.5f;
     [SerializeField] float dashSpeed = 50f;
     [SerializeField] bool isDashing = false;
+    [SerializeField] float dashTime = 0.5f;
+    [SerializeField] bool canDash = false;
+    [SerializeField] float nextDashTime;
     [Space(5)]
 
+    [Header("Controller")]
+    PlayerIndex playerIndex = PlayerIndex.One;
+    GamePadState state;
+    GamePadState prevState;
+    #endregion
+
+    #region Degugger
     [Header("Debugger")]
     [SerializeField] float currentSphereDistance;
     [SerializeField] float currentBoxDistance;
     [Space(5)]
+    #endregion
 
+    #region Animation
     [Header("Aniamtion")]
     [SerializeField] AnimationReferenceAsset walk;
     [SerializeField] AnimationReferenceAsset attack;
     [SerializeField] AnimationReferenceAsset idle;
     [SerializeField] AnimationReferenceAsset jump;
+    #endregion
 
+    #region Other Variables
     private bool _jumpButton;
     private Vector3 _gravity = new Vector3(0, -50f, 0);
-    public float _gravityScale = 1f;
+    private float _gravityScale = 1f;
     private InputMaster _inputActions;
     private Animator _animator;
-    private Rigidbody _rb;
+    [SerializeField] private Rigidbody _rb;
     private SkeletonAnimation _skeletonAnimation;
     private Spine.EventData _endAttEvent;
     private Spine.EventData _onStepEvenet;
@@ -65,8 +85,11 @@ public class Player : MonoBehaviour
     private bool _isWallOnRight =true;
     private Transform _wallTransform;
     private bool _dashButton;
+    #endregion
 
-    
+    #endregion
+
+    #region Unity Functions
     private void Awake()
     {
         _inputActions = new InputMaster();
@@ -76,7 +99,7 @@ public class Player : MonoBehaviour
     {
         _spineRenderer = transform.GetChild(0).gameObject;
         _animator = GetComponent<Animator>();
-        _rb = GetComponent<Rigidbody>();
+        //_rb = GetComponent<Rigidbody>();
         _skeletonAnimation = _spineRenderer.GetComponent<SkeletonAnimation>();
     }
     private void Update()
@@ -100,36 +123,51 @@ public class Player : MonoBehaviour
         _dashButton = _inputActions.Player.Dash.ReadValue<float>() == 1f ? true : false;
         _animator.SetBool("DashButton", _dashButton);
 
-        //_animator.SetBool("IsDashing", isDashing);
+        _animator.SetBool("IsDashing", isDashing);
+
+        _animator.SetBool("CanDash", canDash);
+
+        if (onGround == false)
+            _flyTime += Time.deltaTime;
+        if (onGround || onWall)
+            if (!_dashButton)
+                canDash = Time.time > nextDashTime;
+        if (!isDashing)
+        {
+            if (isWalking)
+                _skeletonAnimation.timeScale = Mathf.Abs(_playerDirection);
+            if (!isWallJumping)
+                _rb.velocity = new Vector3(_playerDirection * moveSpeed, _rb.velocity.y);
+            PlayerFlip();
+        }
+
+        state = GamePad.GetState(playerIndex);
     }
 
     private void FixedUpdate()
     {
         //Custom Gravity
         _rb.AddForce(_gravity * _gravityScale, ForceMode.Acceleration);
-        //if (_rb.velocity.y < fallSpeedLimiter)
-          //  _rb.velocity = new Vector2(_rb.velocity.x, fallSpeedLimiter);
-        
+        if (_rb.velocity.y < fallSpeedLimiter)
+            _rb.velocity = new Vector2(_rb.velocity.x, fallSpeedLimiter);
+
         //Ground Update
         onGround = Physics.SphereCast(transform.position + new Vector3(0, anchorOffset, 0), groundDetectRadius, Vector3.down,
-            out RaycastHit hitGround, groundDetectDistance, LayerMask.GetMask("Ground"));
-        if (onGround == false)
-            _flyTime += Time.deltaTime;
-        if (isWalking)
-            _skeletonAnimation.timeScale = Mathf.Abs(_playerDirection);
-        if (!isWallJumping)
+            out RaycastHit hitGround, groundDetectDistance, groundDetectLayers);
+        if (!isDashing && !isWallJumping)
+        {
             _rb.velocity = new Vector3(_playerDirection * moveSpeed, _rb.velocity.y);
+        }
 
         //Wall Update
         onWall = Physics.BoxCast(transform.position + new Vector3(0, anchorOffset, 0), wallDetectRadius / 2, faceRight? Vector3.right : Vector3.left,
-                 out RaycastHit hitwall, Quaternion.identity, wallDetectDistance, LayerMask.GetMask("Wall"));
+                 out RaycastHit hitwall, Quaternion.identity, wallDetectDistance, wallDetectLayers);
         if (onWall)
-        {            
+        {
             _wallTransform = hitwall.transform;
             WallFace();
         }
 
-        PlayerFlip();
 
         //Debugger
         if (hitGround.distance == 0f)
@@ -141,7 +179,21 @@ public class Player : MonoBehaviour
             currentBoxDistance = wallDetectDistance;
         else
             currentBoxDistance = hitwall.distance;
+
+
+        
     }
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position + new Vector3(0, -currentSphereDistance + anchorOffset, 0), groundDetectRadius);
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireCube(transform.position + new Vector3(faceRight ? currentBoxDistance : -currentBoxDistance, anchorOffset), wallDetectRadius);
+    }
+
+    #endregion
+
+    #region Other Function
     private void WallFace()
     {
         if ((_wallTransform.position - transform.position).x > 0)
@@ -151,25 +203,28 @@ public class Player : MonoBehaviour
     }
     private void PlayerFlip()
     {
-        if (_playerDirection > 0)
+        if (_playerDirection > 0 && faceRight == false)
         {
-            transform.localScale = new Vector3(-1, 1, 1);
+            transform.Rotate(0, 180f, 0);
             faceRight = true;
         }
-        else if (_playerDirection < 0)
+        else if (_playerDirection < 0 && faceRight == true)
         {
-            transform.localScale = Vector3.one;
+            transform.Rotate(0, -180f, 0);
             faceRight = false;
         }
     }
 
-    private void OnDrawGizmosSelected()
+    private void ShapeSwitchEvent(bool isSnake)
     {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position + new Vector3(0, -currentSphereDistance + anchorOffset, 0), groundDetectRadius);
-        Gizmos.color = Color.blue;
-        Gizmos.DrawWireCube(transform.position + new Vector3(faceRight? currentBoxDistance : -currentBoxDistance, anchorOffset), wallDetectRadius);
+        if (isSnake)
+        {
+
+        }
     }
+    #endregion
+
+    #region State Control
     public void StateCallback(string stateName)
     {
         switch (stateName)
@@ -224,11 +279,14 @@ public class Player : MonoBehaviour
             case "EndClimbWall":
                 EndClimbWall();
                 break;
+
             //#################### Dash ############################
             case "StartDash":
                 StartDash();
                 break;
-
+            case "EndDash":
+                EndDash();
+                break;
 
             //#################### Attack ##########################
 
@@ -236,6 +294,13 @@ public class Player : MonoBehaviour
             //#################### Fall ############################
             case "Falling":
                 Falling();
+                break;
+            case "OnGround":
+                //OnGround();
+                break;
+
+            default:
+                Debug.LogError("Can't found state " + stateName);
                 break;
         }
     }
@@ -258,14 +323,20 @@ public class Player : MonoBehaviour
         var downVelocity = Mathf.Min(_rb.velocity.y, 0);
         var deltaVelocity = new Vector3(0, jumpSpeed - downVelocity, 0);
         _rb.AddForce(deltaVelocity, ForceMode.VelocityChange);
+        //_rb.velocity = deltaVelocity;
         _skeletonAnimation.AnimationState.SetAnimation(0, jump, false);
+        GameManager.instance.SetControllerVibration(0.3f, 0.3f, 0.1f);
     }
     private void EndJump()
     {
-        // 產生剛好的力道來抵銷上升的動量
-        var upVelocity = Mathf.Max(_rb.velocity.y, 0);
-        var deltaVelocity = new Vector3(0, -upVelocity, 0);
-        _rb.AddForce(deltaVelocity, ForceMode.VelocityChange);
+        if (!_dashButton)
+        {
+            // 產生剛好的力道來抵銷上升的動量
+            var upVelocity = Mathf.Max(_rb.velocity.y, 0);
+            var deltaVelocity = new Vector3(0, -upVelocity, 0);
+            _rb.AddForce(deltaVelocity, ForceMode.VelocityChange);
+            //_rb.velocity = deltaVelocity;
+        }
     }
 
     #endregion
@@ -298,6 +369,7 @@ public class Player : MonoBehaviour
     private void StartClimb()
     {
         _gravityScale = 0;
+        //_rb.AddForce(new Vector2(0, climbSpeed), ForceMode.VelocityChange);
         _rb.velocity = new Vector2(0, climbSpeed);
     }
     private void EndClimb() 
@@ -329,7 +401,7 @@ public class Player : MonoBehaviour
     private void StartClimbWall()
     {
         _rb.velocity = Vector3.zero;
-        _rb.AddForce(new Vector3(wallJumpSpeedx * (_isWallOnRight == true ? -1 : 1), 0, 0), ForceMode.Impulse);
+        _rb.AddForce(new Vector3(wallJumpSpeedx * (_isWallOnRight == true ? -1 : 1), 0, 0), ForceMode.VelocityChange);
         isWallJumping = true;
         Invoke("ClimbWallCallback", 0.1f);
         _flyTime = 0f;
@@ -356,8 +428,26 @@ public class Player : MonoBehaviour
     private void StartDash()
     {
         _gravityScale = 0f;
-        _rb.AddForce(new Vector3(dashSpeed * (faceRight ? 1 : -1), 0, 0), ForceMode.VelocityChange);
+        _rb.velocity = Vector3.zero;
+        if (!onWall)
+            _rb.velocity = new Vector3(dashSpeed * (faceRight ? 1 : -1), 0, 0);
+        else
+            _rb.velocity = new Vector3(dashSpeed * (!faceRight ? 1 : -1), 0, 0);
         isDashing = true;
+        canDash = false;
+        nextDashTime = Time.time + dashCooldown;
+        Invoke("SetDashingFalse", dashTime);
+        GameManager.instance.SetControllerVibration(0.2f, 0.5f, 0.3f);
+    }
+    private void SetDashingFalse()
+    {
+        isDashing = false;
+
+    }
+    private void EndDash()
+    {
+        _gravityScale = 1f;
+        _rb.velocity = Vector3.zero;
     }
 
     #endregion
@@ -374,6 +464,12 @@ public class Player : MonoBehaviour
     {
         _gravityScale = 1f;
     }
+    private void OnGround()
+    {
+
+    }
+
+    #endregion
 
     #endregion
 
