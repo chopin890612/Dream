@@ -28,9 +28,13 @@ namespace Bang.StateMachine.PlayerMachine
         {
             base.LogicUpdate();
 
-            if (obj.LastPressedDashTime > 0 && obj.dashState.CanDash())
+            if(obj.LastAttackTime > 0)
             {
-                obj.stateMachine.ChangeState(obj.dashState);
+                stateMachine.ChangeState(obj.attackState);
+            }
+            else if (obj.LastPressedDashTime > 0 && obj.dashState.CanDash())
+            {
+                stateMachine.ChangeState(obj.dashState);
             }
             else if (obj.LastPressedJumpTime > 0 && obj.jumpState.CanJump())
             {

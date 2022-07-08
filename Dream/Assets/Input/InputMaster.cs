@@ -286,7 +286,7 @@ public partial class @InputMaster : IInputActionCollection2, IDisposable
                 {
                     ""name"": ""positive"",
                     ""id"": ""7ddd2f86-c343-4d97-bfa4-0b262986ffca"",
-                    ""path"": ""<Keyboard>/upArrow"",
+                    ""path"": ""<Keyboard>/rightArrow"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard"",
@@ -297,7 +297,7 @@ public partial class @InputMaster : IInputActionCollection2, IDisposable
                 {
                     ""name"": ""negative"",
                     ""id"": ""cf9d2e7e-7b2b-472d-88b6-8fff37d0b4ca"",
-                    ""path"": ""<Keyboard>/downArrow"",
+                    ""path"": ""<Keyboard>/leftArrow"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard"",
@@ -308,7 +308,7 @@ public partial class @InputMaster : IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""2c352d85-931e-4116-a64d-a423a68224df"",
-                    ""path"": ""<Gamepad>/leftStick/y"",
+                    ""path"": ""<Gamepad>/leftStick/x"",
                     ""interactions"": """",
                     ""processors"": ""AxisDeadzone"",
                     ""groups"": ""Gamepad"",

@@ -27,7 +27,7 @@ namespace Bang.StateMachine.PlayerMachine
             base.LogicUpdate();
             if (obj.LastPressedDashTime > 0 && obj.dashState.CanDash())
             {
-                obj.stateMachine.ChangeState(obj.dashState);
+                stateMachine.ChangeState(obj.dashState);
             }
             else if (obj.LastPressedJumpTime > 0 && obj.jumpState.CanJump())
             {
@@ -39,11 +39,11 @@ namespace Bang.StateMachine.PlayerMachine
             }
             else if (obj.LastPressedJumpTime > 0 && obj.LastOnWallTime > 0)
             {
-                obj.stateMachine.ChangeState(obj.wallJumpState);
+                stateMachine.ChangeState(obj.wallJumpState);
             }
             else if ((obj.LastOnWallLeftTime > 0 && InputHandler.instance.Movement.x < 0) || (obj.LastOnWallRightTime > 0 && InputHandler.instance.Movement.x > 0))
             {
-                obj.stateMachine.ChangeState(obj.wallSlideState);
+                stateMachine.ChangeState(obj.wallSlideState);
             }
             else if (obj._rb.velocity.y < 0)
             {

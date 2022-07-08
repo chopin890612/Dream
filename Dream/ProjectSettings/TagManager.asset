@@ -12,18 +12,19 @@ TagManager:
   - PlatformGroup
   - Trap
   - CheckPoint
+  - Enemy
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Player
   - Water
   - UI
   - Ground
   - Wall
   - Background
-  - SnakeFormat
-  - HumanFormat
+  - Enemy
+  - 
   - 
   - 
   - 

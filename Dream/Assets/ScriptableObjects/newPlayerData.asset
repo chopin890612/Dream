@@ -44,5 +44,8 @@ MonoBehaviour:
   dashUpEndMult: 0.6
   dashEndRunLerp: 0.3
   dashBufferTime: 0.05
+  knockBackForce: {x: 30, y: 10}
+  invincibleTime: 0.1
+  attackBufferTime: 0.1
   doKeepRunMomentum: 0
   doTurnOnWallJump: 0

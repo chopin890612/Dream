@@ -1,7 +1,9 @@
-﻿using System.Collections;
+﻿
+using System.Collections;
 using UnityEngine;
 using Bang.StateMachine;
 using Bang.StateMachine.PlayerMachine;
+using Spine.Unity;
 
 
 
@@ -27,12 +29,26 @@ public class TestPlayer : MonoBehaviour
     public float gravityScale;
     #endregion
 
+    #region Animations
+    public GameObject spineRenderer;
+    public Animator spineAnimator;
+    public SkeletonMecanim skeletonMecanim;
+    public SkeletonAnimation skeletonAnimation;
+    public AnimationReferenceAsset idle, walk, jump, fall, attack;
+    public EventDataReferenceAsset startCollision, endCollision, endAttack;
+    #endregion
+
+    #region Combat
+    public GameObject attackCollision;
+    #endregion
+
     #region STATE PARAMETERS
     public bool IsFacingRight { get; private set; }
-    public float LastOnGroundTime;
+    public float LastOnGroundTime { get; private set; }
     public float LastOnWallTime { get; private set; }
     public float LastOnWallRightTime { get; private set; }
     public float LastOnWallLeftTime { get; private set; }
+    public float LastAttackTime;
     #endregion
 
     #region INPUT PARAMETERS
@@ -78,6 +94,8 @@ public class TestPlayer : MonoBehaviour
         attackState = new AttackState(this, stateMachine, playerData);
 
         _rb = GetComponent<Rigidbody>();
+        skeletonAnimation = spineRenderer.GetComponent<SkeletonAnimation>();
+        skeletonAnimation.AnimationState.Event += AttackAnimationHandler;
     }
     private void Start()
     {
@@ -90,6 +108,8 @@ public class TestPlayer : MonoBehaviour
 
         stateMachine.Initalize(idleState);
         IsFacingRight = true;
+
+        attackCollision.SetActive(false);
     }
     private void Update()
     {
@@ -103,6 +123,7 @@ public class TestPlayer : MonoBehaviour
 
         LastPressedJumpTime -= Time.deltaTime;
         LastPressedDashTime -= Time.deltaTime;
+        LastAttackTime -= Time.deltaTime;
 
         //Ground Check
         if (Physics.CheckSphere(_groundCheckPoint.position, _groundCheckSize, _groundLayer)) //checks if set box overlaps with ground
@@ -132,6 +153,16 @@ public class TestPlayer : MonoBehaviour
 
     #endregion
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.collider.CompareTag("Enemy"))
+        {
+            Debug.Log("Hurt");
+            Vector2 force = new Vector2(playerData.knockBackForce.x, playerData.knockBackForce.y);
+            force.x *= -1f * Mathf.Sign(collision.transform.position.x - transform.position.x);
+            _rb.AddForce(force, ForceMode.Impulse);
+        }
+    }
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
@@ -187,7 +218,7 @@ public class TestPlayer : MonoBehaviour
     }
     public void OnAttack(InputHandler.InputArgs args)
     {
-
+        LastAttackTime = playerData.attackBufferTime;
     }
     #endregion
 
@@ -311,7 +342,22 @@ public class TestPlayer : MonoBehaviour
     #region Combat Methods
     public void Attack()
     {
-
+        _rb.velocity = Vector2.zero;
+    }
+    public void AttackAnimationHandler(Spine.TrackEntry trackEntry, Spine.Event e)
+    {
+        if(e.Data == startCollision.EventData)
+        {
+            attackCollision.SetActive(true);
+        }
+        else if(e.Data == endCollision.EventData)
+        {
+            attackCollision.SetActive(false);
+        }
+        else if(e.Data == endAttack.EventData)
+        {
+            attackState.IsAttackEnd();
+        }
     }
     #endregion
 }

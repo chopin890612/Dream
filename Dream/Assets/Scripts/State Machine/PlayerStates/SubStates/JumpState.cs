@@ -17,6 +17,7 @@ namespace Bang.StateMachine.PlayerMachine
 
             Jumped();
             obj.Jump();
+            obj.skeletonAnimation.AnimationState.SetAnimation(0, obj.jump, false);
         }
 
         public override void ExitState()
@@ -29,15 +30,15 @@ namespace Bang.StateMachine.PlayerMachine
             base.LogicUpdate();
             if (obj.LastPressedDashTime > 0 && obj.dashState.CanDash())
             {
-                obj.stateMachine.ChangeState(obj.dashState);
+                stateMachine.ChangeState(obj.dashState);
             }
             else if (obj.LastPressedJumpTime > 0 && obj.LastOnWallTime > 0)
             {
-                obj.stateMachine.ChangeState(obj.wallJumpState);
+                stateMachine.ChangeState(obj.wallJumpState);
             }
             else if (obj._rb.velocity.y < 0) //Jump performed, change state
             {
-                obj.stateMachine.ChangeState(obj.onAirState);
+                stateMachine.ChangeState(obj.onAirState);
             }
         }
 
@@ -67,7 +68,6 @@ namespace Bang.StateMachine.PlayerMachine
         }
         public void ResetJumps()
         {
-            Debug.Log("Reset");
             jumpsLeft = objData.jumpAmount;
         }
         public void Jumped()
