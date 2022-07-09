@@ -28,7 +28,12 @@ namespace Bang.StateMachine.PlayerMachine
         public override void LogicUpdate()
         {
             base.LogicUpdate();
-            if (obj.LastPressedDashTime > 0 && obj.dashState.CanDash())
+
+            if (obj.LastAttackTime > 0)
+            {
+                stateMachine.ChangeState(obj.attackState);
+            }
+            else if (obj.LastPressedDashTime > 0 && obj.dashState.CanDash())
             {
                 stateMachine.ChangeState(obj.dashState);
             }

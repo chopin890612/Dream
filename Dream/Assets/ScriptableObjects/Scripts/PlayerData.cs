@@ -72,6 +72,7 @@ public class PlayerData : ScriptableObject
 	//COMBAT
 	[Header("Combat")]
 	public Vector2 knockBackForce;
+	[Range(0.1f, 2f)]public float knockBackTime;
 	[Range(0, 0.5f)] public float invincibleTime;
 	[Range(0, 0.5f)] public float attackBufferTime;
 

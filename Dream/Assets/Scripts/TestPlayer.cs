@@ -20,6 +20,7 @@ public class TestPlayer : MonoBehaviour
     public WallSlideState wallSlideState { get; private set; }
     public WallJumpState wallJumpState { get; private set; }
     public AttackState attackState { get; private set; }
+    public KnockBackState knockBackState { get; private set; }
 
     [SerializeField] private PlayerData playerData;
     #endregion
@@ -31,8 +32,6 @@ public class TestPlayer : MonoBehaviour
 
     #region Animations
     public GameObject spineRenderer;
-    public Animator spineAnimator;
-    public SkeletonMecanim skeletonMecanim;
     public SkeletonAnimation skeletonAnimation;
     public AnimationReferenceAsset idle, walk, jump, fall, attack;
     public EventDataReferenceAsset startCollision, endCollision, endAttack;
@@ -40,6 +39,7 @@ public class TestPlayer : MonoBehaviour
 
     #region Combat
     public GameObject attackCollision;
+    public Collision touchedCollision;
     #endregion
 
     #region STATE PARAMETERS
@@ -48,7 +48,8 @@ public class TestPlayer : MonoBehaviour
     public float LastOnWallTime { get; private set; }
     public float LastOnWallRightTime { get; private set; }
     public float LastOnWallLeftTime { get; private set; }
-    public float LastAttackTime;
+    public float LastAttackTime { get; private set; }
+    public float LastKnockBackTime { get; private set; }
     #endregion
 
     #region INPUT PARAMETERS
@@ -92,6 +93,7 @@ public class TestPlayer : MonoBehaviour
         wallSlideState = new WallSlideState(this, stateMachine, playerData);
         wallJumpState = new WallJumpState(this, stateMachine, playerData);
         attackState = new AttackState(this, stateMachine, playerData);
+        knockBackState = new KnockBackState(this, stateMachine, playerData);
 
         _rb = GetComponent<Rigidbody>();
         skeletonAnimation = spineRenderer.GetComponent<SkeletonAnimation>();
@@ -124,6 +126,7 @@ public class TestPlayer : MonoBehaviour
         LastPressedJumpTime -= Time.deltaTime;
         LastPressedDashTime -= Time.deltaTime;
         LastAttackTime -= Time.deltaTime;
+        LastKnockBackTime -= Time.deltaTime;
 
         //Ground Check
         if (Physics.CheckSphere(_groundCheckPoint.position, _groundCheckSize, _groundLayer)) //checks if set box overlaps with ground
@@ -155,12 +158,12 @@ public class TestPlayer : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        touchedCollision = collision;
         if (collision.collider.CompareTag("Enemy"))
         {
             Debug.Log("Hurt");
-            Vector2 force = new Vector2(playerData.knockBackForce.x, playerData.knockBackForce.y);
-            force.x *= -1f * Mathf.Sign(collision.transform.position.x - transform.position.x);
-            _rb.AddForce(force, ForceMode.Impulse);
+            LastKnockBackTime = playerData.knockBackTime;
+            stateMachine.ChangeState(knockBackState);
         }
     }
     private void OnDrawGizmosSelected()
@@ -358,6 +361,12 @@ public class TestPlayer : MonoBehaviour
         {
             attackState.IsAttackEnd();
         }
+    }
+    public void KnockBack()
+    {
+        Vector2 force = new Vector2(playerData.knockBackForce.x, playerData.knockBackForce.y);
+        force.x *= -1f * Mathf.Sign(touchedCollision.transform.position.x - transform.position.x);
+        _rb.AddForce(force, ForceMode.Impulse);
     }
     #endregion
 }

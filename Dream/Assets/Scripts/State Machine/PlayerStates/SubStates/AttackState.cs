@@ -29,9 +29,16 @@ namespace Bang.StateMachine.PlayerMachine
         {
             base.LogicUpdate();
 
-            if(isAttackEnd && obj.LastOnGroundTime > 0)
+            if(isAttackEnd)
             {
-                stateMachine.ChangeState(obj.idleState);
+                if (obj.LastOnGroundTime > 0)
+                {
+                    stateMachine.ChangeState(obj.idleState);
+                }
+                else if(obj.LastOnGroundTime < 0)
+                {
+                    stateMachine.ChangeState(obj.onAirState);
+                }
             }
         }
 

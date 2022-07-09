@@ -26,12 +26,18 @@ MonoBehaviour:
   skeletonDataModifiers: []
   fromAnimation:
   - "\u5F85\u6A5F"
+  - "\u653B\u64CA"
   - "\u8DD1"
+  - "\u8DF3"
   toAnimation:
+  - "\u653B\u64CA"
+  - "\u653B\u64CA"
   - "\u653B\u64CA"
   - "\u653B\u64CA"
   duration:
   - 0
   - 0
+  - 0
+  - 0
   defaultMix: 0.2
-  controller: {fileID: 9100000, guid: c173fa372294907478028a9469c37115, type: 2}
+  controller: {fileID: 0}

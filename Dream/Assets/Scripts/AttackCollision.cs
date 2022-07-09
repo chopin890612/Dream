@@ -12,7 +12,6 @@ public class AttackCollision : MonoBehaviour
         {
             sA.timeScale = 0;
             GameManager.instance.DoForSeconds(() => sA.timeScale = 1, 0.1f);
-            Debug.Log("!!!");
         }
     }
     
