@@ -2,11 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using XInputDotNetPure;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     private PlayerIndex playerIndex = PlayerIndex.One;
     public static GameManager instance;
+    public GameState gameState;
+
+    public enum GameState
+    {
+        MainMenu,
+        GameView,
+        GameMenu
+    }
     private void Awake()
     {
         if (instance == null)
@@ -16,7 +25,7 @@ public class GameManager : MonoBehaviour
     }
     void Start()
     {
-        
+        InputHandler.instance.SetActionEnable(gameState);
     }
 
     // Update is called once per frame

@@ -52,13 +52,15 @@ namespace Bang.StateMachine.PlayerMachine
             base.PhysicsUpdate();
 
             obj.Drag(objData.dragAmount);
-            obj.Run(1);
+            obj.Run(1, false);
         }
 
         public bool CanJumpCut()
         {
-            if (obj._rb.velocity.y > 0) //if the player is jumping and still moving up
+            if (obj._rb.velocity.y > 0 && stateMachine.currentState != obj.attackState)//if the player is jumping and still moving up
+            {  
                 return true;
+            }
             else
             {
                 return false;

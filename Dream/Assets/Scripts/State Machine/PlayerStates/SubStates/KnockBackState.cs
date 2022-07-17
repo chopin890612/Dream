@@ -16,7 +16,7 @@ namespace Bang.StateMachine.PlayerMachine
             base.EnterState();
 
             isKnockBacking = true;
-            obj.KnockBack();
+            obj.KnockBack(1);
         }
 
         public override void ExitState()

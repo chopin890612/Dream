@@ -13,11 +13,13 @@ namespace Bang.StateMachine.PlayerMachine
         public override void EnterState()
         {
             base.EnterState();
+            obj.SetGravityScale(0);
         }
 
         public override void ExitState()
         {
             base.ExitState();
+            obj.SetGravityScale(objData.gravityScale);
         }
 
         public override void LogicUpdate()
@@ -38,8 +40,9 @@ namespace Bang.StateMachine.PlayerMachine
         {
             base.PhysicsUpdate();
 
-            obj.Drag(objData.dragAmount);
-            obj.Slide();
+            //obj.Drag(objData.dragAmount);
+            //obj.Slide();
+            obj.Climb();
         }
     }
 }

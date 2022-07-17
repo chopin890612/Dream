@@ -7,14 +7,24 @@ using UnityEngine.InputSystem;
 public class InputHandler : MonoBehaviour
 {
     public static InputHandler instance;
-    public Vector2 Movement { get; private set; }
 
+    #region Player Input
+    public Vector2 Movement { get; private set; }
     public Action<InputArgs> OnJumpPressed;
     public Action<InputArgs> OnJumpReleased;
     public Action<InputArgs> OnDash;
     public Action<InputArgs> OnAttack;
+    #endregion
 
-    private InputMaster inputActions;
+    #region UI Input
+    public Vector2 UIMovment { get; private set; }
+    public Action<InputArgs> OnSelect;
+    public Action<InputArgs> OnCancle;
+    public Action<InputArgs> OnRotate;
+    #endregion
+
+    private InputMaster playerAction;
+    private InputMaster UIAction;
 
     private void Awake()
     {
@@ -31,16 +41,25 @@ public class InputHandler : MonoBehaviour
         }
         #endregion
 
-        inputActions = new InputMaster();
+        playerAction = new InputMaster();
+        UIAction = new InputMaster();
 
         #region Assign Input
-        inputActions.Player.Movment.performed += ctx => Movement = ctx.ReadValue<Vector2>();
-        inputActions.Player.Movment.canceled += ctx => Movement = Vector2.zero;
+        playerAction.Player.Movment.performed += ctx => Movement = ctx.ReadValue<Vector2>();
+        playerAction.Player.Movment.canceled += ctx => Movement = Vector2.zero;
 
-        inputActions.Player.Jump.performed += ctx => OnJumpPressed(new InputArgs { context = ctx});
-        inputActions.Player.JumpUp.performed += ctx => OnJumpReleased(new InputArgs { context = ctx });
-        inputActions.Player.Dash.performed += ctx => OnDash(new InputArgs { context = ctx });
-        inputActions.Player.Attack.performed += ctx => OnAttack(new InputArgs { context = ctx });
+        playerAction.Player.Jump.performed += ctx => OnJumpPressed(new InputArgs { context = ctx});
+        playerAction.Player.JumpUp.performed += ctx => OnJumpReleased(new InputArgs { context = ctx });
+        playerAction.Player.Dash.performed += ctx => OnDash(new InputArgs { context = ctx });
+        playerAction.Player.Attack.performed += ctx => OnAttack(new InputArgs { context = ctx });
+
+
+        UIAction.PlantModule.Movment.performed += ctx => UIMovment = ctx.ReadValue<Vector2>();
+        UIAction.PlantModule.Movment.canceled += ctx => UIMovment = Vector2.zero;
+
+        UIAction.PlantModule.Confirm.performed += ctx => OnSelect(new InputArgs { context = ctx });
+        UIAction.PlantModule.Cancle.performed += ctx => OnCancle(new InputArgs { context = ctx });
+        UIAction.PlantModule.Rotate.performed += ctx => OnRotate(new InputArgs { context = ctx });
         #endregion
     }
 
@@ -49,12 +68,17 @@ public class InputHandler : MonoBehaviour
         public InputAction.CallbackContext context;
     }
 
-    private void OnEnable()
+    public void SetActionEnable(GameManager.GameState gameState)
     {
-        inputActions.Enable();
-    }
-    private void OnDisable()
-    {
-        inputActions.Disable();
+        if (gameState == GameManager.GameState.GameView)
+        {
+            playerAction.Enable();
+            UIAction.Disable();
+        }
+        else if(gameState == GameManager.GameState.GameMenu)
+        {
+            playerAction.Disable();
+            UIAction.Enable();
+        }
     }
 }

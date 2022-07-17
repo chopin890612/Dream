@@ -27,6 +27,7 @@ public class TestPlayer : MonoBehaviour
 
     #region Components
     public Rigidbody _rb { get; private set; }
+    public CombatSystem combatSystem;
     public float gravityScale;
     #endregion
 
@@ -39,7 +40,7 @@ public class TestPlayer : MonoBehaviour
 
     #region Combat
     public GameObject attackCollision;
-    public Collision touchedCollision;
+    public Collider touchedCollision;
     #endregion
 
     #region STATE PARAMETERS
@@ -59,12 +60,17 @@ public class TestPlayer : MonoBehaviour
 
     #region CHECK PARAMETERS
     [Header("Checks")]
+    [SerializeField] private Transform _headCheckPoint;
+    [SerializeField] private float _headCheckSize;
+    [Space(5)]
     [SerializeField] private Transform _groundCheckPoint;
     [SerializeField] private float _groundCheckSize;
     [Space(5)]
     [SerializeField] private Transform _frontWallCheckPoint;
     [SerializeField] private Transform _backWallCheckPoint;
     [SerializeField] private Vector2 _wallCheckSize;
+    [Space(5)]
+    [SerializeField] private float _platformSlopeCheckLength;
     #endregion
 
     #region LAYERS & TAGS
@@ -74,7 +80,9 @@ public class TestPlayer : MonoBehaviour
     #endregion
 
     #region Debugger
+    [Header("Debugger")]
     [SerializeField] string CurrentState;
+    [SerializeField] Vector2 _platformNormal;
     private float groundDistance;
     private float wallDistance;
     #endregion
@@ -98,6 +106,8 @@ public class TestPlayer : MonoBehaviour
         _rb = GetComponent<Rigidbody>();
         skeletonAnimation = spineRenderer.GetComponent<SkeletonAnimation>();
         skeletonAnimation.AnimationState.Event += AttackAnimationHandler;
+
+        combatSystem.hurtEvent.AddListener(Hurt);
     }
     private void Start()
     {
@@ -128,6 +138,9 @@ public class TestPlayer : MonoBehaviour
         LastAttackTime -= Time.deltaTime;
         LastKnockBackTime -= Time.deltaTime;
 
+        //Head Check
+
+
         //Ground Check
         if (Physics.CheckSphere(_groundCheckPoint.position, _groundCheckSize, _groundLayer)) //checks if set box overlaps with ground
             LastOnGroundTime = playerData.coyoteTime; //if so sets the lastGrounded to coyoteTime
@@ -144,6 +157,11 @@ public class TestPlayer : MonoBehaviour
 
         LastOnWallTime = Mathf.Max(LastOnWallLeftTime, LastOnWallRightTime);
         //Two checks needed for both left and right walls since whenever the play turns the wall checkPoints swap sides
+
+        //Platform Slope Check
+        Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, _platformSlopeCheckLength);
+        _platformNormal = hit.normal;
+
         #endregion
 
         CurrentState = stateMachine.currentState.ToString();
@@ -155,17 +173,6 @@ public class TestPlayer : MonoBehaviour
     }
 
     #endregion
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        touchedCollision = collision;
-        if (collision.collider.CompareTag("Enemy"))
-        {
-            Debug.Log("Hurt");
-            LastKnockBackTime = playerData.knockBackTime;
-            stateMachine.ChangeState(knockBackState);
-        }
-    }
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
@@ -173,6 +180,9 @@ public class TestPlayer : MonoBehaviour
 
         Gizmos.color = Color.blue;
         Gizmos.DrawWireCube(_frontWallCheckPoint.position, _wallCheckSize * 2);
+
+        Gizmos.color = Color.green;
+        Gizmos.DrawRay(transform.position, Vector2.down * _platformSlopeCheckLength);
     }
 
     
@@ -236,7 +246,7 @@ public class TestPlayer : MonoBehaviour
 
         _rb.AddForce(-force, ForceMode.Impulse); //applies force against movement direction
     }
-    public void Run(float lerpAmount)
+    public void Run(float lerpAmount, bool walkSlope)
     {
         float targetSpeed = InputHandler.instance.Movement.x * playerData.runMaxSpeed; //calculate the direction we want to move in and our desired velocity
         float speedDif = targetSpeed - _rb.velocity.x; //calculate difference between current velocity and desired velocity
@@ -276,8 +286,14 @@ public class TestPlayer : MonoBehaviour
         //applies acceleration to speed difference, then is raised to a set power so the acceleration increases with higher speeds, finally multiplies by sign to preserve direction
         float movement = Mathf.Pow(Mathf.Abs(speedDif) * accelRate, velPower) * Mathf.Sign(speedDif);
         movement = Mathf.Lerp(_rb.velocity.x, movement, lerpAmount);
-
-        _rb.AddForce(movement * Vector2.right); //applies force force to rigidbody, multiplying by Vector2.right so that it only affects X axis 
+ 
+        Vector2 moveDir = Vector2.right;
+        if (walkSlope)
+        {
+            moveDir = Vector2.Perpendicular(_platformNormal).normalized * -1;
+            Debug.DrawRay(transform.position, moveDir, Color.red);
+        }
+        _rb.AddForce(movement * moveDir); //applies force force to rigidbody, multiplying by Vector2.right so that it only affects X axis 
 
         if (InputHandler.instance.Movement.x != 0)
             CheckDirectionToFace(InputHandler.instance.Movement.x > 0);
@@ -298,6 +314,10 @@ public class TestPlayer : MonoBehaviour
     }
     private void JumpCut()
     {
+        if(stateMachine.currentState != jumpState)
+        {
+            Debug.Log("JumpCut in " + stateMachine.currentState.ToString());
+        }
         //applies force downward when the jump button is released. Allowing the player to control jump height
         _rb.AddForce(Vector2.down * _rb.velocity.y * (1 - playerData.jumpCutMultiplier), ForceMode.Impulse);
     }
@@ -306,7 +326,10 @@ public class TestPlayer : MonoBehaviour
         LastOnGroundTime = 0;
         LastPressedDashTime = 0;
 
-        _rb.velocity = dir.normalized * playerData.dashSpeed;
+        //_rb.velocity = new Vector2(dir.normalized.x * playerData.dashSpeed,0);
+        _rb.velocity = Vector2.zero;
+        Vector2 force = new Vector2(dir.normalized.x * playerData.dashSpeed, 0);
+        _rb.AddForce(force, ForceMode.Impulse);
 
         SetGravityScale(0);
     }
@@ -317,6 +340,16 @@ public class TestPlayer : MonoBehaviour
         float speedDif = targetSpeed - _rb.velocity.y;
 
         float movement = Mathf.Pow(Mathf.Abs(speedDif) * playerData.slideAccel, playerData.slidePower) * Mathf.Sign(speedDif);
+        _rb.AddForce(movement * Vector2.up, ForceMode.Force);
+    }
+    public void Climb()
+    {
+        //works the same as the Run but only in the y-axis
+        float targetSpeed = InputHandler.instance.Movement.y * playerData.climbSpeed;
+        float speedDif = targetSpeed - _rb.velocity.y;
+
+        float movement = Mathf.Pow(Mathf.Abs(speedDif) * playerData.slideAccel, playerData.slidePower) * Mathf.Sign(speedDif);
+        movement = Mathf.Lerp(_rb.velocity.y, movement, 1);
         _rb.AddForce(movement * Vector2.up, ForceMode.Force);
     }
     public void WallJump(int dir)
@@ -345,7 +378,9 @@ public class TestPlayer : MonoBehaviour
     #region Combat Methods
     public void Attack()
     {
-        _rb.velocity = Vector2.zero;
+        //_rb.velocity = Vector2.zero;
+        SetGravityScale(0);
+        _rb.AddForce(new Vector2(0, -_rb.velocity.y), ForceMode.Impulse);
     }
     public void AttackAnimationHandler(Spine.TrackEntry trackEntry, Spine.Event e)
     {
@@ -359,14 +394,22 @@ public class TestPlayer : MonoBehaviour
         }
         else if(e.Data == endAttack.EventData)
         {
+            SetGravityScale(playerData.fallGravityMult);
             attackState.IsAttackEnd();
         }
     }
-    public void KnockBack()
+    public void KnockBack(float forceScale)
     {
         Vector2 force = new Vector2(playerData.knockBackForce.x, playerData.knockBackForce.y);
         force.x *= -1f * Mathf.Sign(touchedCollision.transform.position.x - transform.position.x);
-        _rb.AddForce(force, ForceMode.Impulse);
+        _rb.AddForce(force * forceScale, ForceMode.Impulse);
+    }
+    public void Hurt(Collider collider)
+    {
+        touchedCollision = collider;
+        Debug.Log("Hurt");
+        LastKnockBackTime = playerData.knockBackTime;
+        stateMachine.ChangeState(knockBackState);
     }
     #endregion
 }

@@ -53,6 +53,7 @@ public class PlayerData : ScriptableObject
 	[Header("Slide")]
 	public float slideAccel;
 	[Range(.5f, 2f)] public float slidePower;
+	public float climbSpeed;
 
 
 	//ABILITIES
@@ -75,6 +76,7 @@ public class PlayerData : ScriptableObject
 	[Range(0.1f, 2f)]public float knockBackTime;
 	[Range(0, 0.5f)] public float invincibleTime;
 	[Range(0, 0.5f)] public float attackBufferTime;
+	public float attackDragAmount;
 
 
 	//OTHER

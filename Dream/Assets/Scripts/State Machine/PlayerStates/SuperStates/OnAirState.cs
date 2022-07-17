@@ -69,7 +69,7 @@ namespace Bang.StateMachine.PlayerMachine
             base.PhysicsUpdate();
 
             obj.Drag(objData.dragAmount);
-            obj.Run(1);
+            obj.Run(1, false);
         }
     }
 }

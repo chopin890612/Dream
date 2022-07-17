@@ -29,13 +29,14 @@ MonoBehaviour:
   turnPower: 1.13
   jumpAmount: 1
   jumpForce: 20
-  jumpCutMultiplier: 0.2
-  jumpBufferTime: 0.08
-  wallJumpForce: {x: 9, y: 15}
+  jumpCutMultiplier: 0.5
+  jumpBufferTime: 0.05
+  wallJumpForce: {x: 20, y: 10}
   wallJumpRunLerp: 0.3
   wallJumpTime: 0.35
-  slideAccel: 0.8
+  slideAccel: 9
   slidePower: 0.95
+  climbSpeed: 7
   dashAmount: 1
   dashSpeed: 25
   dashAttackTime: 0.1
@@ -48,5 +49,6 @@ MonoBehaviour:
   knockBackTime: 0.2
   invincibleTime: 0.1
   attackBufferTime: 0.1
+  attackDragAmount: 0.5
   doKeepRunMomentum: 0
   doTurnOnWallJump: 0
