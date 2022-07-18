@@ -14,9 +14,11 @@ namespace Bang.StateMachine.PlayerMachine
         public override void EnterState()
         {
             base.EnterState();
-
-            obj.dashState.ResetDashes();
-            obj.jumpState.ResetJumps();
+            if (obj.CanSlope)
+            {
+                obj.dashState.ResetDashes();
+                obj.jumpState.ResetJumps();
+            }
         }
 
         public override void ExitState()
@@ -44,6 +46,18 @@ namespace Bang.StateMachine.PlayerMachine
             {
                 obj.jumpState.Jumped();
                 stateMachine.ChangeState(obj.onAirState);
+            }
+            else if ((obj.LastOnWallLeftTime > 0 && InputHandler.instance.Movement.x < 0) || (obj.LastOnWallRightTime > 0 && InputHandler.instance.Movement.x > 0) && InputHandler.instance.Movement.y != 0)
+            {
+                stateMachine.ChangeState(obj.wallSlideState);
+            }
+            else if (!obj.CanSlope)
+            {
+                obj.SetGravityScale(5);
+            }
+            else
+            {
+                obj.SetGravityScale(objData.gravityScale);
             }
         }
 

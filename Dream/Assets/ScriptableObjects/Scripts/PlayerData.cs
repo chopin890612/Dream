@@ -32,6 +32,7 @@ public class PlayerData : ScriptableObject
 	[Range(.5f, 2f)] public float accelPower;
 	[Range(.5f, 2f)] public float stopPower;
 	[Range(.5f, 2f)] public float turnPower;
+	[Range(0f, 90f)] public float maxSlopeAngle;
 
 
 	//JUMP

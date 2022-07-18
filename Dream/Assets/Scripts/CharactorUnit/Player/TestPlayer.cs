@@ -29,9 +29,12 @@ public class TestPlayer : MonoBehaviour
     public Rigidbody _rb { get; private set; }
     public CombatSystem combatSystem;
     public float gravityScale;
+    public PhysicMaterial noFriction;
+    public PhysicMaterial infFrction;
     #endregion
 
     #region Animations
+    [Header("Animations")]
     public GameObject spineRenderer;
     public SkeletonAnimation skeletonAnimation;
     public AnimationReferenceAsset idle, walk, jump, fall, attack;
@@ -51,6 +54,8 @@ public class TestPlayer : MonoBehaviour
     public float LastOnWallLeftTime { get; private set; }
     public float LastAttackTime { get; private set; }
     public float LastKnockBackTime { get; private set; }
+    public bool CanSlope { get; private set; }
+    public bool IsPassingPlatform { get; private set; }
     #endregion
 
     #region INPUT PARAMETERS
@@ -70,13 +75,18 @@ public class TestPlayer : MonoBehaviour
     [SerializeField] private Transform _backWallCheckPoint;
     [SerializeField] private Vector2 _wallCheckSize;
     [Space(5)]
+    [SerializeField] private Transform _platformSlopeCheck;
+    [SerializeField] private float _platformSlopeCheckSize;
     [SerializeField] private float _platformSlopeCheckLength;
     #endregion
 
     #region LAYERS & TAGS
     [Header("Layers & Tags")]
+    [SerializeField] private LayerMask _player;
+    [SerializeField] private LayerMask _walkLayer;
     [SerializeField] private LayerMask _groundLayer;
     [SerializeField] private LayerMask _wallLayer;
+    [SerializeField] private LayerMask _canPassPlatform;
     #endregion
 
     #region Debugger
@@ -85,6 +95,7 @@ public class TestPlayer : MonoBehaviour
     [SerializeField] Vector2 _platformNormal;
     private float groundDistance;
     private float wallDistance;
+    [SerializeField] private Vector2 inputM;
     #endregion
 
     #region Unity Lifecycle
@@ -126,6 +137,7 @@ public class TestPlayer : MonoBehaviour
     private void Update()
     {
         stateMachine.currentState.LogicUpdate();
+        inputM = InputHandler.instance.Movement;
 
         #region CHECKS
         LastOnGroundTime -= Time.deltaTime;
@@ -139,29 +151,41 @@ public class TestPlayer : MonoBehaviour
         LastKnockBackTime -= Time.deltaTime;
 
         //Head Check
-
+        if(Physics.CheckSphere(_headCheckPoint.position, _headCheckSize, _canPassPlatform))
+        {
+            PassPlatform(0.2f);
+        }
 
         //Ground Check
-        if (Physics.CheckSphere(_groundCheckPoint.position, _groundCheckSize, _groundLayer)) //checks if set box overlaps with ground
-            LastOnGroundTime = playerData.coyoteTime; //if so sets the lastGrounded to coyoteTime
+        if (IsPassingPlatform)
+        {
+            if (Physics.CheckSphere(_groundCheckPoint.position, _groundCheckSize, _groundLayer)) //checks if set box overlaps with ground
+                LastOnGroundTime = playerData.coyoteTime; //if so sets the lastGrounded to coyoteTime
+        }
+        else
+        {
+            if (Physics.CheckSphere(_groundCheckPoint.position, _groundCheckSize, _walkLayer)) //checks if set box overlaps with ground
+                LastOnGroundTime = playerData.coyoteTime; //if so sets the lastGrounded to coyoteTime
+        }
 
         //Right Wall Check
-        if ((Physics.CheckBox(_frontWallCheckPoint.position, _wallCheckSize, Quaternion.identity, _wallLayer) && IsFacingRight)
-                || (Physics.CheckBox(_backWallCheckPoint.position, _wallCheckSize, Quaternion.identity, _wallLayer) && !IsFacingRight))
+        if ((Physics.CheckBox(_frontWallCheckPoint.position, _wallCheckSize, Quaternion.identity, _walkLayer) && IsFacingRight)
+                || (Physics.CheckBox(_backWallCheckPoint.position, _wallCheckSize, Quaternion.identity, _walkLayer) && !IsFacingRight))
             LastOnWallRightTime = playerData.coyoteTime;
 
-        //Right Wall Check
-        if ((Physics.CheckBox(_frontWallCheckPoint.position, _wallCheckSize, Quaternion.identity, _wallLayer) && !IsFacingRight)
-            || (Physics.CheckBox(_backWallCheckPoint.position, _wallCheckSize, Quaternion.identity, _wallLayer) && IsFacingRight))
+        //Left Wall Check
+        if ((Physics.CheckBox(_frontWallCheckPoint.position, _wallCheckSize, Quaternion.identity, _walkLayer) && !IsFacingRight)
+            || (Physics.CheckBox(_backWallCheckPoint.position, _wallCheckSize, Quaternion.identity, _walkLayer) && IsFacingRight))
             LastOnWallLeftTime = playerData.coyoteTime;
 
         LastOnWallTime = Mathf.Max(LastOnWallLeftTime, LastOnWallRightTime);
         //Two checks needed for both left and right walls since whenever the play turns the wall checkPoints swap sides
 
         //Platform Slope Check
-        Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, _platformSlopeCheckLength);
+        Physics.SphereCast(_platformSlopeCheck.position, _platformSlopeCheckSize, Vector3.down, out RaycastHit hit, _platformSlopeCheckLength, _walkLayer);
         _platformNormal = hit.normal;
-
+        groundDistance = hit.distance;
+        CanSlope = Mathf.Abs(Vector2.Angle(_platformNormal, Vector2.up)) < playerData.maxSlopeAngle;
         #endregion
 
         CurrentState = stateMachine.currentState.ToString();
@@ -181,11 +205,27 @@ public class TestPlayer : MonoBehaviour
         Gizmos.color = Color.blue;
         Gizmos.DrawWireCube(_frontWallCheckPoint.position, _wallCheckSize * 2);
 
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(_headCheckPoint.position, _headCheckSize);
+
         Gizmos.color = Color.green;
         Gizmos.DrawRay(transform.position, Vector2.down * _platformSlopeCheckLength);
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(_platformSlopeCheck.position + new Vector3(0, -groundDistance), _platformSlopeCheckSize);
+        //Gizmos.DrawRay(transform.position, new Vector2(Mathf.Cos(playerData.maxSlopeAngle * Mathf.Deg2Rad), Mathf.Sin(playerData.maxSlopeAngle * Mathf.Deg2Rad)));
     }
 
-    
+    private void PassPlatform(float time)
+    {
+        IsPassingPlatform = true;
+        Physics.IgnoreLayerCollision(3, 8, true);
+        Invoke("DisableCollision", time);
+    }
+    private void DisableCollision()
+    {
+        Physics.IgnoreLayerCollision(3, 8, false);
+        IsPassingPlatform = false;
+    }
 
     private void Turn()
     {
@@ -216,7 +256,12 @@ public class TestPlayer : MonoBehaviour
     //These functions are called when an even is triggered in my InputHandler. You could call these methods through a if(Input.GetKeyDown) in Update
     public void OnJump(InputHandler.InputArgs args)
     {
-        LastPressedJumpTime = playerData.jumpBufferTime;
+        if (InputHandler.instance.Movement.y < -0.5f)
+        {
+            PassPlatform(0.5f);
+        }
+        else
+            LastPressedJumpTime = playerData.jumpBufferTime;
     }
 
     public void OnJumpUp(InputHandler.InputArgs args)
@@ -246,7 +291,7 @@ public class TestPlayer : MonoBehaviour
 
         _rb.AddForce(-force, ForceMode.Impulse); //applies force against movement direction
     }
-    public void Run(float lerpAmount, bool walkSlope)
+    public void Run(float lerpAmount, bool needSlope)
     {
         float targetSpeed = InputHandler.instance.Movement.x * playerData.runMaxSpeed; //calculate the direction we want to move in and our desired velocity
         float speedDif = targetSpeed - _rb.velocity.x; //calculate difference between current velocity and desired velocity
@@ -288,11 +333,12 @@ public class TestPlayer : MonoBehaviour
         movement = Mathf.Lerp(_rb.velocity.x, movement, lerpAmount);
  
         Vector2 moveDir = Vector2.right;
-        if (walkSlope)
-        {
+        if (needSlope && CanSlope)
+        {            
             moveDir = Vector2.Perpendicular(_platformNormal).normalized * -1;
-            Debug.DrawRay(transform.position, moveDir, Color.red);
+            Debug.DrawRay(transform.position, moveDir, Color.yellow);
         }
+
         _rb.AddForce(movement * moveDir); //applies force force to rigidbody, multiplying by Vector2.right so that it only affects X axis 
 
         if (InputHandler.instance.Movement.x != 0)
@@ -316,7 +362,7 @@ public class TestPlayer : MonoBehaviour
     {
         if(stateMachine.currentState != jumpState)
         {
-            Debug.Log("JumpCut in " + stateMachine.currentState.ToString());
+            //Debug.Log("JumpCut in " + stateMachine.currentState.ToString());
         }
         //applies force downward when the jump button is released. Allowing the player to control jump height
         _rb.AddForce(Vector2.down * _rb.velocity.y * (1 - playerData.jumpCutMultiplier), ForceMode.Impulse);

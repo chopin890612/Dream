@@ -27,7 +27,7 @@ namespace Bang.StateMachine.PlayerMachine
             {
                 obj.stateMachine.ChangeState(obj.dashState);
             }
-            else if (obj.LastOnGroundTime > 0)
+            else if (obj.LastOnGroundTime > 0 && InputHandler.instance.Movement.x == 0)
             {
                 obj.stateMachine.ChangeState(obj.idleState);
             }

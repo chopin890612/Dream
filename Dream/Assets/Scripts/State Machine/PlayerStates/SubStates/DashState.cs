@@ -58,7 +58,7 @@ namespace Bang.StateMachine.PlayerMachine
             {
                 //initial dash phase over, now begin slowing down and giving control back to player
                 obj.Drag(objData.dragAmount);
-                obj.Run(objData.dashEndRunLerp, true); //able to apply some run force but will be limited (~50% of normal)
+                obj.Run(objData.dashEndRunLerp, false); //able to apply some run force but will be limited (~50% of normal)
 
                 if (dashAttacking)
                     StopDash();

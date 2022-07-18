@@ -10,5 +10,25 @@ namespace Bang.StateMachine.EnemyMachine
         {
             
         }
+
+        public override void EnterState()
+        {
+            base.EnterState();
+        }
+
+        public override void ExitState()
+        {
+            base.ExitState();
+        }
+
+        public override void LogicUpdate()
+        {
+            base.LogicUpdate();
+        }
+
+        public override void PhysicsUpdate()
+        {
+            base.PhysicsUpdate();
+        }
     }
 }

@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gravity: {x: 0, y: -30, z: 0}
   gravityScale: 1
-  fallGravityMult: 1.7
-  quickFallGravityMult: 2.2
+  fallGravityMult: 2.5
+  quickFallGravityMult: 3.5
   dragAmount: 0.22
   frictionAmount: 0.55
   coyoteTime: 0.1
@@ -27,11 +27,12 @@ MonoBehaviour:
   accelPower: 1.05
   stopPower: 1.23
   turnPower: 1.13
+  maxSlopeAngle: 45
   jumpAmount: 1
   jumpForce: 20
   jumpCutMultiplier: 0.5
   jumpBufferTime: 0.05
-  wallJumpForce: {x: 20, y: 10}
+  wallJumpForce: {x: 20, y: 15}
   wallJumpRunLerp: 0.3
   wallJumpTime: 0.35
   slideAccel: 9

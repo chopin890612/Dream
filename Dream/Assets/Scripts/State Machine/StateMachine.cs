@@ -1,4 +1,6 @@
-﻿namespace Bang.StateMachine
+﻿using UnityEngine;
+
+namespace Bang.StateMachine
 {
     /// <summary>
     /// Base StateMachine
@@ -18,11 +20,11 @@
         {
             if (currentState.isExitingState)
                 return;
-
+            
             currentState.ExitState();
             currentState = tartgetState;
             currentState.EnterState();
-            //Debug.Log(currentState.ToString());
+            Debug.Log(currentState.ToString());
         }
     }
 }

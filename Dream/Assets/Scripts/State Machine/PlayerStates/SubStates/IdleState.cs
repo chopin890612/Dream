@@ -15,18 +15,23 @@ namespace Bang.StateMachine.PlayerMachine
         {
             base.EnterState();
             obj.skeletonAnimation.AnimationState.SetAnimation(0, obj.idle, true);
+            if (obj.CanSlope)
+                obj.GetComponent<CapsuleCollider>().material = obj.infFrction;
+            else
+                obj.GetComponent<CapsuleCollider>().material = obj.noFriction;
         }
 
         public override void ExitState()
         {
             base.ExitState();
+            obj.GetComponent<CapsuleCollider>().material = obj.noFriction;
         }
 
         public override void LogicUpdate()
         {
             base.LogicUpdate();
 
-            if(InputHandler.instance.Movement.x != 0)
+            if(InputHandler.instance.Movement.x != 0 && obj.CanSlope)
             {
                 stateMachine.ChangeState(obj.runState);
             }
@@ -35,7 +40,7 @@ namespace Bang.StateMachine.PlayerMachine
         public override void PhysicsUpdate()
         {
             base.PhysicsUpdate();
-            obj.Run(1, true);
+            //obj.Run(1, true);
         }
     }
 }
