@@ -21,3 +21,5 @@ MonoBehaviour:
   stopPower: 1.191
   turnPower: 1.161
   maxSlopeAngle: 45
+  knockBackForce: {x: 0, y: 0}
+  attackSpeed: 5

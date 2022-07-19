@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-[CreateAssetMenu(fileName = "newModuleData", menuName = "Bang's Things/ScriptObjects/ModuleData")]
+[CreateAssetMenu(fileName = "newModuleData", menuName = "Bang's Things/ScriptObjects/ModuleData/ModuleData")]
 public class ModuleDataContainer : ScriptableObject
 {
     public List<ModuleDataContainer> moduleDatas = new List<ModuleDataContainer>();

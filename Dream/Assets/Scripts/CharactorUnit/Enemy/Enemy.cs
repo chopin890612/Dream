@@ -11,16 +11,22 @@ public class Enemy : MonoBehaviour
     public StateMachine<Enemy, EnemyData> stateMachine;
     public IdleState idleState;
     public RunState runState;
+    public ChaseState chaseState;
+    public AttackState attackState;
 
     [SerializeField] private EnemyData enemyData;
     #endregion
 
     #region State Parameters
     public bool CanSlope;
+    public bool seePlayer;
+    public bool playerInAttackRange;
+    public float attackTime;
     #endregion
 
     #region Component
     private Rigidbody _rb;
+    public GameObject attackCollision;
     #endregion
 
     #region Animations
@@ -35,6 +41,14 @@ public class Enemy : MonoBehaviour
     [SerializeField] private Vector3 _wallCheckSize;
     [SerializeField] private bool _onWall;
 
+    [SerializeField] private Transform _seeCheckPoint;
+    [SerializeField] private float _seeCheckSize;
+    [SerializeField] private float _seeCheckMaxDistance;
+    [SerializeField] private GameObject _seePlayerObject;
+
+    [SerializeField] private Transform _attackCheckPoint;
+    [SerializeField] private float _attackCheckSize;
+
     [SerializeField] private float _platformSlopeCheckLength;
     #endregion
 
@@ -42,11 +56,13 @@ public class Enemy : MonoBehaviour
     [Header("Layers & Tags")]
     [SerializeField] private LayerMask _groundLayer;
     [SerializeField] private LayerMask _wallLayer;
+    [SerializeField] private LayerMask _playeLayer;
     #endregion
 
     [SerializeField] private int faceDir = 1;
     private Vector2 _platformNormal;
     [SerializeField] private string currentState;
+    private float _seeDistance;
 
     #region Unity LifeCycles
     private void Awake()
@@ -54,25 +70,46 @@ public class Enemy : MonoBehaviour
         stateMachine = new StateMachine<Enemy, EnemyData>();
         idleState = new IdleState(this, stateMachine, enemyData);
         runState = new RunState(this, stateMachine, enemyData);
+        chaseState = new ChaseState(this, stateMachine, enemyData);
+        attackState = new AttackState(this, stateMachine, enemyData);
     }
     private void Start()
     {
         _rb = GetComponent<Rigidbody>();
         stateMachine.Initalize(runState);
+        attackCollision.SetActive(false);
     }
     private void Update()
     {
         stateMachine.currentState.LogicUpdate();
 
+        attackTime -= Time.deltaTime;
+
         #region CHECKS
+        //Chase Check
+        var objects = Physics.OverlapSphere(_seeCheckPoint.position, _seeCheckSize, _playeLayer);
+        if (objects.Length > 0)
+        {
+            _seePlayerObject = objects[0].transform.gameObject;
+            seePlayer = true;
+        }
+        else
+        {
+            _seePlayerObject = null;
+            seePlayer = false;
+        }
+
+        //AttackRange Check
+        playerInAttackRange = Physics.CheckSphere(_attackCheckPoint.position, _attackCheckSize, _playeLayer);
+
         //Ground Check
         _onGround = Physics.CheckSphere(_groundCheckPoint.position, _groundCheckSize, _groundLayer);
 
         //Wall Check
-        _onWall = Physics.CheckBox(_wallCheckPoint.position, _wallCheckSize, Quaternion.identity, _wallLayer);
+        _onWall = Physics.CheckBox(_wallCheckPoint.position, _wallCheckSize, Quaternion.identity, _groundLayer);
 
         //Platform Slope Check
-        Physics.Raycast(transform.position, Vector2.down, out RaycastHit hit, _platformSlopeCheckLength);
+        Physics.Raycast(transform.position, Vector2.down, out RaycastHit hit, _platformSlopeCheckLength, _groundLayer);
         _platformNormal = hit.normal;
         #endregion
 
@@ -97,6 +134,12 @@ public class Enemy : MonoBehaviour
 
         Gizmos.color = Color.cyan;
         Gizmos.DrawWireCube(_wallCheckPoint.position, _wallCheckSize * 2);
+
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(_seeCheckPoint.position, _seeCheckSize);
+
+        Gizmos.color = Color.white;
+        Gizmos.DrawWireSphere(_attackCheckPoint.position, _attackCheckSize);
     }
 
     private void Turn()
@@ -120,9 +163,9 @@ public class Enemy : MonoBehaviour
 
         _rb.AddForce(-force, ForceMode.Impulse); //applies force against movement direction
     }
-    public void Run(float lerpAmount, bool walkSlope)
+    public void Run(float lerpAmount, bool walkSlope, float multiple)
     {
-        float targetSpeed = enemyData.runMaxSpeed * faceDir;
+        float targetSpeed = enemyData.runMaxSpeed * faceDir * multiple;
         float speedDif = targetSpeed - _rb.velocity.x; //calculate difference between current velocity and desired velocity
 
         #region Acceleration Rate
@@ -158,8 +201,34 @@ public class Enemy : MonoBehaviour
         }
         _rb.AddForce(movement * moveDir); //applies force force to rigidbody, multiplying by Vector2.right so that it only affects X axis 
     }
+    public void Chase(float chaseSpeed)
+    {
+        if (_seePlayerObject == null)
+            return;
+        var playerSide = (int)Mathf.Sign((_seePlayerObject.transform.position - transform.position).x);
+        if (playerSide != faceDir)
+            Turn();
+        Run(1, true, chaseSpeed);
+    }
     #endregion
 
     #region CombatMethods
+    public void Attack()
+    {
+        StartCoroutine(AttackDelay());
+    }
+    private IEnumerator AttackDelay()
+    {
+        yield return new WaitForSeconds(1f);
+        attackCollision.SetActive(true);
+        yield return new WaitForSeconds(0.2f);
+        attackCollision.SetActive(false);
+        attackTime = enemyData.attackSpeed;
+        attackState.EndAttack();
+    }
+    public void KnockBack()
+    {
+
+    }
     #endregion
 }

@@ -4,6 +4,7 @@ using UnityEngine;
 using Bang.StateMachine;
 using Bang.StateMachine.PlayerMachine;
 using Spine.Unity;
+using UnityEngine.Events;
 
 
 
@@ -43,6 +44,7 @@ public class TestPlayer : MonoBehaviour
 
     #region Combat
     public GameObject attackCollision;
+    public Collider bodyCollider;
     public Collider touchedCollision;
     #endregion
 
@@ -61,6 +63,7 @@ public class TestPlayer : MonoBehaviour
     #region INPUT PARAMETERS
     public float LastPressedJumpTime { get; private set; }
     public float LastPressedDashTime { get; private set; }
+    public bool isPressJump;
     #endregion
 
     #region CHECK PARAMETERS
@@ -159,24 +162,43 @@ public class TestPlayer : MonoBehaviour
         //Ground Check
         if (IsPassingPlatform)
         {
-            if (Physics.CheckSphere(_groundCheckPoint.position, _groundCheckSize, _groundLayer)) //checks if set box overlaps with ground
+            if (Physics.CheckSphere(_groundCheckPoint.position, _groundCheckSize, _groundLayer))//checks if set box overlaps with ground
+            {
                 LastOnGroundTime = playerData.coyoteTime; //if so sets the lastGrounded to coyoteTime
+            }
         }
         else
         {
             if (Physics.CheckSphere(_groundCheckPoint.position, _groundCheckSize, _walkLayer)) //checks if set box overlaps with ground
+            {
                 LastOnGroundTime = playerData.coyoteTime; //if so sets the lastGrounded to coyoteTime
+            }
         }
 
-        //Right Wall Check
-        if ((Physics.CheckBox(_frontWallCheckPoint.position, _wallCheckSize, Quaternion.identity, _walkLayer) && IsFacingRight)
-                || (Physics.CheckBox(_backWallCheckPoint.position, _wallCheckSize, Quaternion.identity, _walkLayer) && !IsFacingRight))
-            LastOnWallRightTime = playerData.coyoteTime;
+        if (IsPassingPlatform)
+        {
+            //Right Wall Check
+            if ((Physics.CheckBox(_frontWallCheckPoint.position, _wallCheckSize, Quaternion.identity, _groundLayer) && IsFacingRight))
+                LastOnWallRightTime = playerData.coyoteTime;
 
-        //Left Wall Check
-        if ((Physics.CheckBox(_frontWallCheckPoint.position, _wallCheckSize, Quaternion.identity, _walkLayer) && !IsFacingRight)
-            || (Physics.CheckBox(_backWallCheckPoint.position, _wallCheckSize, Quaternion.identity, _walkLayer) && IsFacingRight))
-            LastOnWallLeftTime = playerData.coyoteTime;
+            //Left Wall Check
+            if (Physics.CheckBox(_backWallCheckPoint.position, _wallCheckSize, Quaternion.identity, _groundLayer) && !IsFacingRight)
+                LastOnWallLeftTime = playerData.coyoteTime;
+        }
+        else
+        {
+            //Right Wall Check
+            if ((Physics.CheckBox(_frontWallCheckPoint.position, _wallCheckSize, Quaternion.identity, _walkLayer) && IsFacingRight))
+                LastOnWallRightTime = playerData.coyoteTime;
+
+            //Left Wall Check
+            if (Physics.CheckBox(_backWallCheckPoint.position, _wallCheckSize, Quaternion.identity, _walkLayer) && !IsFacingRight)
+                LastOnWallLeftTime = playerData.coyoteTime;
+        }
+        
+        //if ((Physics.CheckBox(_frontWallCheckPoint.position, _wallCheckSize, Quaternion.identity, _walkLayer) && !IsFacingRight)
+        //    || (Physics.CheckBox(_backWallCheckPoint.position, _wallCheckSize, Quaternion.identity, _walkLayer) && IsFacingRight))
+        //    LastOnWallLeftTime = playerData.coyoteTime;
 
         LastOnWallTime = Mathf.Max(LastOnWallLeftTime, LastOnWallRightTime);
         //Two checks needed for both left and right walls since whenever the play turns the wall checkPoints swap sides
@@ -204,6 +226,8 @@ public class TestPlayer : MonoBehaviour
 
         Gizmos.color = Color.blue;
         Gizmos.DrawWireCube(_frontWallCheckPoint.position, _wallCheckSize * 2);
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireCube(_backWallCheckPoint.position, _wallCheckSize * 2);
 
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(_headCheckPoint.position, _headCheckSize);
@@ -233,7 +257,7 @@ public class TestPlayer : MonoBehaviour
         //scale.x *= -1;
         //transform.localScale = scale;
 
-        transform.Rotate(0, 180, 0);
+        spineRenderer.transform.Rotate(0, 180, 0);
 
         IsFacingRight = !IsFacingRight;
     }
@@ -251,11 +275,15 @@ public class TestPlayer : MonoBehaviour
     {
         gravityScale = scaleValue;
     }
-
+    public void ResetLastOnGroundTime()
+    {
+        LastOnGroundTime = 0;
+    }
     #region INPUT CALLBACKS
     //These functions are called when an even is triggered in my InputHandler. You could call these methods through a if(Input.GetKeyDown) in Update
     public void OnJump(InputHandler.InputArgs args)
     {
+        isPressJump = true;
         if (InputHandler.instance.Movement.y < -0.5f)
         {
             PassPlatform(0.5f);
@@ -266,6 +294,7 @@ public class TestPlayer : MonoBehaviour
 
     public void OnJumpUp(InputHandler.InputArgs args)
     {
+        isPressJump = false;
         if (jumpState.CanJumpCut())
             JumpCut();
     }
@@ -350,6 +379,8 @@ public class TestPlayer : MonoBehaviour
         LastPressedJumpTime = 0;
         LastOnGroundTime = 0;
 
+        _rb.velocity = Vector2.zero;
+
         #region Perform Jump
         float adjustedJumpForce = playerData.jumpForce;
         if (_rb.velocity.y < 0)
@@ -378,6 +409,13 @@ public class TestPlayer : MonoBehaviour
         _rb.AddForce(force, ForceMode.Impulse);
 
         SetGravityScale(0);
+        Physics.IgnoreLayerCollision(3, 9, true);
+        bodyCollider.enabled = false;
+    }
+    public void EndDash()
+    {
+        Physics.IgnoreLayerCollision(3, 9, false);
+        bodyCollider.enabled = true;
     }
     public void Slide()
     {

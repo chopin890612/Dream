@@ -24,7 +24,7 @@ namespace Bang.StateMachine
             currentState.ExitState();
             currentState = tartgetState;
             currentState.EnterState();
-            Debug.Log(currentState.ToString());
+            //Debug.Log(currentState.ToString());
         }
     }
 }

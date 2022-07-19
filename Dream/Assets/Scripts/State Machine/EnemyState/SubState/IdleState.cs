@@ -24,6 +24,9 @@ namespace Bang.StateMachine.EnemyMachine
         public override void LogicUpdate()
         {
             base.LogicUpdate();
+
+            if (Time.time - startTime > 5f)
+                stateMachine.ChangeState(obj.runState);
         }
 
         public override void PhysicsUpdate()

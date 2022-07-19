@@ -35,6 +35,7 @@ namespace Bang.StateMachine.PlayerMachine
             base.ExitState();
 
             obj.SetGravityScale(objData.gravityScale);
+            obj.EndDash();
         }
 
         public override void LogicUpdate()

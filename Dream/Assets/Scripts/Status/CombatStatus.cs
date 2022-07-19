@@ -21,4 +21,15 @@ public class CombatStatus
     {
         return currentHealth.ChangeValue(currentHealth.value - damage);
     }
+    public float Heal(float heal)
+    {
+        if(currentHealth.value + heal > maxHealth.value)
+        {
+            return currentHealth.ChangeValue(maxHealth.value);
+        }
+        else
+        {
+            return currentHealth.ChangeValue(currentHealth.value + heal);
+        }
+    }
 }

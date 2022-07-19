@@ -29,10 +29,10 @@ MonoBehaviour:
   turnPower: 1.13
   maxSlopeAngle: 45
   jumpAmount: 1
-  jumpForce: 20
+  jumpForce: 25
   jumpCutMultiplier: 0.5
   jumpBufferTime: 0.05
-  wallJumpForce: {x: 20, y: 15}
+  wallJumpForce: {x: 10, y: 15}
   wallJumpRunLerp: 0.3
   wallJumpTime: 0.35
   slideAccel: 9

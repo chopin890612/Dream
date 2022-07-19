@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "newEnemyData", menuName = "Bang's Things/ScriptObjects/EnemyData")]
+[CreateAssetMenu(fileName = "newEnemyData", menuName = "Bang's Things/ScriptObjects/StatusData/EnemyData")]
 public class EnemyData : ScriptableObject
 {
     [Header("Drag")]
@@ -17,4 +17,8 @@ public class EnemyData : ScriptableObject
     [Range(.5f, 2f)] public float stopPower;
     [Range(.5f, 2f)] public float turnPower;
     [Range(0f, 90f)] public float maxSlopeAngle;
+
+    [Header("Combat")]
+    public Vector2 knockBackForce;
+    public float attackSpeed;
 }

@@ -1,12 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using UnityEngine;
 
 namespace Bang.StateMachine.EnemyMachine
 {
-    public class RunState : GroundState
+    public class ChaseState : AbilityState
     {
-        public RunState(Enemy obj, StateMachine<Enemy, EnemyData> stateMachine, EnemyData objData) : base(obj, stateMachine, objData)
+        public ChaseState(Enemy obj, StateMachine<Enemy, EnemyData> stateMachine, EnemyData objData) : base(obj, stateMachine, objData)
         {
         }
 
@@ -23,15 +22,21 @@ namespace Bang.StateMachine.EnemyMachine
         public override void LogicUpdate()
         {
             base.LogicUpdate();
-
-            if (Time.time - startTime > 10f)
+            if (obj.playerInAttackRange && obj.attackTime < 0)
+            {
+                stateMachine.ChangeState(obj.attackState);
+            }
+            else if (!obj.seePlayer)
+            {
                 stateMachine.ChangeState(obj.idleState);
+            }
         }
 
         public override void PhysicsUpdate()
         {
             base.PhysicsUpdate();
-            obj.Run(1, true, 1f);
+
+            obj.Chase(1.5f);
         }
     }
 }

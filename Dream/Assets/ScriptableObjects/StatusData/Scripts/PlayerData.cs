@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-[CreateAssetMenu(fileName = "newPlayerData", menuName = "Bang's Things/ScriptObjects/PlayerData")]
+[CreateAssetMenu(fileName = "newPlayerData", menuName = "Bang's Things/ScriptObjects/StatusData/PlayerData")]
 public class PlayerData : ScriptableObject
 {
 	//PHYSICS

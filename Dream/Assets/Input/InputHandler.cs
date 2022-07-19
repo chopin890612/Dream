@@ -70,15 +70,16 @@ public class InputHandler : MonoBehaviour
 
     public void SetActionEnable(GameManager.GameState gameState)
     {
-        if (gameState == GameManager.GameState.GameView)
+        switch (gameState)
         {
-            playerAction.Enable();
-            UIAction.Disable();
-        }
-        else if(gameState == GameManager.GameState.GameMenu)
-        {
-            playerAction.Disable();
-            UIAction.Enable();
+            case GameManager.GameState.GameView:
+                playerAction.Enable();
+                UIAction.Disable();
+                break;
+            case GameManager.GameState.GameMenu:
+                playerAction.Disable();
+                UIAction.Enable();
+                break;
         }
     }
 }

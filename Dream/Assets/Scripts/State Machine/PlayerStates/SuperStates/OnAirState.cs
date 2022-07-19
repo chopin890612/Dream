@@ -37,11 +37,7 @@ namespace Bang.StateMachine.PlayerMachine
             else if (obj.LastPressedJumpTime > 0 && obj.jumpState.CanJump())
             {
                 stateMachine.ChangeState(obj.jumpState);
-            }
-            else if(obj.LastOnGroundTime > 0)
-            {
-                stateMachine.ChangeState(obj.idleState);
-            }
+            }            
             else if (obj.LastPressedJumpTime > 0 && obj.LastOnWallTime > 0)
             {
                 stateMachine.ChangeState(obj.wallJumpState);
@@ -49,6 +45,10 @@ namespace Bang.StateMachine.PlayerMachine
             else if ((obj.LastOnWallLeftTime > 0 && InputHandler.instance.Movement.x < 0) || (obj.LastOnWallRightTime > 0 && InputHandler.instance.Movement.x > 0))
             {
                 stateMachine.ChangeState(obj.wallSlideState);
+            }
+            else if (obj.LastOnGroundTime > 0)
+            {
+                stateMachine.ChangeState(obj.idleState);                
             }
             else if (obj._rb.velocity.y < 0)
             {

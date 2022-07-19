@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "newGridData", menuName = "Bang's Things/ScriptObjects/GridData")]
+[CreateAssetMenu(fileName = "newGridData", menuName = "Bang's Things/ScriptObjects/ModuleData/GridData")]
 public class GridData : ScriptableObject
 {
     public Vector2Int tileSize;
