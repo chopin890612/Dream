@@ -18,6 +18,7 @@ public class TestPlayer : MonoBehaviour
     public JumpState jumpState { get; private set; }
     public OnAirState onAirState { get; private set; }
     public DashState dashState { get; private set; }
+    public WallIdleState wallIdleState { get; private set; }
     public WallSlideState wallSlideState { get; private set; }
     public WallJumpState wallJumpState { get; private set; }
     public AttackState attackState { get; private set; }
@@ -63,6 +64,7 @@ public class TestPlayer : MonoBehaviour
     public float LastOnWallRightTime { get; private set; }
     public float LastOnWallLeftTime { get; private set; }
     public float LastAttackTime { get; private set; }
+    public float AttackCooldown { get; private set; }
     public float LastKnockBackTime { get; private set; }
     public float AttackResetTime { get; private set; }
     public bool CanSlope { get; private set; }
@@ -121,6 +123,7 @@ public class TestPlayer : MonoBehaviour
         jumpState = new JumpState(this, stateMachine, playerData);
         onAirState = new OnAirState(this, stateMachine, playerData);
         dashState = new DashState(this, stateMachine, playerData);
+        wallIdleState = new WallIdleState(this, stateMachine, playerData);
         wallSlideState = new WallSlideState(this, stateMachine, playerData);
         wallJumpState = new WallJumpState(this, stateMachine, playerData);
         attackState = new AttackState(this, stateMachine, playerData);
@@ -163,6 +166,7 @@ public class TestPlayer : MonoBehaviour
         LastAttackTime -= Time.deltaTime;
         LastKnockBackTime -= Time.deltaTime;
 
+        AttackCooldown -= Time.deltaTime;
         AttackResetTime -= Time.deltaTime;
         if (AttackResetTime < 0)
             ResetAttackCount();
@@ -462,7 +466,8 @@ public class TestPlayer : MonoBehaviour
         LastOnWallLeftTime = 0;
 
         #region Perform Wall Jump
-        Vector2 force = new Vector2(playerData.wallJumpForce.x, playerData.wallJumpForce.y);
+        var yDiff = playerData.wallJumpForce.y - _rb.velocity.y;
+        Vector2 force = new Vector2(playerData.wallJumpForce.x, yDiff);
         force.x *= dir; //apply force in opposite direction of wall
 
         if (Mathf.Sign(_rb.velocity.x) != Mathf.Sign(force.x))
@@ -483,6 +488,7 @@ public class TestPlayer : MonoBehaviour
         SetGravityScale(0);
         _rb.AddForce(new Vector2(0, -_rb.velocity.y), ForceMode.Impulse);
         attackCount++;
+        ResetAttackCooldown();
 
         if (attackCount > playerData.maxAttackCount-1)
             ResetAttackCount();
@@ -495,6 +501,10 @@ public class TestPlayer : MonoBehaviour
     {
         SetGravityScale(playerData.fallGravityMult);
         attackState.IsAttackEnd();
+    }
+    private void ResetAttackCooldown()
+    {
+        AttackCooldown = playerData.attackCooldown;
     }
     public void AttackAnimationHandler(Spine.TrackEntry trackEntry, Spine.Event e)
     {

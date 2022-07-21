@@ -30,7 +30,7 @@ namespace Bang.StateMachine.PlayerMachine
         {
             base.LogicUpdate();
 
-            if(obj.LastAttackTime > 0)
+            if(obj.LastAttackTime > 0 && obj.AttackCooldown < 0)
             {
                 stateMachine.ChangeState(obj.attackState);
             }
@@ -49,7 +49,7 @@ namespace Bang.StateMachine.PlayerMachine
             }
             else if (((obj.LastOnWallLeftTime > 0 && InputHandler.instance.Movement.x < 0) || (obj.LastOnWallRightTime > 0 && InputHandler.instance.Movement.x > 0)) && InputHandler.instance.Movement.y != 0)
             {
-                stateMachine.ChangeState(obj.wallSlideState);
+                stateMachine.ChangeState(obj.wallIdleState);
             }
             else if (!obj.CanSlope)
             {

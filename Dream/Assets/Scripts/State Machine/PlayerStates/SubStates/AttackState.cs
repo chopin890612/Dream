@@ -19,11 +19,9 @@ namespace Bang.StateMachine.PlayerMachine
             {
                 case 0:
                     obj.animator.Play("attack0", 0);
-                    Debug.Log("Attack0");
                     break;
                 case 1:
                     obj.animator.Play("attack1", 0);
-                    Debug.Log("Attack1");
                     break;
             }
 

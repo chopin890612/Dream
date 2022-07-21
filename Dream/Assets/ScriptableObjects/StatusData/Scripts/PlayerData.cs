@@ -77,6 +77,7 @@ public class PlayerData : ScriptableObject
 	[Range(0.1f, 2f)]public float knockBackTime;
 	[Range(0, 0.5f)] public float invincibleTime;
 	[Range(0, 0.5f)] public float attackBufferTime;
+	[Range(0, 5f)] public float attackCooldown;
 	public int maxAttackCount;
 	[Range(0, 1f)] public float attackResetTime;
 	public float attackDragAmount;

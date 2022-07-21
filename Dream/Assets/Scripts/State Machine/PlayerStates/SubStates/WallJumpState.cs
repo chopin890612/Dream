@@ -18,6 +18,7 @@ namespace Bang.StateMachine.PlayerMachine
             jumpDir = obj.LastOnWallRightTime > 0 ? -1 : 1;
             obj.WallJump(jumpDir);
             obj.skeletonAnimation.AnimationState.SetAnimation(0, obj.jump, false);
+            obj.animator.Play("Jump", 0);
         }
 
         public override void ExitState()

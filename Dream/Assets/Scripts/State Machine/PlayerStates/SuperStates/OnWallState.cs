@@ -25,15 +25,15 @@ namespace Bang.StateMachine.PlayerMachine
 
             if (obj.LastPressedDashTime > 0 && obj.dashState.CanDash())
             {
-                obj.stateMachine.ChangeState(obj.dashState);
+                stateMachine.ChangeState(obj.dashState);
             }
             else if (obj.LastOnGroundTime > 0 && InputHandler.instance.Movement.x == 0)
             {
-                obj.stateMachine.ChangeState(obj.idleState);
+                stateMachine.ChangeState(obj.idleState);
             }
             else if (obj.LastOnWallTime <= 0)
             {
-                obj.stateMachine.ChangeState(obj.onAirState);
+                stateMachine.ChangeState(obj.onAirState);
             }
         }
 

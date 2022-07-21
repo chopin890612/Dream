@@ -18,6 +18,7 @@ namespace Bang.StateMachine.PlayerMachine
             Jumped();
             obj.Jump();
             obj.skeletonAnimation.AnimationState.SetAnimation(0, obj.jump, false);
+            obj.animator.Play("Jump", 0);
         }
 
         public override void ExitState()
@@ -29,7 +30,7 @@ namespace Bang.StateMachine.PlayerMachine
         {
             base.LogicUpdate();
 
-            if (obj.LastAttackTime > 0)
+            if (obj.LastAttackTime > 0 && obj.AttackCooldown < 0)
             {
                 stateMachine.ChangeState(obj.attackState);
             }

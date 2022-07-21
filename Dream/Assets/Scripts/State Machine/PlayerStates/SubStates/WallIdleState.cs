@@ -1,12 +1,11 @@
 ﻿using System.Collections;
 using UnityEngine;
-using Bang.StateMachine;
 
 namespace Bang.StateMachine.PlayerMachine
 {
-    public class WallSlideState : OnWallState
+    public class WallIdleState : OnWallState
     {
-        public WallSlideState(TestPlayer obj, StateMachine<TestPlayer, PlayerData> stateMachine, PlayerData objData) : base(obj, stateMachine, objData)
+        public WallIdleState(TestPlayer obj, StateMachine<TestPlayer, PlayerData> stateMachine, PlayerData objData) : base(obj, stateMachine, objData)
         {
         }
 
@@ -14,7 +13,7 @@ namespace Bang.StateMachine.PlayerMachine
         {
             base.EnterState();
             obj.SetGravityScale(0);
-            obj.animator.Play("WallClimb", 0);
+            obj.animator.Play("WallIdle", 0);
         }
 
         public override void ExitState()
@@ -31,9 +30,9 @@ namespace Bang.StateMachine.PlayerMachine
             {
                 stateMachine.ChangeState(obj.wallJumpState);
             }
-            else if (InputHandler.instance.Movement.y == 0)
+            else if (InputHandler.instance.Movement.y != 0)
             {
-                stateMachine.ChangeState(obj.wallIdleState);
+                stateMachine.ChangeState(obj.wallSlideState);
             }
             else if ((obj.LastOnWallLeftTime > 0 && InputHandler.instance.Movement.x >= 0) || (obj.LastOnWallRightTime > 0 && InputHandler.instance.Movement.x <= 0))
             {
@@ -44,9 +43,6 @@ namespace Bang.StateMachine.PlayerMachine
         public override void PhysicsUpdate()
         {
             base.PhysicsUpdate();
-
-            //obj.Drag(objData.dragAmount);
-            //obj.Slide();
             obj.Climb();
         }
     }

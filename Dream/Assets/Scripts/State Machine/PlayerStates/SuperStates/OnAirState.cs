@@ -13,6 +13,7 @@ namespace Bang.StateMachine.PlayerMachine
         public override void EnterState()
         {
             base.EnterState();
+            obj.animator.Play("Fall", 0);
         }
 
         public override void ExitState()
@@ -26,7 +27,7 @@ namespace Bang.StateMachine.PlayerMachine
         {
             base.LogicUpdate();
 
-            if (obj.LastAttackTime > 0)
+            if (obj.LastAttackTime > 0 && obj.AttackCooldown < 0)
             {
                 stateMachine.ChangeState(obj.attackState);
             }
@@ -44,7 +45,7 @@ namespace Bang.StateMachine.PlayerMachine
             }
             else if ((obj.LastOnWallLeftTime > 0 && InputHandler.instance.Movement.x < 0) || (obj.LastOnWallRightTime > 0 && InputHandler.instance.Movement.x > 0))
             {
-                stateMachine.ChangeState(obj.wallSlideState);
+                stateMachine.ChangeState(obj.wallIdleState);
             }
             else if (obj.LastOnGroundTime > 0)
             {
