@@ -16,6 +16,10 @@ public class DialogueContext
     [Range(0,1)]public int charSide; // 0 在左邊, 1在右邊
     public string charName;
 
+    public bool IsSelect;
+    [TextArea]
+    public List<string> selects = new List<string>();
+
     [TextArea]
     public List<string> sentence = new List<string>();
 }

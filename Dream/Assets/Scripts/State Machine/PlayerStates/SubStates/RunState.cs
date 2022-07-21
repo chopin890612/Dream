@@ -15,7 +15,8 @@ namespace Bang.StateMachine.PlayerMachine
         public override void EnterState()
         {
             base.EnterState();
-            obj.skeletonAnimation.AnimationState.SetAnimation(0, obj.walk, true);           
+            obj.skeletonAnimation.AnimationState.SetAnimation(0, obj.walk, true);
+            obj.animator.Play("run", 0);
         }
 
         public override void ExitState()

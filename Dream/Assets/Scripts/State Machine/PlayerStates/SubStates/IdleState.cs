@@ -15,6 +15,7 @@ namespace Bang.StateMachine.PlayerMachine
         {
             base.EnterState();
             obj.skeletonAnimation.AnimationState.SetAnimation(0, obj.idle, true);
+            obj.animator.Play("idle", 0);
             if (obj.CanSlope)
                 obj.GetComponent<CapsuleCollider>().material = obj.infFrction;
             else

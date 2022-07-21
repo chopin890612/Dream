@@ -33,6 +33,13 @@ public class GameManager : MonoBehaviour
     {
         
     }
+
+    public void ChangeGameState(GameState state)
+    {
+        this.gameState = state;
+        InputHandler.instance.SetActionEnable(gameState);
+    }
+
     public void DoForSeconds(System.Action action ,float seconds)
     {
         StartCoroutine(WaitCoroutin(action, seconds));

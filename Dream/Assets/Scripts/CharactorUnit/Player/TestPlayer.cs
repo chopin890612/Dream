@@ -35,17 +35,25 @@ public class TestPlayer : MonoBehaviour
     #endregion
 
     #region Animations
-    [Header("Animations")]
+    [Header("Spine Animations")]
     public GameObject spineRenderer;
     public SkeletonAnimation skeletonAnimation;
     public AnimationReferenceAsset idle, walk, jump, fall, attack;
     public EventDataReferenceAsset startCollision, endCollision, endAttack;
+    [Space(5)]
+    [Header("Animator")]
+    public GameObject spriteRenderer;
+    public Animator animator;
     #endregion
 
     #region Combat
+    [Header("Combat")]
     public GameObject attackCollision;
+    public GameObject spriteAttackCollision;
     public Collider bodyCollider;
     public Collider touchedCollision;
+
+    public int attackCount = 0;
     #endregion
 
     #region STATE PARAMETERS
@@ -56,6 +64,7 @@ public class TestPlayer : MonoBehaviour
     public float LastOnWallLeftTime { get; private set; }
     public float LastAttackTime { get; private set; }
     public float LastKnockBackTime { get; private set; }
+    public float AttackResetTime { get; private set; }
     public bool CanSlope { get; private set; }
     public bool IsPassingPlatform { get; private set; }
     #endregion
@@ -120,6 +129,7 @@ public class TestPlayer : MonoBehaviour
         _rb = GetComponent<Rigidbody>();
         skeletonAnimation = spineRenderer.GetComponent<SkeletonAnimation>();
         skeletonAnimation.AnimationState.Event += AttackAnimationHandler;
+        animator = spriteRenderer.GetComponent<Animator>();
 
         combatSystem.hurtEvent.AddListener(Hurt);
     }
@@ -152,6 +162,11 @@ public class TestPlayer : MonoBehaviour
         LastPressedDashTime -= Time.deltaTime;
         LastAttackTime -= Time.deltaTime;
         LastKnockBackTime -= Time.deltaTime;
+
+        AttackResetTime -= Time.deltaTime;
+        if (AttackResetTime < 0)
+            ResetAttackCount();
+        
 
         //Head Check
         if(Physics.CheckSphere(_headCheckPoint.position, _headCheckSize, _canPassPlatform))
@@ -258,6 +273,7 @@ public class TestPlayer : MonoBehaviour
         //transform.localScale = scale;
 
         spineRenderer.transform.Rotate(0, 180, 0);
+        spriteRenderer.transform.Rotate(0, 180, 0);
 
         IsFacingRight = !IsFacingRight;
     }
@@ -306,6 +322,7 @@ public class TestPlayer : MonoBehaviour
     public void OnAttack(InputHandler.InputArgs args)
     {
         LastAttackTime = playerData.attackBufferTime;
+        AttackResetTime = playerData.attackResetTime;
     }
     #endregion
 
@@ -465,6 +482,19 @@ public class TestPlayer : MonoBehaviour
         //_rb.velocity = Vector2.zero;
         SetGravityScale(0);
         _rb.AddForce(new Vector2(0, -_rb.velocity.y), ForceMode.Impulse);
+        attackCount++;
+
+        if (attackCount > playerData.maxAttackCount-1)
+            ResetAttackCount();
+    }
+    public void ResetAttackCount()
+    {
+        attackCount = 0;
+    }
+    public void EndAttack()
+    {
+        SetGravityScale(playerData.fallGravityMult);
+        attackState.IsAttackEnd();
     }
     public void AttackAnimationHandler(Spine.TrackEntry trackEntry, Spine.Event e)
     {
@@ -478,8 +508,7 @@ public class TestPlayer : MonoBehaviour
         }
         else if(e.Data == endAttack.EventData)
         {
-            SetGravityScale(playerData.fallGravityMult);
-            attackState.IsAttackEnd();
+            EndAttack();
         }
     }
     public void KnockBack(float forceScale)

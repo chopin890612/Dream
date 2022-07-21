@@ -50,6 +50,8 @@ MonoBehaviour:
   knockBackTime: 0.2
   invincibleTime: 0.1
   attackBufferTime: 0.1
+  maxAttackCount: 2
+  attackResetTime: 0.5
   attackDragAmount: 0.5
   doKeepRunMomentum: 0
   doTurnOnWallJump: 0

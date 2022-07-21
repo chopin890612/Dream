@@ -6,6 +6,7 @@ using Spine.Unity;
 public class AttackCollision : MonoBehaviour
 {
     public SkeletonAnimation sA;
+    public Animator animator;
     public CombatData combatData;
 
     public CombatStatus data { get; private set; }
@@ -17,10 +18,18 @@ public class AttackCollision : MonoBehaviour
     {
         if (other.CompareTag("Body"))
         {
-            if (sA != null)
+            if (other.gameObject.GetComponent<CombatSystem>().data.attackOwner.value != data.attackOwner.value)
             {
-                sA.timeScale = 0;
-                GameManager.instance.DoForSeconds(() => sA.timeScale = 1, 0.1f);
+                if (sA != null)
+                {
+                    sA.timeScale = 0;
+                    GameManager.instance.DoForSeconds(() => sA.timeScale = 1, 0.1f);
+                }
+                if (animator != null)
+                {
+                    animator.speed = 0;
+                    GameManager.instance.DoForSeconds(() => animator.speed = 1, 0.1f);
+                }
             }
         }
     }

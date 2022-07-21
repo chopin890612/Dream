@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dragAmount: 0.22
   frictionAmount: 0.55
-  runMaxSpeed: 5
+  runMaxSpeed: 3
   runAccel: 9.3
   runDeccel: 25
   accelPower: 1.146
