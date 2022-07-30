@@ -445,6 +445,42 @@ public partial class @InputMaster : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""UpPress"",
+                    ""type"": ""Button"",
+                    ""id"": ""fc9fb95c-cb1d-4ae8-aa7f-2d9cd4e860fe"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Press"",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""DownPress"",
+                    ""type"": ""Button"",
+                    ""id"": ""145e798f-5cd1-40b5-9da4-8ac9565f4f01"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Press"",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""LeftPress"",
+                    ""type"": ""Button"",
+                    ""id"": ""12c76aeb-6b29-4cf9-a746-6944ae5b6dc0"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Press"",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""RightPress"",
+                    ""type"": ""Button"",
+                    ""id"": ""e9ab36a7-ab92-473d-9f6e-363b20bda49a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Press"",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -579,6 +615,138 @@ public partial class @InputMaster : IInputActionCollection2, IDisposable
                     ""action"": ""Rotate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bd99896c-e692-4071-903d-5104c557edc2"",
+                    ""path"": ""<Gamepad>/leftStick/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""UpPress"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e1c86857-0d20-4e47-a33f-d25bb9a0e55c"",
+                    ""path"": ""<Gamepad>/dpad/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""UpPress"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0b2495b7-7bd3-4953-988a-24fc04a64304"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""UpPress"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""dd9be1da-321e-4660-84e3-030b5fc319a2"",
+                    ""path"": ""<Gamepad>/leftStick/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""DownPress"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""290bae39-5a4d-47c8-bb1e-bc6ed7fb6a5e"",
+                    ""path"": ""<Gamepad>/dpad/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""DownPress"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""037ed31a-e747-4a63-8aeb-52faa67a511e"",
+                    ""path"": ""<Keyboard>/downArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""DownPress"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bbd20412-e94e-416a-b9d8-ccdabea38990"",
+                    ""path"": ""<Gamepad>/leftStick/left"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""LeftPress"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""04085034-8ebe-4a77-b6ef-c40a18bde78b"",
+                    ""path"": ""<Gamepad>/dpad/left"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""LeftPress"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d4e9a2c7-e222-4152-8e70-4c0f9e12e4ff"",
+                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""LeftPress"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2aa8d946-d3bc-49dd-8162-2ef2efbc488e"",
+                    ""path"": ""<Gamepad>/leftStick/right"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""RightPress"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1bdfdf65-43b2-4046-8ab9-599e71146aea"",
+                    ""path"": ""<Gamepad>/dpad/right"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""RightPress"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e3066bd0-c78e-403c-8f5b-16c8ec0b14bd"",
+                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""RightPress"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -615,6 +783,10 @@ public partial class @InputMaster : IInputActionCollection2, IDisposable
         m_PlantModule_Confirm = m_PlantModule.FindAction("Confirm", throwIfNotFound: true);
         m_PlantModule_Cancle = m_PlantModule.FindAction("Cancle", throwIfNotFound: true);
         m_PlantModule_Rotate = m_PlantModule.FindAction("Rotate", throwIfNotFound: true);
+        m_PlantModule_UpPress = m_PlantModule.FindAction("UpPress", throwIfNotFound: true);
+        m_PlantModule_DownPress = m_PlantModule.FindAction("DownPress", throwIfNotFound: true);
+        m_PlantModule_LeftPress = m_PlantModule.FindAction("LeftPress", throwIfNotFound: true);
+        m_PlantModule_RightPress = m_PlantModule.FindAction("RightPress", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -800,6 +972,10 @@ public partial class @InputMaster : IInputActionCollection2, IDisposable
     private readonly InputAction m_PlantModule_Confirm;
     private readonly InputAction m_PlantModule_Cancle;
     private readonly InputAction m_PlantModule_Rotate;
+    private readonly InputAction m_PlantModule_UpPress;
+    private readonly InputAction m_PlantModule_DownPress;
+    private readonly InputAction m_PlantModule_LeftPress;
+    private readonly InputAction m_PlantModule_RightPress;
     public struct PlantModuleActions
     {
         private @InputMaster m_Wrapper;
@@ -808,6 +984,10 @@ public partial class @InputMaster : IInputActionCollection2, IDisposable
         public InputAction @Confirm => m_Wrapper.m_PlantModule_Confirm;
         public InputAction @Cancle => m_Wrapper.m_PlantModule_Cancle;
         public InputAction @Rotate => m_Wrapper.m_PlantModule_Rotate;
+        public InputAction @UpPress => m_Wrapper.m_PlantModule_UpPress;
+        public InputAction @DownPress => m_Wrapper.m_PlantModule_DownPress;
+        public InputAction @LeftPress => m_Wrapper.m_PlantModule_LeftPress;
+        public InputAction @RightPress => m_Wrapper.m_PlantModule_RightPress;
         public InputActionMap Get() { return m_Wrapper.m_PlantModule; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -829,6 +1009,18 @@ public partial class @InputMaster : IInputActionCollection2, IDisposable
                 @Rotate.started -= m_Wrapper.m_PlantModuleActionsCallbackInterface.OnRotate;
                 @Rotate.performed -= m_Wrapper.m_PlantModuleActionsCallbackInterface.OnRotate;
                 @Rotate.canceled -= m_Wrapper.m_PlantModuleActionsCallbackInterface.OnRotate;
+                @UpPress.started -= m_Wrapper.m_PlantModuleActionsCallbackInterface.OnUpPress;
+                @UpPress.performed -= m_Wrapper.m_PlantModuleActionsCallbackInterface.OnUpPress;
+                @UpPress.canceled -= m_Wrapper.m_PlantModuleActionsCallbackInterface.OnUpPress;
+                @DownPress.started -= m_Wrapper.m_PlantModuleActionsCallbackInterface.OnDownPress;
+                @DownPress.performed -= m_Wrapper.m_PlantModuleActionsCallbackInterface.OnDownPress;
+                @DownPress.canceled -= m_Wrapper.m_PlantModuleActionsCallbackInterface.OnDownPress;
+                @LeftPress.started -= m_Wrapper.m_PlantModuleActionsCallbackInterface.OnLeftPress;
+                @LeftPress.performed -= m_Wrapper.m_PlantModuleActionsCallbackInterface.OnLeftPress;
+                @LeftPress.canceled -= m_Wrapper.m_PlantModuleActionsCallbackInterface.OnLeftPress;
+                @RightPress.started -= m_Wrapper.m_PlantModuleActionsCallbackInterface.OnRightPress;
+                @RightPress.performed -= m_Wrapper.m_PlantModuleActionsCallbackInterface.OnRightPress;
+                @RightPress.canceled -= m_Wrapper.m_PlantModuleActionsCallbackInterface.OnRightPress;
             }
             m_Wrapper.m_PlantModuleActionsCallbackInterface = instance;
             if (instance != null)
@@ -845,6 +1037,18 @@ public partial class @InputMaster : IInputActionCollection2, IDisposable
                 @Rotate.started += instance.OnRotate;
                 @Rotate.performed += instance.OnRotate;
                 @Rotate.canceled += instance.OnRotate;
+                @UpPress.started += instance.OnUpPress;
+                @UpPress.performed += instance.OnUpPress;
+                @UpPress.canceled += instance.OnUpPress;
+                @DownPress.started += instance.OnDownPress;
+                @DownPress.performed += instance.OnDownPress;
+                @DownPress.canceled += instance.OnDownPress;
+                @LeftPress.started += instance.OnLeftPress;
+                @LeftPress.performed += instance.OnLeftPress;
+                @LeftPress.canceled += instance.OnLeftPress;
+                @RightPress.started += instance.OnRightPress;
+                @RightPress.performed += instance.OnRightPress;
+                @RightPress.canceled += instance.OnRightPress;
             }
         }
     }
@@ -888,5 +1092,9 @@ public partial class @InputMaster : IInputActionCollection2, IDisposable
         void OnConfirm(InputAction.CallbackContext context);
         void OnCancle(InputAction.CallbackContext context);
         void OnRotate(InputAction.CallbackContext context);
+        void OnUpPress(InputAction.CallbackContext context);
+        void OnDownPress(InputAction.CallbackContext context);
+        void OnLeftPress(InputAction.CallbackContext context);
+        void OnRightPress(InputAction.CallbackContext context);
     }
 }

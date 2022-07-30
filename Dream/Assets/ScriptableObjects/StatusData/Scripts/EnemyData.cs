@@ -20,5 +20,7 @@ public class EnemyData : ScriptableObject
 
     [Header("Combat")]
     public Vector2 knockBackForce;
+    public float knockBackTime;
     public float attackSpeed;
+    public float abilityCooldown;
 }

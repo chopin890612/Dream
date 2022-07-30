@@ -25,7 +25,7 @@ namespace Bang.StateMachine.EnemyMachine
         {
             base.LogicUpdate();
 
-            if (Time.time - startTime > 5f)
+            if (Time.time - startTime > 2f)
                 stateMachine.ChangeState(obj.runState);
         }
 

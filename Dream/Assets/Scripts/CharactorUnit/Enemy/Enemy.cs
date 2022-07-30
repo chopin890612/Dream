@@ -13,6 +13,8 @@ public class Enemy : MonoBehaviour
     public RunState runState;
     public ChaseState chaseState;
     public AttackState attackState;
+    public KnockBackState knockBackState;
+    public DashAttack dashAttackState;
 
     [SerializeField] private EnemyData enemyData;
     #endregion
@@ -21,33 +23,44 @@ public class Enemy : MonoBehaviour
     public bool CanSlope;
     public bool seePlayer;
     public bool playerInAttackRange;
+    public bool playerInFarRange;
     public float attackTime;
+    public float abilityCooldown;
+    public float knockBackTime;
     #endregion
 
     #region Component
     private Rigidbody _rb;
     public GameObject attackCollision;
+    public CombatController combatSystem;
+    public Animator animator;
     #endregion
 
     #region Animations
     #endregion
 
+    #region Combat
+    public Collider touchedCollision;
+    #endregion
+
     #region CHECKS PARAMETERS
     [SerializeField] private Transform _groundCheckPoint;
     [SerializeField] private float _groundCheckSize;
-    [SerializeField] private bool _onGround;
+    [SerializeField] public bool onGround;
 
     [SerializeField] private Transform _wallCheckPoint;
     [SerializeField] private Vector3 _wallCheckSize;
-    [SerializeField] private bool _onWall;
+    [SerializeField] public bool onWall;
 
     [SerializeField] private Transform _seeCheckPoint;
     [SerializeField] private float _seeCheckSize;
-    [SerializeField] private float _seeCheckMaxDistance;
     [SerializeField] private GameObject _seePlayerObject;
 
     [SerializeField] private Transform _attackCheckPoint;
     [SerializeField] private float _attackCheckSize;
+
+    [SerializeField] private Transform _attackCheckPoint2;
+    [SerializeField] private float _attackCheckSize2;
 
     [SerializeField] private float _platformSlopeCheckLength;
     #endregion
@@ -72,20 +85,26 @@ public class Enemy : MonoBehaviour
         runState = new RunState(this, stateMachine, enemyData);
         chaseState = new ChaseState(this, stateMachine, enemyData);
         attackState = new AttackState(this, stateMachine, enemyData);
+        knockBackState = new KnockBackState(this, stateMachine, enemyData);
+        dashAttackState = new DashAttack(this, stateMachine, enemyData);
     }
     private void Start()
     {
         _rb = GetComponent<Rigidbody>();
         stateMachine.Initalize(runState);
         attackCollision.SetActive(false);
+        //combatSystem.hurtEvent.AddListener(Hurt);
+        combatSystem.superArmorBreakEvent.AddListener(Hurt);
     }
     private void Update()
     {
         stateMachine.currentState.LogicUpdate();
 
-        attackTime -= Time.deltaTime;
-
         #region CHECKS
+        attackTime -= Time.deltaTime;
+        knockBackTime -= Time.deltaTime;
+        abilityCooldown -= Time.deltaTime;
+
         //Chase Check
         var objects = Physics.OverlapSphere(_seeCheckPoint.position, _seeCheckSize, _playeLayer);
         if (objects.Length > 0)
@@ -101,19 +120,20 @@ public class Enemy : MonoBehaviour
 
         //AttackRange Check
         playerInAttackRange = Physics.CheckSphere(_attackCheckPoint.position, _attackCheckSize, _playeLayer);
+        playerInFarRange = Physics.CheckSphere(_attackCheckPoint2.position, _attackCheckSize2, _playeLayer);
 
         //Ground Check
-        _onGround = Physics.CheckSphere(_groundCheckPoint.position, _groundCheckSize, _groundLayer);
+        onGround = Physics.CheckSphere(_groundCheckPoint.position, _groundCheckSize, _groundLayer);
 
         //Wall Check
-        _onWall = Physics.CheckBox(_wallCheckPoint.position, _wallCheckSize, Quaternion.identity, _groundLayer);
+        onWall = Physics.CheckBox(_wallCheckPoint.position, _wallCheckSize, Quaternion.identity, _groundLayer);
 
         //Platform Slope Check
         Physics.Raycast(transform.position, Vector2.down, out RaycastHit hit, _platformSlopeCheckLength, _groundLayer);
         _platformNormal = hit.normal;
         #endregion
 
-        if(_onGround == false || _onWall == true || CanSlope == false)
+        if((onGround == false || onWall == true || CanSlope == false) && stateMachine.currentState == runState)
         {
             Turn();
         }
@@ -140,6 +160,8 @@ public class Enemy : MonoBehaviour
 
         Gizmos.color = Color.white;
         Gizmos.DrawWireSphere(_attackCheckPoint.position, _attackCheckSize);
+        Gizmos.color = Color.white;
+        Gizmos.DrawWireSphere(_attackCheckPoint2.position, _attackCheckSize2);
     }
 
     private void Turn()
@@ -215,7 +237,21 @@ public class Enemy : MonoBehaviour
     #region CombatMethods
     public void Attack()
     {
-        StartCoroutine(AttackDelay());
+        //StartCoroutine(AttackDelay());
+        attackTime = enemyData.attackSpeed;
+    }
+    public void EndAttack()
+    {
+        if(stateMachine.currentState == attackState)
+            attackState.EndAttack();
+        else if(stateMachine.currentState == dashAttackState)
+            dashAttackState.EndAttack();
+    }
+    public void DashAttack()
+    {
+        abilityCooldown = enemyData.abilityCooldown;
+        attackTime = enemyData.attackSpeed;
+        GameManager.instance.DoForSeconds(() => _rb.AddForce(new Vector2(20, 0) * faceDir, ForceMode.Impulse), 0.25f) ;
     }
     private IEnumerator AttackDelay()
     {
@@ -226,9 +262,17 @@ public class Enemy : MonoBehaviour
         attackTime = enemyData.attackSpeed;
         attackState.EndAttack();
     }
-    public void KnockBack()
+    public void KnockBack(float forceScale)
     {
-
+        _rb.velocity = Vector3.zero;
+        Vector3 force = new Vector3(enemyData.knockBackForce.x, enemyData.knockBackForce.y);
+        force.x *= -1f * Mathf.Sign(touchedCollision.GetComponent<AttackCollision>().owner.transform.position.x - transform.position.x);
+        _rb.AddForce(force * forceScale, ForceMode.Impulse);
+    }
+    public void Hurt(Collider collider)
+    {
+        touchedCollision = collider;
+        knockBackTime = enemyData.knockBackTime;
     }
     #endregion
 }

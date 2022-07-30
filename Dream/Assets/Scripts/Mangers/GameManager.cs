@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
     private PlayerIndex playerIndex = PlayerIndex.One;
     public static GameManager instance;
     public GameState gameState;
+    public TestPlayer player;
 
     public enum GameState
     {
@@ -26,6 +27,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         InputHandler.instance.SetActionEnable(gameState);
+        player = FindObjectOfType<TestPlayer>();
     }
 
     // Update is called once per frame

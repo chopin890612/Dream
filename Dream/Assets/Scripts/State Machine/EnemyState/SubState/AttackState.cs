@@ -5,7 +5,7 @@ namespace Bang.StateMachine.EnemyMachine
 {
     public class AttackState : AbilityState
     {
-        private bool isAttacking;
+        private bool isAttackEnd;
 
         public AttackState(Enemy obj, StateMachine<Enemy, EnemyData> stateMachine, EnemyData objData) : base(obj, stateMachine, objData)
         {
@@ -14,20 +14,25 @@ namespace Bang.StateMachine.EnemyMachine
         public override void EnterState()
         {
             base.EnterState();
-            isAttacking = true;
+
+            obj.animator.Play("Attack0", 0);
             obj.Attack();
+
+
+            isAttackEnd = false;
         }
 
         public override void ExitState()
         {
             base.ExitState();
+            obj.animator.Play("Default", 0);
         }
 
         public override void LogicUpdate()
         {
             base.LogicUpdate();
 
-            if (!isAttacking)
+            if (isAttackEnd)
             {
                 if (obj.seePlayer)
                 {
@@ -46,7 +51,7 @@ namespace Bang.StateMachine.EnemyMachine
         }
         public void EndAttack()
         {
-            isAttacking = false;
+            isAttackEnd = true;
         }
     }
 }

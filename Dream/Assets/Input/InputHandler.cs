@@ -18,6 +18,10 @@ public class InputHandler : MonoBehaviour
 
     #region UI Input
     public Vector2 UIMovment { get; private set; }
+    public Action<InputArgs> OnPressUp;
+    public Action<InputArgs> OnPressDown;
+    public Action<InputArgs> OnPressLeft;
+    public Action<InputArgs> OnPressRight;
     public Action<InputArgs> OnSelect;
     public Action<InputArgs> OnCancle;
     public Action<InputArgs> OnRotate;
@@ -56,6 +60,10 @@ public class InputHandler : MonoBehaviour
 
         UIAction.PlantModule.Movment.performed += ctx => UIMovment = ctx.ReadValue<Vector2>();
         UIAction.PlantModule.Movment.canceled += ctx => UIMovment = Vector2.zero;
+        UIAction.PlantModule.UpPress.performed += ctx => OnPressUp(new InputArgs { context = ctx });
+        UIAction.PlantModule.DownPress.performed += ctx => OnPressDown(new InputArgs { context = ctx });
+        UIAction.PlantModule.LeftPress.performed += ctx => OnPressLeft(new InputArgs { context = ctx });
+        UIAction.PlantModule.RightPress.performed += ctx => OnPressRight(new InputArgs { context = ctx });
 
         UIAction.PlantModule.Confirm.performed += ctx => OnSelect(new InputArgs { context = ctx });
         UIAction.PlantModule.Cancle.performed += ctx => OnCancle(new InputArgs { context = ctx });

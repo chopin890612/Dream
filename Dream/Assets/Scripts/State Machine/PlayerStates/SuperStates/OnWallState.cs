@@ -40,6 +40,7 @@ namespace Bang.StateMachine.PlayerMachine
         public override void PhysicsUpdate()
         {
             base.PhysicsUpdate();
+            obj.Drag(objData.dragAmount);
         }
     }
 }

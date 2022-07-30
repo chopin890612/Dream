@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: Enemy
   m_EditorClassIdentifier: 
   attackDamage: 10
-  maxHealth: 100
   attackOwner: 0
+  maxHealth: 200
+  maxSuperArmor: 30

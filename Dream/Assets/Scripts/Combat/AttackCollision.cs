@@ -8,6 +8,8 @@ public class AttackCollision : MonoBehaviour
     public SkeletonAnimation sA;
     public Animator animator;
     public CombatData combatData;
+    public GameObject owner;
+    public float attackSeed;
 
     public CombatStatus data { get; private set; }
     private void Start()
@@ -18,7 +20,7 @@ public class AttackCollision : MonoBehaviour
     {
         if (other.CompareTag("Body"))
         {
-            if (other.gameObject.GetComponent<CombatSystem>().data.attackOwner.value != data.attackOwner.value)
+            if (other.gameObject.GetComponent<CombatController>().currentData.attackOwner.value != data.attackOwner.value)
             {
                 if (sA != null)
                 {
@@ -33,5 +35,12 @@ public class AttackCollision : MonoBehaviour
             }
         }
     }
-    
+    private void OnEnable()
+    {
+        attackSeed = Random.Range(0f, 100f);
+    }
+    private void OnDisable()
+    {
+        
+    }
 }

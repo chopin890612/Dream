@@ -7,11 +7,9 @@ using Spine.Unity;
 using UnityEngine.Events;
 
 
-
 public class TestPlayer : MonoBehaviour
 {
     #region State Variables
-
     public StateMachine<TestPlayer, PlayerData> stateMachine { get; private set; }
     public IdleState idleState { get; private set; }
     public RunState runState { get; private set; }
@@ -27,9 +25,13 @@ public class TestPlayer : MonoBehaviour
     [SerializeField] private PlayerData playerData;
     #endregion
 
+    #region Game Datas
+    public SaveStatus statues;
+    #endregion
+
     #region Components
     public Rigidbody _rb { get; private set; }
-    public CombatSystem combatSystem;
+    public CombatController combatSystem;
     public float gravityScale;
     public PhysicMaterial noFriction;
     public PhysicMaterial infFrction;
@@ -524,7 +526,7 @@ public class TestPlayer : MonoBehaviour
     public void KnockBack(float forceScale)
     {
         Vector2 force = new Vector2(playerData.knockBackForce.x, playerData.knockBackForce.y);
-        force.x *= -1f * Mathf.Sign(touchedCollision.transform.position.x - transform.position.x);
+        force.x *= -1f * Mathf.Sign(touchedCollision.GetComponent<AttackCollision>().owner.transform.position.x - transform.position.x);
         _rb.AddForce(force * forceScale, ForceMode.Impulse);
     }
     public void Hurt(Collider collider)

@@ -6,6 +6,7 @@ using UnityEngine;
 public class CombatData : ScriptableObject
 {
     public float attackDamage;
-    public float maxHealth;
     public int attackOwner;
+    public float maxHealth;
+    public float maxSuperArmor; 
 }

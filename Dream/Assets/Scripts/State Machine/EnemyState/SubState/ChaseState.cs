@@ -22,6 +22,10 @@ namespace Bang.StateMachine.EnemyMachine
         public override void LogicUpdate()
         {
             base.LogicUpdate();
+            if (obj.abilityCooldown < 0 && obj.playerInFarRange)
+            {
+                stateMachine.ChangeState(obj.dashAttackState);
+            }
             if (obj.playerInAttackRange && obj.attackTime < 0)
             {
                 stateMachine.ChangeState(obj.attackState);

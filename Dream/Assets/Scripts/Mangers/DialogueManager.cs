@@ -16,6 +16,7 @@ public class DialogueManager : MonoBehaviour
     /// <summary>
     /// 訊息文字顯示
     /// </summary>
+    public GameObject MessageBanner;
     public Text MessageTxt;
 
     /// <summary>
@@ -39,6 +40,9 @@ public class DialogueManager : MonoBehaviour
 
     private int sentenceIndex = 0;
     private string currentSentence;
+
+    public List<GameObject> selectObjects;
+    private int selectIndex = 0;
     
     private bool isPlaying;
     private bool onSelect;
@@ -47,13 +51,6 @@ public class DialogueManager : MonoBehaviour
     {
         EventManager.instance.TalkToNPCEvent.AddListener(StartConversation);
         DialogueBox.SetActive(false);
-    }
-    private void Update()
-    {
-        if (onSelect)
-        {
-
-        }
     }
     public void StartConversation(DialogueData conversation)
     {
@@ -65,17 +62,42 @@ public class DialogueManager : MonoBehaviour
 
         StartSentence();
         InputHandler.instance.OnSelect += NextSentence;
+        InputHandler.instance.OnPressUp += SelectUp;
+        InputHandler.instance.OnPressDown += SelectDown;
 
     }
     public void EndConversation()
     {
         InputHandler.instance.OnSelect -= NextSentence;
+        InputHandler.instance.OnPressUp -= SelectUp;
+        InputHandler.instance.OnPressDown -= SelectDown;
+
         GameManager.instance.ChangeGameState(GameManager.GameState.GameView);
     }
 
     private void StartSentence()
     {
         SetContext();        
+    }
+    private void SelectUp(InputHandler.InputArgs args)
+    {
+        if (onSelect)
+        {
+            selectIndex--;
+            if (selectIndex < 0)
+                selectIndex = 0;
+            ShowSelectOutline();
+        }
+    }
+    private void SelectDown(InputHandler.InputArgs args)
+    {
+        if (onSelect)
+        {
+            selectIndex++;
+            if (selectIndex > selectObjects.Count - 1)
+                selectIndex = selectObjects.Count - 1;
+            ShowSelectOutline();
+        }
     }
     private void NextSentence(InputHandler.InputArgs args)
     {
@@ -110,25 +132,37 @@ public class DialogueManager : MonoBehaviour
         currentContext = dialogueData.data[contextIndex];
 
         if (currentContext.IsSelect)
-        {
-            for(int i = 0; i < SelectBox.transform.childCount; i++)
+        {            
+            foreach(var select in selectObjects)
             {
-                Destroy(SelectBox.transform.GetChild(i).gameObject);
+                Destroy(select);
             }
-            for(int i = 0; i < currentContext.selects.Count; i++)
+
+            List<GameObject> tempList = new List<GameObject>();
+            foreach(var select in currentContext.selects)
             {
-                var select = Instantiate(SelectPrefab, SelectBox.transform);
-                select.GetComponentInChildren<Text>().text = currentContext.selects[i];
+                var tempSelect = Instantiate(SelectPrefab, SelectBox.transform);
+                tempSelect.GetComponentInChildren<Text>().text = select;
+                tempList.Add(tempSelect);
             }
+            selectObjects = tempList;
+
+            selectIndex = 0;
+            ShowSelectOutline();
 
             MessageTxt.text = "";
 
             SelectBox.SetActive(true);
+            MessageBanner.SetActive(false);
 
+            onSelect = true;
         }
         else
         {
+            onSelect = false;
+
             SelectBox.SetActive(false);
+            MessageBanner.SetActive(true);
 
             currentSentence = currentContext.sentence[sentenceIndex];
 
@@ -160,5 +194,12 @@ public class DialogueManager : MonoBehaviour
             }
         }
     }
-
+    private void ShowSelectOutline()
+    {
+        foreach(var select in selectObjects)
+        {
+            select.GetComponentInChildren<RawImage>().enabled = false;
+        }
+        selectObjects[selectIndex].GetComponentInChildren<RawImage>().enabled = true;
+    }
 }

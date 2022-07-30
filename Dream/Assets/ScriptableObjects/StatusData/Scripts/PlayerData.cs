@@ -59,6 +59,7 @@ public class PlayerData : ScriptableObject
 
 	//ABILITIES
 	[Header("Dash")]
+	public bool enableDash = false;
 	public int dashAmount;
 	public float dashSpeed;
 	[Space(5)]
@@ -73,6 +74,7 @@ public class PlayerData : ScriptableObject
 
 	//COMBAT
 	[Header("Combat")]
+	public bool enableAttack = false;
 	public Vector2 knockBackForce;
 	[Range(0.1f, 2f)]public float knockBackTime;
 	[Range(0, 0.5f)] public float invincibleTime;

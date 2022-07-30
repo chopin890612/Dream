@@ -19,7 +19,7 @@ MonoBehaviour:
   dragAmount: 0.22
   frictionAmount: 0.55
   coyoteTime: 0.1
-  runMaxSpeed: 9.5
+  runMaxSpeed: 15
   runAccel: 9.3
   runDeccel: 25
   accelInAir: 0.65
@@ -38,6 +38,7 @@ MonoBehaviour:
   slideAccel: 9
   slidePower: 0.95
   climbSpeed: 10
+  enableDash: 0
   dashAmount: 1
   dashSpeed: 25
   dashAttackTime: 0.1
@@ -46,6 +47,7 @@ MonoBehaviour:
   dashUpEndMult: 0.6
   dashEndRunLerp: 0.3
   dashBufferTime: 0.05
+  enableAttack: 0
   knockBackForce: {x: 10, y: 10}
   knockBackTime: 0.2
   invincibleTime: 0.1
