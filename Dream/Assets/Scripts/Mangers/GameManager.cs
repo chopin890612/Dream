@@ -59,7 +59,8 @@ public class GameManager : MonoBehaviour
         }
         else if(scene == SceneManager.GetSceneByBuildIndex(0))
         {
-            SceneManager.LoadScene(5, LoadSceneMode.Additive);
+            if(SceneManager.sceneCount == 1)
+                SceneManager.LoadScene(5, LoadSceneMode.Additive);
         }
     }
     private void LoadScene(InputAction.CallbackContext ctx)

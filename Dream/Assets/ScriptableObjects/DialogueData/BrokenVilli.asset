@@ -41,6 +41,7 @@ MonoBehaviour:
     IsSelect: 0
     selects: []
     sentence:
+    - ..............
     - "\u5FEB\u6E96\u5099\u4E00\u4E0B\u5427\uFF0C\u6211\u5011\u8981\u642C\u96E2\u9019\u4E86......\r\n"
   - charImage: {fileID: 21300000, guid: 161c681efa42964459c7acf5364900e6, type: 3}
     charSide: 0
@@ -48,6 +49,8 @@ MonoBehaviour:
     IsSelect: 0
     selects: []
     sentence:
+    - .......
+    - ......................
     - "\u6211\u807D\u5230\u4F60\u5011\u4E4B\u524D\u7684\u5C0D\u8A71\u4E86\uFF0C\u8981\u505C\u6B62\u707D\u96E3\u8981\u9001\u4E0A\u796D\u54C1\u5C0D\u5427"
     - "\u6211\u4F86\u53BB\u5427\uFF01"
     - "\u963F\u7238\u662F\u6700\u512A\u79C0\u7684\u52C7\u58EB\u3002"
