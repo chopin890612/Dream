@@ -41,7 +41,7 @@ MonoBehaviour:
   enableDash: 0
   dashAmount: 1
   dashSpeed: 25
-  dashAttackTime: 0.1
+  dashAttackTime: 0.2
   dashAttackDragAmount: 0.22
   dashEndTime: 0.1
   dashUpEndMult: 0.6

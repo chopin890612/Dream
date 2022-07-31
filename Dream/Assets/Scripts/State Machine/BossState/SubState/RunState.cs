@@ -25,11 +25,17 @@ namespace Bang.StateMachine.BossState
         public override void LogicUpdate()
         {
             base.LogicUpdate();
+
+            if(obj.seePlayer == false || obj.playerBeside == true)
+            {
+                stateMachine.ChangeState(obj.idleState);
+            }
         }
 
         public override void PhysicsUpdate()
         {
             base.PhysicsUpdate();
+            obj.Drag(1);
             obj.Run(1, true, 1);
         }
     }

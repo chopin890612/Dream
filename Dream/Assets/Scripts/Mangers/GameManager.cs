@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using XInputDotNetPure;
 using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
 
 public class GameManager : MonoBehaviour
 {
@@ -10,12 +11,18 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
     public GameState gameState;
     public TestPlayer player;
+    public string currentSceneName;
+    public Cinemachine.CinemachineConfiner cameraBorder;
+    private Scene currenScene;
+
+    public InputAction action;
 
     public enum GameState
     {
         MainMenu,
         GameView,
-        GameMenu
+        GameMenu,
+        Dialogue
     }
     private void Awake()
     {
@@ -23,6 +30,11 @@ public class GameManager : MonoBehaviour
             instance = this;
         else
             Destroy(gameObject);
+
+        SceneManager.sceneLoaded += OnSceneLoaded;
+
+        action.Enable();
+        action.performed += LoadScene;
     }
     void Start()
     {
@@ -35,7 +47,30 @@ public class GameManager : MonoBehaviour
     {
         
     }
-
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene != SceneManager.GetSceneByBuildIndex(0))
+        {
+            currentSceneName = scene.name.ToString();
+            currenScene = scene;
+            Transform startPoint = GameObject.Find("StartPoint").transform;
+            player.transform.position = startPoint.position;
+            cameraBorder.m_BoundingVolume = GameObject.Find("CameraBorder").GetComponent<Collider>();
+        }
+        else if(scene == SceneManager.GetSceneByBuildIndex(0))
+        {
+            SceneManager.LoadScene(5, LoadSceneMode.Additive);
+        }
+    }
+    private void LoadScene(InputAction.CallbackContext ctx)
+    {
+        SceneManager.LoadScene(5, LoadSceneMode.Additive);
+    }
+    public void LoadScene(int sceneIndex)
+    {
+        SceneManager.UnloadSceneAsync(currenScene);
+        SceneManager.LoadScene(sceneIndex, LoadSceneMode.Additive);
+    }
     public void ChangeGameState(GameState state)
     {
         this.gameState = state;

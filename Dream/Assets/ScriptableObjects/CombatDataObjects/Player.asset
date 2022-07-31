@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: Player
   m_EditorClassIdentifier: 
   attackDamage: 10
-  maxHealth: 100
   attackOwner: 1
+  maxHealth: 1000
+  maxSuperArmor: 0

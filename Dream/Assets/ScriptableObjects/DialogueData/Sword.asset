@@ -21,3 +21,10 @@ MonoBehaviour:
     sentence:
     - "(\u6CDB\u8457\u5E7D\u5E7D\u85CD\u5149\u7684\u5315\u9996)"
     - "(\u597D\u50CF\u9084\u80FD\u4F7F\u7528)"
+  - charImage: {fileID: 21300000, guid: 161c681efa42964459c7acf5364900e6, type: 3}
+    charSide: 0
+    charName: "\u4E3B\u89D2"
+    IsSelect: 0
+    selects: []
+    sentence:
+    - "\u62FF\u56DE\u53BB\u7D66\u7238\u7238\u597D\u4E86!"

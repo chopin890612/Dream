@@ -44,6 +44,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DialogueBox: {fileID: 0}
+  SelectBox: {fileID: 0}
+  SelectPrefab: {fileID: 8045124304936879985, guid: fcfda746a9b6dba40bfebbe636f491e0, type: 3}
+  MessageBanner: {fileID: 0}
   MessageTxt: {fileID: 0}
   CharNameTxt0: {fileID: 0}
   CharNameImage0: {fileID: 0}
@@ -52,3 +55,4 @@ MonoBehaviour:
   CharImg0: {fileID: 0}
   CharImg1: {fileID: 0}
   dialogueData: {fileID: 11400000, guid: aea7080b2bb0d83439870c7318bc7563, type: 2}
+  selectObjects: []

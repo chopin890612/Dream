@@ -32,6 +32,6 @@ public class TalkNPC : MonoBehaviour
     private void Talk()
     {
         EventManager.instance.TalkToNPCEvent.Invoke(data);
-        GameManager.instance.ChangeGameState(GameManager.GameState.GameMenu);
+        GameManager.instance.ChangeGameState(GameManager.GameState.Dialogue);
     }
 }

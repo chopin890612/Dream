@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackDamage: 10
   attackOwner: 2
-  maxHealth: 1000
+  maxHealth: 200
   maxSuperArmor: 50

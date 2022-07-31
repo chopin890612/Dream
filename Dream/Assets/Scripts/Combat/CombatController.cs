@@ -15,6 +15,7 @@ public class CombatController : MonoBehaviour
     public UnityEvent<Collider> hurtEvent;
     public UnityEvent<Collider> healEvent;
     public UnityEvent<Collider> superArmorBreakEvent;
+    public UnityEvent dieEvent;
 
     [SerializeField] private float lastBeingAttackTime;
     void Start()
@@ -34,6 +35,7 @@ public class CombatController : MonoBehaviour
         {
             Debug.LogWarning("Die!!");
             Destroy(parent);
+            dieEvent.Invoke();
         }
     }
     private void OnTriggerEnter(Collider other)

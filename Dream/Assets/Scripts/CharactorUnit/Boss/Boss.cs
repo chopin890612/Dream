@@ -9,6 +9,8 @@ public class Boss : MonoBehaviour
     public StateMachine<Boss, EnemyData> stateMachine;
     public IdleState idleState;
     public RunState runState;
+    public TailAttack tailAttack;
+    public DashAttack dashAttack;
 
     #endregion
 
@@ -17,6 +19,7 @@ public class Boss : MonoBehaviour
     public bool seePlayer;
     public bool playerInAttackRange;
     public bool playerInFarRange;
+    public bool playerBeside;
     public float attackTime;
     public float abilityCooldown;
     public float knockBackTime;
@@ -47,6 +50,9 @@ public class Boss : MonoBehaviour
     [SerializeField] private float _seeCheckSize;
     [SerializeField] private GameObject _seePlayerObject;
 
+    [SerializeField] private Transform _besideCheckPoint;
+    [SerializeField] private float _besideCheckSize;
+
     [SerializeField] private Transform _attackCheckPoint;
     [SerializeField] private float _attackCheckSize;
 
@@ -72,6 +78,8 @@ public class Boss : MonoBehaviour
         stateMachine = new StateMachine<Boss, EnemyData>();
         idleState = new IdleState(this, stateMachine, enemyData);
         runState = new RunState(this, stateMachine, enemyData);
+        tailAttack = new TailAttack(this, stateMachine, enemyData);
+        dashAttack = new DashAttack(this, stateMachine, enemyData);
     }
     private void Start()
     {
@@ -83,6 +91,9 @@ public class Boss : MonoBehaviour
         stateMachine.currentState.LogicUpdate();
 
         #region Checks
+        attackTime -= Time.deltaTime;
+        abilityCooldown -= Time.deltaTime;
+
         //Chase Check
         var objects = Physics.OverlapSphere(_seeCheckPoint.position, _seeCheckSize, _playeLayer);
         if (objects.Length > 0)
@@ -95,6 +106,7 @@ public class Boss : MonoBehaviour
             _seePlayerObject = null;
             seePlayer = false;
         }
+        playerBeside = Physics.CheckSphere(_besideCheckPoint.position, _besideCheckSize, _playeLayer);
 
         //AttackRange Check
         playerInAttackRange = Physics.CheckSphere(_attackCheckPoint.position, _attackCheckSize, _playeLayer);
@@ -130,6 +142,8 @@ public class Boss : MonoBehaviour
 
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(_seeCheckPoint.position, _seeCheckSize);
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(_besideCheckPoint.position, _besideCheckSize);
 
         Gizmos.color = Color.white;
         Gizmos.DrawWireSphere(_attackCheckPoint.position, _attackCheckSize);
@@ -194,8 +208,35 @@ public class Boss : MonoBehaviour
         }
         _rb.AddForce(movement * moveDir); //applies force force to rigidbody, multiplying by Vector2.right so that it only affects X axis 
     }
+    public void ChangeFace()
+    {
+        int playerSide = faceDir;
+        if (seePlayer)
+            playerSide = (int)Mathf.Sign((_seePlayerObject.transform.position - transform.position).x);
+        if (playerBeside == false && playerSide != faceDir)
+            Turn();
+    }
     #endregion
 
     #region Combat Methods
+    public void DashAttack()
+    {
+        _rb.velocity = Vector3.zero;
+        attackTime = enemyData.attackSpeed;
+        abilityCooldown = enemyData.abilityCooldown;
+        GameManager.instance.DoForSeconds(() => _rb.AddForce(new Vector2(30 * faceDir, 0), ForceMode.Impulse), (25f / 60f) / 0.3f);
+    }
+    public void TailAttack()
+    {
+        _rb.velocity = Vector3.zero;
+        attackTime = enemyData.attackSpeed;
+    }
+    public void EndAttack()
+    {
+        if (stateMachine.currentState == tailAttack)
+            tailAttack.EndAttack();
+        else if (stateMachine.currentState == dashAttack)
+            dashAttack.EndAttack();
+    }
     #endregion
 }

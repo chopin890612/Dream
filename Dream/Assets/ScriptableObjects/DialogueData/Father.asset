@@ -1,0 +1,69 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41491792f8a41d84681d418135fcb534, type: 3}
+  m_Name: Father
+  m_EditorClassIdentifier: 
+  data:
+  - charImage: {fileID: 21300000, guid: 45eab98bf12069d43955a9c91d47388e, type: 3}
+    charSide: 1
+    charName: "\u7238\u7238"
+    IsSelect: 0
+    selects: []
+    sentence:
+    - "\u9192\u4F86\u4E86\uFF1F"
+  - charImage: {fileID: 21300000, guid: 161c681efa42964459c7acf5364900e6, type: 3}
+    charSide: 0
+    charName: "\u4E3B\u89D2"
+    IsSelect: 1
+    selects:
+    - "\u96E8\u9084\u5728\u4E0B\u55CE\uFF1F"
+    - "\u9019\u96E8\u4E0B\u5F97\u6211\u6709\u9EDE\u7169\u71E5\u3002"
+    sentence: []
+  - charImage: {fileID: 21300000, guid: 45eab98bf12069d43955a9c91d47388e, type: 3}
+    charSide: 1
+    charName: "\u7238\u7238"
+    IsSelect: 0
+    selects: []
+    sentence:
+    - "\u5C0D\u554A\uFF0C\u6C92\u60F3\u5230\u6703\u7A81\u7136\u4E0B\u96E8\u3002\r"
+    - "\u770B\u4F86\u4ECA\u5929\u4E0D\u9069\u5408\u51FA\u53BB\uFF0C\u7B49\u96E8\u505C\u4E86\u4E4B\u5F8C\u6211\u5011\u5C31\u56DE\u53BB\u5427\u3002\r"
+  - charImage: {fileID: 21300000, guid: 161c681efa42964459c7acf5364900e6, type: 3}
+    charSide: 0
+    charName: "\u4E3B\u89D2"
+    IsSelect: 1
+    selects:
+    - "\u6211\u5011\u9023\u68EE\u6797\u5165\u53E3\u90FD\u6C92\u898B\u5230\u6B38\uFF01"
+    - "\u8AAA\u597D\u7684\u4ECA\u5929\u4E00\u5B9A\u5E36\u6211\u9032\u68EE\u6797\u7684\uFF01\r"
+    sentence: []
+  - charImage: {fileID: 21300000, guid: 45eab98bf12069d43955a9c91d47388e, type: 3}
+    charSide: 1
+    charName: "\u7238\u7238"
+    IsSelect: 0
+    selects: []
+    sentence:
+    - "\u96E8\u5F8C\u7684\u68EE\u6797\u5F88\u5371\u96AA\u7684\uFF0C\u4F60\u5F9E\u4F86\u6C92\u6709\u9032\u68EE\u6797\u904E\uFF0C\u6C92\u6709\u7D93\u9A57\u6211\u6015\u4F60\u53D7\u50B7\u3002\r"
+  - charImage: {fileID: 21300000, guid: 161c681efa42964459c7acf5364900e6, type: 3}
+    charSide: 0
+    charName: "\u4E3B\u89D2"
+    IsSelect: 1
+    selects:
+    - "\u8EAB\u70BA\u52C7\u58EB\u662F\u4E0D\u754F\u61FC\u53D7\u50B7\u7684\uFF01"
+    - "\u53EA\u662F\u4E0B\u96E8\u800C\u5DF1\u600E\u9EBC\u53EF\u80FD\u53D7\u50B7\uFF01"
+    sentence: []
+  - charImage: {fileID: 21300000, guid: 45eab98bf12069d43955a9c91d47388e, type: 3}
+    charSide: 1
+    charName: "\u7238\u7238"
+    IsSelect: 0
+    selects: []
+    sentence:
+    - "\u54C8\u54C8\u597D\u5566\u597D\u5566\uFF0C\u7B49\u5929\u6C23\u597D\u4E9B\uFF0C\u4E0B\u6B21\u4E00\u5B9A\u5E36\u4F60\u53BB\u3002\r"
+    - "\u53CD\u6B63\u9592\u7740\u4E5F\u662F\u7121\u804A\uFF0C\u4F60\u53EF\u4EE5\u53BB\u5F8C\u9762\u7684\u5C71\u6D1E\u770B\u770B\uFF0C\u8AAA\u4E0D\u5B9A\u6709\u751A\u9EBC\u6536\u7372\u3002\r\n"

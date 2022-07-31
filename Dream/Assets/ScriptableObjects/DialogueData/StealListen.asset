@@ -1,0 +1,78 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41491792f8a41d84681d418135fcb534, type: 3}
+  m_Name: StealListen
+  m_EditorClassIdentifier: 
+  data:
+  - charImage: {fileID: 0}
+    charSide: 0
+    charName: '?'
+    IsSelect: 0
+    selects: []
+    sentence:
+    - "\u770B\u5230\u90A3\u96BB\u91CE\u7378\u4E86\u55CE\uFF1F\u662F\u5F9E\u4F86\u90FD\u6C92\u898B\u904E\u7684\u6A23\u5B50\uFF01"
+  - charImage: {fileID: 0}
+    charSide: 1
+    charName: '?'
+    IsSelect: 0
+    selects: []
+    sentence:
+    - "\u5C0F\u7C73\u6536\u6210\u4E5F\u6709\u554F\u984C\uFF0C\u4E00\u9846\u9846\u90FD\u662F\u9ED1\u7684......\r\n"
+  - charImage: {fileID: 0}
+    charSide: 0
+    charName: '?'
+    IsSelect: 0
+    selects: []
+    sentence:
+    - "\u4ECA\u5929\u4E0B\u7684\u90A3\u4E00\u5834\u96E8\u4E5F\u6709\u554F\u984C\uFF0C\u78B0\u5230\u96E8\u7684\u87F2\u6703\u6D88\u6EB6\u3002"
+  - charImage: {fileID: 0}
+    charSide: 1
+    charName: '?'
+    IsSelect: 0
+    selects: []
+    sentence:
+    - "\u800C\u4E14\u5C71\u7684\u547C\u559A\u8D8A\u4F86\u8D8A\u983B\u983B\u7E41\u4E86\u3002"
+  - charImage: {fileID: 0}
+    charSide: 0
+    charName: '?'
+    IsSelect: 0
+    selects: []
+    sentence:
+    - "\u770B\u4F86\u9810\u8A00\u6210\u771F\u4E86...\u5927\u6A39\u7684\u8150\u8755\u8981\u5230\u6211\u5011\u9019\u4E86...\r\n"
+  - charImage: {fileID: 0}
+    charSide: 1
+    charName: '?'
+    IsSelect: 0
+    selects: []
+    sentence:
+    - "\u6211\u5011\u518D\u642C\u96E2\u9019\u5427\uFF01\u53C8\u4E0D\u662F\u7B2C\u4E00\u6B21\u642C\u4E86\uFF01"
+  - charImage: {fileID: 0}
+    charSide: 0
+    charName: '?'
+    IsSelect: 0
+    selects: []
+    sentence:
+    - "\u6C92\u7528\u7684\uFF0C\u8150\u8755\u9072\u65E9\u6703\u8FFD\u4E0A\u6211\u5011\uFF01\r"
+  - charImage: {fileID: 0}
+    charSide: 1
+    charName: '?'
+    IsSelect: 0
+    selects: []
+    sentence:
+    - "\u8981\u9001\u4E0A\u796D\u54C1...\u5FC5\u9808\u8981\u9001\u4E0A\u796D\u54C1\u5E73\u606F\u6012\u706B\uFF01"
+  - charImage: {fileID: 0}
+    charSide: 0
+    charName: '?'
+    IsSelect: 0
+    selects: []
+    sentence:
+    - "\u53EF\u662F\u8981\u9078\u8AB0\u53BB\uFF1F\u524D\u4F4F\u5927\u6A39\u7684\u8DEF\u9014\u90FD\u88AB\u9ED1\u6697\u4FB5\u8755\u4E86\uFF0C\u8981\u9001\u4E0A...."

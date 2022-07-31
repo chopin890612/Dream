@@ -73,6 +73,7 @@ public class DialogueManager : MonoBehaviour
         InputHandler.instance.OnPressDown -= SelectDown;
 
         GameManager.instance.ChangeGameState(GameManager.GameState.GameView);
+        EventManager.instance.DialogueEndEvent.Invoke();
     }
 
     private void StartSentence()
@@ -166,32 +167,34 @@ public class DialogueManager : MonoBehaviour
 
             currentSentence = currentContext.sentence[sentenceIndex];
 
-            MessageTxt.text = currentSentence;
+            MessageTxt.text = currentSentence;            
+        }
 
-            if (currentContext.charSide == 0)
-            {
-                CharImg0.sprite = currentContext.charImage;
+        if (currentContext.charSide == 0)
+        {
+            CharImg0.sprite = currentContext.charImage;
 
-                CharImg0.enabled = true;
-                CharImg1.enabled = false;
+            CharImg0.enabled = true;
+            CharImg0.SetNativeSize();
+            CharImg1.enabled = false;
 
-                CharNameTxt0.text = currentContext.charName;
-                CharNameImage0.SetActive(true);
+            CharNameTxt0.text = currentContext.charName;
+            CharNameImage0.SetActive(true);
 
-                CharNameImage1.SetActive(false);
-            }
-            else if (currentContext.charSide == 1)
-            {
-                CharImg1.sprite = currentContext.charImage;
+            CharNameImage1.SetActive(false);
+        }
+        else if (currentContext.charSide == 1)
+        {
+            CharImg1.sprite = currentContext.charImage;
 
-                CharImg1.enabled = true;
-                CharImg0.enabled = false;
+            CharImg1.enabled = true;
+            CharImg1.SetNativeSize();
+            CharImg0.enabled = false;
 
-                CharNameTxt1.text = currentContext.charName;
-                CharNameImage1.SetActive(true);
+            CharNameTxt1.text = currentContext.charName;
+            CharNameImage1.SetActive(true);
 
-                CharNameImage0.SetActive(false);
-            }
+            CharNameImage0.SetActive(false);
         }
     }
     private void ShowSelectOutline()
