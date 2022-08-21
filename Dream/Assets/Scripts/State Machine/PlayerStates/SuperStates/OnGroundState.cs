@@ -19,11 +19,13 @@ namespace Bang.StateMachine.PlayerMachine
                 obj.dashState.ResetDashes();
                 obj.jumpState.ResetJumps();
             }
+            obj.SetGravityScale(0);
         }
 
         public override void ExitState()
         {
             base.ExitState();
+            obj.SetGravityScale(objData.gravityScale);
         }
 
         public override void LogicUpdate()
@@ -51,14 +53,14 @@ namespace Bang.StateMachine.PlayerMachine
             {
                 stateMachine.ChangeState(obj.wallIdleState);
             }
-            else if (!obj.CanSlope)
-            {
-                obj.SetGravityScale(5);
-            }
-            else
-            {
-                obj.SetGravityScale(objData.gravityScale);
-            }
+            //else if (!obj.CanSlope)
+            //{
+            //    obj.SetGravityScale(5);
+            //}
+            //else
+            //{
+            //    obj.SetGravityScale(objData.gravityScale);
+            //}
         }
 
         public override void PhysicsUpdate()

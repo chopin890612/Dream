@@ -8,6 +8,7 @@ using UnityEngine.InputSystem;
 public class GameManager : MonoBehaviour
 {
     private PlayerIndex playerIndex = PlayerIndex.One;
+    [SerializeField] private bool Debugging;
     public static GameManager instance;
     public GameState gameState;
     public TestPlayer player;
@@ -30,8 +31,8 @@ public class GameManager : MonoBehaviour
             instance = this;
         else
             Destroy(gameObject);
-
-        SceneManager.sceneLoaded += OnSceneLoaded;
+        if(!Debugging)
+            SceneManager.sceneLoaded += OnSceneLoaded;
 
         action.Enable();
         action.performed += LoadScene;

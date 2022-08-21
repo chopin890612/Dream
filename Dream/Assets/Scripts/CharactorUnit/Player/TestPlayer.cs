@@ -1,5 +1,4 @@
-﻿
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using Bang.StateMachine;
 using Bang.StateMachine.PlayerMachine;
@@ -69,6 +68,7 @@ public class TestPlayer : MonoBehaviour
     public float AttackCooldown { get; private set; }
     public float LastKnockBackTime { get; private set; }
     public float AttackResetTime { get; private set; }
+    public float AtEdgeTime { get; private set; }
     public bool CanSlope { get; private set; }
     public bool IsPassingPlatform { get; private set; }
     #endregion
@@ -94,6 +94,9 @@ public class TestPlayer : MonoBehaviour
     [SerializeField] private Transform _platformSlopeCheck;
     [SerializeField] private float _platformSlopeCheckSize;
     [SerializeField] private float _platformSlopeCheckLength;
+    [Space(5)]
+    [SerializeField] private Transform _edgeClimbCheck;
+    [SerializeField] private float _edgeClimbCheckSize;
     #endregion
 
     #region LAYERS & TAGS
@@ -108,7 +111,7 @@ public class TestPlayer : MonoBehaviour
     #region Debugger
     [Header("Debugger")]
     [SerializeField] string CurrentState;
-    [SerializeField] Vector2 _platformNormal;
+    [SerializeField] Vector3 _platformNormal;
     private float groundDistance;
     private float wallDistance;
     [SerializeField] private Vector2 inputM;
@@ -167,6 +170,7 @@ public class TestPlayer : MonoBehaviour
         LastPressedDashTime -= Time.deltaTime;
         LastAttackTime -= Time.deltaTime;
         LastKnockBackTime -= Time.deltaTime;
+        AtEdgeTime -= Time.deltaTime;
 
         AttackCooldown -= Time.deltaTime;
         AttackResetTime -= Time.deltaTime;
@@ -216,6 +220,9 @@ public class TestPlayer : MonoBehaviour
             if (Physics.CheckBox(_backWallCheckPoint.position, _wallCheckSize, Quaternion.identity, _walkLayer) && !IsFacingRight)
                 LastOnWallLeftTime = playerData.coyoteTime;
         }
+
+        if(!Physics.CheckSphere(_edgeClimbCheck.position, _edgeClimbCheckSize, _wallLayer))
+            AtEdgeTime = playerData.coyoteTime;
         
         //if ((Physics.CheckBox(_frontWallCheckPoint.position, _wallCheckSize, Quaternion.identity, _walkLayer) && !IsFacingRight)
         //    || (Physics.CheckBox(_backWallCheckPoint.position, _wallCheckSize, Quaternion.identity, _walkLayer) && IsFacingRight))
@@ -225,9 +232,25 @@ public class TestPlayer : MonoBehaviour
         //Two checks needed for both left and right walls since whenever the play turns the wall checkPoints swap sides
 
         //Platform Slope Check
-        Physics.SphereCast(_platformSlopeCheck.position, _platformSlopeCheckSize, Vector3.down, out RaycastHit hit, _platformSlopeCheckLength, _walkLayer);
-        _platformNormal = hit.normal;
-        groundDistance = hit.distance;
+        //Physics.SphereCast(_platformSlopeCheck.position, _platformSlopeCheckSize, Vector3.down, out RaycastHit hitVertical, _platformSlopeCheckLength, _walkLayer);
+        bool slopeVertical = Physics.Raycast(_platformSlopeCheck.position, Vector3.down, out RaycastHit hitVertical, _platformSlopeCheckLength, _walkLayer);
+        bool slopeFront = Physics.Raycast(_platformSlopeCheck.position, Vector3.right, out RaycastHit hitFront, _platformSlopeCheckLength, _walkLayer);
+        bool slopeBack = Physics.Raycast(_platformSlopeCheck.position, Vector3.left, out RaycastHit hitBack, _platformSlopeCheckLength, _walkLayer);
+        if(_platformNormal != hitVertical.normal)
+        {
+            //_rb.AddForce(new Vector2(0, -_rb.velocity.y), ForceMode.Impulse);
+            _platformNormal = hitVertical.normal;
+        }
+        
+        groundDistance = hitVertical.distance;
+        //if (slopeFront)
+        //{
+        //    _platformNormal = hitFront.normal;
+        //}
+        //else if (slopeBack)
+        //{
+        //    _platformNormal = hitBack.normal;
+        //}
         CanSlope = Mathf.Abs(Vector2.Angle(_platformNormal, Vector2.up)) < playerData.maxSlopeAngle;
         #endregion
 
@@ -255,9 +278,12 @@ public class TestPlayer : MonoBehaviour
 
         Gizmos.color = Color.green;
         Gizmos.DrawRay(transform.position, Vector2.down * _platformSlopeCheckLength);
+        Gizmos.DrawRay(transform.position, Vector2.right * _platformSlopeCheckLength);
+        Gizmos.DrawRay(transform.position, Vector2.left * _platformSlopeCheckLength);
+
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(_platformSlopeCheck.position + new Vector3(0, -groundDistance), _platformSlopeCheckSize);
-        //Gizmos.DrawRay(transform.position, new Vector2(Mathf.Cos(playerData.maxSlopeAngle * Mathf.Deg2Rad), Mathf.Sin(playerData.maxSlopeAngle * Mathf.Deg2Rad)));
+        //Gizmos.DrawWireSphere(_platformSlopeCheck.position + new Vector3(0, -groundDistance), _platformSlopeCheckSize);
+        Gizmos.DrawRay(_platformSlopeCheck.position, _platformNormal);
     }
 
     private void PassPlatform(float time)
@@ -388,13 +414,18 @@ public class TestPlayer : MonoBehaviour
         if (needSlope && CanSlope)
         {            
             moveDir = Vector2.Perpendicular(_platformNormal).normalized * -1;
-            Debug.DrawRay(transform.position, moveDir, Color.yellow);
+            //Debug.DrawRay(transform.position, moveDir, Color.yellow);
         }
 
-        _rb.AddForce(movement * moveDir); //applies force force to rigidbody, multiplying by Vector2.right so that it only affects X axis 
+        _rb.AddForce(movement * moveDir, ForceMode.Force); //applies force force to rigidbody, multiplying by Vector2.right so that it only affects X axis 
+        //_rb.velocity = movement * moveDir;
 
         if (InputHandler.instance.Movement.x != 0)
             CheckDirectionToFace(InputHandler.instance.Movement.x > 0);
+    }
+    public void SlopeRun()
+    {
+
     }
     public void Jump()
     {

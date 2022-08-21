@@ -41,7 +41,7 @@ namespace Bang.StateMachine.PlayerMachine
         public override void PhysicsUpdate()
         {
             base.PhysicsUpdate();
-            //obj.Run(1, true);
+            //obj.Run(1, true);            
         }
     }
 }

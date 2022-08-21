@@ -14,7 +14,6 @@ namespace Bang.StateMachine.PlayerMachine
         public override void EnterState()
         {
             base.EnterState();
-
             Jumped();
             obj.Jump();
             obj.skeletonAnimation.AnimationState.SetAnimation(0, obj.jump, false);
