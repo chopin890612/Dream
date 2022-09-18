@@ -38,6 +38,7 @@ namespace Bang.StateMachine.PlayerMachine
         {
             base.PhysicsUpdate();
             obj.Run(1, true);
+            //obj.SlopeRun(1);
         }
     }
 }

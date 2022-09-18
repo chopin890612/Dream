@@ -19,7 +19,7 @@ namespace Bang.StateMachine.PlayerMachine
                 obj.dashState.ResetDashes();
                 obj.jumpState.ResetJumps();
             }
-            obj.SetGravityScale(0);
+            obj.SetGravityScale(10);
         }
 
         public override void ExitState()

@@ -221,36 +221,18 @@ public class TestPlayer : MonoBehaviour
                 LastOnWallLeftTime = playerData.coyoteTime;
         }
 
+        //EdgeClimb Check
         if(!Physics.CheckSphere(_edgeClimbCheck.position, _edgeClimbCheckSize, _wallLayer))
             AtEdgeTime = playerData.coyoteTime;
         
-        //if ((Physics.CheckBox(_frontWallCheckPoint.position, _wallCheckSize, Quaternion.identity, _walkLayer) && !IsFacingRight)
-        //    || (Physics.CheckBox(_backWallCheckPoint.position, _wallCheckSize, Quaternion.identity, _walkLayer) && IsFacingRight))
-        //    LastOnWallLeftTime = playerData.coyoteTime;
-
         LastOnWallTime = Mathf.Max(LastOnWallLeftTime, LastOnWallRightTime);
         //Two checks needed for both left and right walls since whenever the play turns the wall checkPoints swap sides
 
         //Platform Slope Check
-        //Physics.SphereCast(_platformSlopeCheck.position, _platformSlopeCheckSize, Vector3.down, out RaycastHit hitVertical, _platformSlopeCheckLength, _walkLayer);
-        bool slopeVertical = Physics.Raycast(_platformSlopeCheck.position, Vector3.down, out RaycastHit hitVertical, _platformSlopeCheckLength, _walkLayer);
-        bool slopeFront = Physics.Raycast(_platformSlopeCheck.position, Vector3.right, out RaycastHit hitFront, _platformSlopeCheckLength, _walkLayer);
-        bool slopeBack = Physics.Raycast(_platformSlopeCheck.position, Vector3.left, out RaycastHit hitBack, _platformSlopeCheckLength, _walkLayer);
-        if(_platformNormal != hitVertical.normal)
-        {
-            //_rb.AddForce(new Vector2(0, -_rb.velocity.y), ForceMode.Impulse);
-            _platformNormal = hitVertical.normal;
-        }
+        Physics.SphereCast(_platformSlopeCheck.position, _platformSlopeCheckSize, Vector3.down, out RaycastHit hitVertical, _platformSlopeCheckLength, _walkLayer);
+        _platformNormal = hitVertical.normal;
         
         groundDistance = hitVertical.distance;
-        //if (slopeFront)
-        //{
-        //    _platformNormal = hitFront.normal;
-        //}
-        //else if (slopeBack)
-        //{
-        //    _platformNormal = hitBack.normal;
-        //}
         CanSlope = Mathf.Abs(Vector2.Angle(_platformNormal, Vector2.up)) < playerData.maxSlopeAngle;
         #endregion
 
@@ -276,14 +258,11 @@ public class TestPlayer : MonoBehaviour
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(_headCheckPoint.position, _headCheckSize);
 
-        Gizmos.color = Color.green;
-        Gizmos.DrawRay(transform.position, Vector2.down * _platformSlopeCheckLength);
-        Gizmos.DrawRay(transform.position, Vector2.right * _platformSlopeCheckLength);
-        Gizmos.DrawRay(transform.position, Vector2.left * _platformSlopeCheckLength);
+        Gizmos.color = Color.black;
+        Gizmos.DrawWireSphere(_edgeClimbCheck.position, _edgeClimbCheckSize);
 
         Gizmos.color = Color.red;
-        //Gizmos.DrawWireSphere(_platformSlopeCheck.position + new Vector3(0, -groundDistance), _platformSlopeCheckSize);
-        Gizmos.DrawRay(_platformSlopeCheck.position, _platformNormal);
+        Gizmos.DrawWireSphere(_platformSlopeCheck.position + new Vector3(0, -groundDistance), _platformSlopeCheckSize);
     }
 
     private void PassPlatform(float time)
@@ -317,7 +296,19 @@ public class TestPlayer : MonoBehaviour
     }
     private void UseGravity()
     {
-        Physics.gravity = playerData.gravity * gravityScale;
+        //Change globle gravity
+        //Physics.gravity = playerData.gravity * gravityScale;
+
+        //Custom Gravity
+        if (LastOnGroundTime > 0 && CanSlope)
+        {
+            Vector2 gravityWay = _platformNormal * -1;
+            _rb.AddForce(9.81f * gravityScale * gravityWay);
+        }
+        else
+        {
+            _rb.AddForce(playerData.gravity * gravityScale);
+        }
     }
     public void SetGravityScale(float scaleValue)
     {
@@ -423,9 +414,59 @@ public class TestPlayer : MonoBehaviour
         if (InputHandler.instance.Movement.x != 0)
             CheckDirectionToFace(InputHandler.instance.Movement.x > 0);
     }
-    public void SlopeRun()
+    public void SlopeRun(float lerpAmount)
     {
+        float targetSpeed = InputHandler.instance.Movement.x * playerData.runMaxSpeed; //calculate the direction we want to move in and our desired velocity
+        float speedDif = targetSpeed - _rb.velocity.x; //calculate difference between current velocity and desired velocity
 
+        #region Acceleration Rate
+        float accelRate;
+
+        //gets an acceleration value based on if we are accelerating (includes turning) or trying to stop (decelerating). As well as applying a multiplier if we're air borne
+        if (LastOnGroundTime > 0)
+            accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? playerData.runAccel : playerData.runDeccel;
+        else
+            accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? playerData.runAccel * playerData.accelInAir : playerData.runDeccel * playerData.deccelInAir;
+
+        //if we want to run but are already going faster than max run speed
+        if (((_rb.velocity.x > targetSpeed && targetSpeed > 0.01f) || (_rb.velocity.x < targetSpeed && targetSpeed < -0.01f)) && playerData.doKeepRunMomentum)
+        {
+            accelRate = 0; //prevent any deceleration from happening, or in other words conserve are current momentum
+        }
+        #endregion
+
+        #region Velocity Power
+        float velPower;
+        if (Mathf.Abs(targetSpeed) < 0.01f)
+        {
+            velPower = playerData.stopPower;
+        }
+        else if (Mathf.Abs(_rb.velocity.x) > 0 && (Mathf.Sign(targetSpeed) != Mathf.Sign(_rb.velocity.x)))
+        {
+            velPower = playerData.turnPower;
+        }
+        else
+        {
+            velPower = playerData.accelPower;
+        }
+        #endregion
+
+        //applies acceleration to speed difference, then is raised to a set power so the acceleration increases with higher speeds, finally multiplies by sign to preserve direction
+        float movement = Mathf.Pow(Mathf.Abs(speedDif) * accelRate, velPower) * Mathf.Sign(speedDif);
+        movement = Mathf.Lerp(_rb.velocity.x, movement, lerpAmount);
+        Debug.Log(movement);
+
+        Vector2 moveDir = Vector2.right;
+        if (CanSlope)
+        {
+            moveDir = Vector2.Perpendicular(_platformNormal).normalized * -1;
+            //Debug.DrawRay(transform.position, moveDir, Color.yellow);
+        }
+
+        _rb.velocity = moveDir * Mathf.Sign(movement) * 10;
+
+        if (InputHandler.instance.Movement.x != 0)
+            CheckDirectionToFace(InputHandler.instance.Movement.x > 0);
     }
     public void Jump()
     {
