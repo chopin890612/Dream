@@ -344,8 +344,8 @@ public class TestPlayer : MonoBehaviour
     }
     public void OnAttack(InputHandler.InputArgs args)
     {
-        LastAttackTime = playerData.attackBufferTime;
-        AttackResetTime = playerData.attackResetTime;
+        //LastAttackTime = playerData.attackBufferTime;
+        //AttackResetTime = playerData.attackResetTime;
     }
     #endregion
 
@@ -609,4 +609,11 @@ public class TestPlayer : MonoBehaviour
         stateMachine.ChangeState(knockBackState);
     }
     #endregion
+
+    #region Spacial Abilitys
+
+
+
+    #endregion
+
 }

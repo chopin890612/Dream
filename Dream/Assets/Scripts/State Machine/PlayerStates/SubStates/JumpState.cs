@@ -33,7 +33,7 @@ namespace Bang.StateMachine.PlayerMachine
             {
                 stateMachine.ChangeState(obj.attackState);
             }
-            else if (obj.LastPressedDashTime > 0 && obj.dashState.CanDash())
+            else if (obj.LastPressedDashTime > 0 && obj.dashState.CanDash() && obj.statues.Have_Relic_Scale)
             {
                 stateMachine.ChangeState(obj.dashState);
             }
