@@ -30,7 +30,7 @@ namespace Bang.StateMachine.PlayerMachine
         {
             base.LogicUpdate();
 
-            if (obj.LastPressedDashTime > 0 && obj.dashState.CanDash())
+            if (objData.enableDash && obj.LastPressedDashTime > 0 && obj.dashState.CanDash())
             {
                 obj.stateMachine.ChangeState(obj.dashState);
             }
@@ -38,7 +38,7 @@ namespace Bang.StateMachine.PlayerMachine
             {
                 obj.stateMachine.ChangeState(obj.idleState);
             }
-            else if (obj.LastPressedJumpTime > 0 && ((obj.LastOnWallRightTime > 0 && jumpDir == 1) || (obj.LastOnWallLeftTime > 0 && jumpDir == -1)))
+            else if (objData.enableWallJump && obj.LastPressedJumpTime > 0 && ((obj.LastOnWallRightTime > 0 && jumpDir == 1) || (obj.LastOnWallLeftTime > 0 && jumpDir == -1)))
             {
                 obj.stateMachine.ChangeState(obj.wallJumpState);
             }

@@ -32,15 +32,15 @@ namespace Bang.StateMachine.PlayerMachine
         {
             base.LogicUpdate();
 
-            if(obj.LastAttackTime > 0 && obj.AttackCooldown < 0)
+            if(objData.enableAttack && obj.LastAttackTime > 0 && obj.AttackCooldown < 0)
             {
                 stateMachine.ChangeState(obj.attackState);
             }
-            else if (obj.LastPressedDashTime > 0 && obj.dashState.CanDash() && obj.statues.Have_Relic_Scale)
+            else if (objData.enableDash && obj.LastPressedDashTime > 0 && obj.dashState.CanDash() && obj.statues.Have_Relic_Scale)
             {
                 stateMachine.ChangeState(obj.dashState);
             }
-            else if (obj.LastPressedJumpTime > 0 && obj.jumpState.CanJump())
+            else if (objData.enableJump && obj.LastPressedJumpTime > 0 && obj.jumpState.CanJump())
             {
                 stateMachine.ChangeState(obj.jumpState);
             }
@@ -49,7 +49,7 @@ namespace Bang.StateMachine.PlayerMachine
                 obj.jumpState.Jumped();
                 stateMachine.ChangeState(obj.onAirState);
             }
-            else if (((obj.LastOnWallLeftTime > 0 && InputHandler.instance.Movement.x < 0) || (obj.LastOnWallRightTime > 0 && InputHandler.instance.Movement.x > 0)) && InputHandler.instance.Movement.y != 0)
+            else if (objData.enableSlide && ((obj.LastOnWallLeftTime > 0 && InputHandler.instance.Movement.x < 0) || (obj.LastOnWallRightTime > 0 && InputHandler.instance.Movement.x > 0)) && InputHandler.instance.Movement.y != 0)
             {
                 stateMachine.ChangeState(obj.wallIdleState);
             }

@@ -344,8 +344,8 @@ public class TestPlayer : MonoBehaviour
     }
     public void OnAttack(InputHandler.InputArgs args)
     {
-        //LastAttackTime = playerData.attackBufferTime;
-        //AttackResetTime = playerData.attackResetTime;
+        LastAttackTime = playerData.attackBufferTime;
+        AttackResetTime = playerData.attackResetTime;
     }
     #endregion
 
@@ -475,7 +475,6 @@ public class TestPlayer : MonoBehaviour
         LastOnGroundTime = 0;
 
         _rb.velocity = Vector2.zero;
-
         #region Perform Jump
         float adjustedJumpForce = playerData.jumpForce;
         if (_rb.velocity.y < 0)

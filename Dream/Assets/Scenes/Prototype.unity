@@ -16354,6 +16354,10 @@ PrefabInstance:
       propertyPath: _edgeClimbCheckSize
       value: 0.3
       objectReference: {fileID: 0}
+    - target: {fileID: 3564858042119445406, guid: 76d4947bd2969334e84cc5cd0104afc2, type: 3}
+      propertyPath: statues.Have_Relic_Scale
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4680357586002407090, guid: 76d4947bd2969334e84cc5cd0104afc2, type: 3}
       propertyPath: m_Name
       value: DebugModule

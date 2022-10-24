@@ -26,11 +26,11 @@ namespace Bang.StateMachine.PlayerMachine
         {
             base.LogicUpdate();
 
-            if (obj.LastPressedJumpTime > 0)
+            if (objData.enableWallJump && obj.LastPressedJumpTime > 0)
             {
                 stateMachine.ChangeState(obj.wallJumpState);
             }
-            else if (InputHandler.instance.Movement.y != 0)
+            else if (objData.enableSlide && InputHandler.instance.Movement.y != 0)
             {
                 stateMachine.ChangeState(obj.wallSlideState);
             }

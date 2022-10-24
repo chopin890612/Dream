@@ -23,6 +23,7 @@ public class PlayerData : ScriptableObject
 
 	//GROUND
 	[Header("Run")]
+	public bool enableRun = false;
 	public float runMaxSpeed;
 	public float runAccel;
 	public float runDeccel;
@@ -37,6 +38,7 @@ public class PlayerData : ScriptableObject
 
 	//JUMP
 	[Header("Jump")]
+	public bool enableJump = false;
 	public int jumpAmount;
 	public float jumpForce;
 	[Range(0, 1)] public float jumpCutMultiplier;
@@ -44,6 +46,7 @@ public class PlayerData : ScriptableObject
 	[Range(0, 0.5f)] public float jumpBufferTime; //time after pressing the jump button where if the requirements are met a jump will be automatically performed
 
 	[Header("Wall Jump")]
+	public bool enableWallJump = false;
 	public Vector2 wallJumpForce;
 	[Space(5)]
 	[Range(0f, 1f)] public float wallJumpRunLerp; //slows the affect of player movement while wall jumping
@@ -52,6 +55,7 @@ public class PlayerData : ScriptableObject
 
 	//WALL
 	[Header("Slide")]
+	public bool enableSlide = false;
 	public float slideAccel;
 	[Range(.5f, 2f)] public float slidePower;
 	public float climbSpeed;

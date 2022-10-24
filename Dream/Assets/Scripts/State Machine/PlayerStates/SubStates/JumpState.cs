@@ -29,15 +29,15 @@ namespace Bang.StateMachine.PlayerMachine
         {
             base.LogicUpdate();
 
-            if (obj.LastAttackTime > 0 && obj.AttackCooldown < 0)
+            if (objData.enableAttack && obj.LastAttackTime > 0 && obj.AttackCooldown < 0)
             {
                 stateMachine.ChangeState(obj.attackState);
             }
-            else if (obj.LastPressedDashTime > 0 && obj.dashState.CanDash() && obj.statues.Have_Relic_Scale)
+            else if (objData.enableDash && obj.LastPressedDashTime > 0 && obj.dashState.CanDash() && obj.statues.Have_Relic_Scale)
             {
                 stateMachine.ChangeState(obj.dashState);
             }
-            else if (obj.LastPressedJumpTime > 0 && obj.LastOnWallTime > 0)
+            else if (objData.enableWallJump && obj.LastPressedJumpTime > 0 && obj.LastOnWallTime > 0)
             {
                 stateMachine.ChangeState(obj.wallJumpState);
             }

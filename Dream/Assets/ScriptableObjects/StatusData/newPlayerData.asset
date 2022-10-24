@@ -19,6 +19,7 @@ MonoBehaviour:
   dragAmount: 0.22
   frictionAmount: 0.55
   coyoteTime: 0.1
+  enableRun: 1
   runMaxSpeed: 15
   runAccel: 9.3
   runDeccel: 25
@@ -28,17 +29,20 @@ MonoBehaviour:
   stopPower: 1.23
   turnPower: 1.13
   maxSlopeAngle: 45
+  enableJump: 1
   jumpAmount: 1
   jumpForce: 25
   jumpCutMultiplier: 0.5
   jumpBufferTime: 0.05
+  enableWallJump: 0
   wallJumpForce: {x: 10, y: 15}
   wallJumpRunLerp: 0.3
   wallJumpTime: 0.35
+  enableSlide: 0
   slideAccel: 9
   slidePower: 0.95
   climbSpeed: 10
-  enableDash: 0
+  enableDash: 1
   dashAmount: 1
   dashSpeed: 25
   dashAttackTime: 0.2

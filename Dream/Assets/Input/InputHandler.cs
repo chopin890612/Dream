@@ -18,16 +18,11 @@ public class InputHandler : MonoBehaviour
 
     #region UI Input
     public Vector2 UIMovment { get; private set; }
-    public Action<InputArgs> OnUIPressUp;
-    public Action<InputArgs> OnUIPressDown;
-    public Action<InputArgs> OnUIPressLeft;
-    public Action<InputArgs> OnUIPressRight;
-    public Action<InputArgs> OnUISelect;
-    public Action<InputArgs> OnUICancle;
-    public Action<InputArgs> OnUIRotate;
+    public Action<InputArgs> OnUIConfirm;
+    public Action<InputArgs> OnUIBack;
     #endregion
 
-    #region Dialogue Input
+    #region Dialogue
     public Action<InputArgs> OnPressUp;
     public Action<InputArgs> OnPressDown;
     public Action<InputArgs> OnSelect;
@@ -55,8 +50,8 @@ public class InputHandler : MonoBehaviour
         playerAction = new InputMaster();
         UIAction = new InputMaster();
         DialogueAction = new InputMaster();
-
         #region Assign Input
+
         playerAction.Player.Movment.performed += ctx => Movement = ctx.ReadValue<Vector2>();
         playerAction.Player.Movment.canceled += ctx => Movement = Vector2.zero;
 
@@ -66,20 +61,16 @@ public class InputHandler : MonoBehaviour
         playerAction.Player.Attack.performed += ctx => OnAttack(new InputArgs { context = ctx });
 
 
-        UIAction.PlantModule.Movment.performed += ctx => UIMovment = ctx.ReadValue<Vector2>();
-        UIAction.PlantModule.Movment.canceled += ctx => UIMovment = Vector2.zero;
-        UIAction.PlantModule.UpPress.performed += ctx => OnUIPressUp(new InputArgs { context = ctx });
-        UIAction.PlantModule.DownPress.performed += ctx => OnUIPressDown(new InputArgs { context = ctx });
-        UIAction.PlantModule.LeftPress.performed += ctx => OnUIPressLeft(new InputArgs { context = ctx });
-        UIAction.PlantModule.RightPress.performed += ctx => OnUIPressRight(new InputArgs { context = ctx });
+        UIAction.UI.Move.performed += ctx => UIMovment = ctx.ReadValue<Vector2>();
+        UIAction.UI.Move.canceled += ctx => UIMovment = Vector2.zero;
 
-        UIAction.PlantModule.Confirm.performed += ctx => OnUISelect(new InputArgs { context = ctx });
-        UIAction.PlantModule.Cancle.performed += ctx => OnUICancle(new InputArgs { context = ctx });
-        UIAction.PlantModule.Rotate.performed += ctx => OnUIRotate(new InputArgs { context = ctx });
+        UIAction.UI.Confirm.performed += ctx => OnUIConfirm(new InputArgs { context = ctx });
+        UIAction.UI.Back.performed += ctx => OnUIBack(new InputArgs { context = ctx });
 
-        DialogueAction.PlantModule.UpPress.performed += ctx => OnPressUp(new InputArgs { context = ctx });
-        DialogueAction.PlantModule.DownPress.performed += ctx => OnPressDown(new InputArgs { context = ctx });
-        DialogueAction.PlantModule.Confirm.performed += ctx => OnSelect(new InputArgs { context = ctx });
+
+        DialogueAction.Dialogue.Up.performed += ctx => OnPressUp(new InputArgs { context = ctx });
+        DialogueAction.Dialogue.Down.performed += ctx => OnPressDown(new InputArgs { context = ctx });
+        DialogueAction.Dialogue.Confirm.performed += ctx => OnSelect(new InputArgs { context = ctx });
         #endregion
     }
 

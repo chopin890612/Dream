@@ -470,6 +470,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1163244612
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1163244613}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1163244613
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1163244612}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 3451840609688568066}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1251516225
 GameObject:
   m_ObjectHideFlags: 0
@@ -1339,6 +1369,7 @@ Transform:
   - {fileID: 3147847673183410186}
   - {fileID: 8980279534586824755}
   - {fileID: 3136167888137363082}
+  - {fileID: 1163244613}
   m_Father: {fileID: 1417880946392423962}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1359,6 +1390,9 @@ MonoBehaviour:
     testBool: 0
     testInt: 10
     testString: 8787
+    Have_Relic_Scale: 0
+    Have_Relic_Lily: 0
+    Have_Relic_Fire: 0
   combatSystem: {fileID: 1947805866747681482}
   gravityScale: 0
   noFriction: {fileID: 13400000, guid: 94c82ba49368429439ec12a5ab464f3d, type: 2}
@@ -1391,6 +1425,8 @@ MonoBehaviour:
   _platformSlopeCheck: {fileID: 3136167888137363082}
   _platformSlopeCheckSize: 0.5
   _platformSlopeCheckLength: 1
+  _edgeClimbCheck: {fileID: 1163244613}
+  _edgeClimbCheckSize: 0
   _player:
     serializedVersion: 2
     m_Bits: 8
@@ -1407,7 +1443,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   CurrentState: 
-  _platformNormal: {x: 0, y: 0}
+  _platformNormal: {x: 0, y: 0, z: 0}
   inputM: {x: 0, y: 0}
 --- !u!1 &3837735375835401738
 GameObject:
@@ -1608,6 +1644,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19e4d79e0bda5a147adca97d331bb332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Debugging: 0
   gameState: 1
   player: {fileID: 3564858040397692563}
   currentSceneName: 
