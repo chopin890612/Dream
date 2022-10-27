@@ -7,7 +7,6 @@ TagManager:
   - NPC
   - Platform
   - PlatformOutline
-  - SnakePlatform
   - HumanPlatform
   - PlatformGroup
   - Trap

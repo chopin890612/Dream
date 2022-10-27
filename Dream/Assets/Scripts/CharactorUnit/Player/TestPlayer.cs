@@ -147,6 +147,7 @@ public class TestPlayer : MonoBehaviour
         InputHandler.instance.OnJumpReleased += args => OnJumpUp(args);
         InputHandler.instance.OnDash += args => OnDash(args);
         InputHandler.instance.OnAttack += args => OnAttack(args);
+        InputHandler.instance.OnChangeWorld += args => OnChangeWorld(args);
 
         SetGravityScale(playerData.gravityScale);
 
@@ -234,6 +235,9 @@ public class TestPlayer : MonoBehaviour
         
         groundDistance = hitVertical.distance;
         CanSlope = Mathf.Abs(Vector2.Angle(_platformNormal, Vector2.up)) < playerData.maxSlopeAngle;
+
+        //ChangWorld Range Check
+        //Physics.SphereCastAll(transform.position, )
         #endregion
 
         CurrentState = stateMachine.currentState.ToString();
@@ -346,6 +350,10 @@ public class TestPlayer : MonoBehaviour
     {
         LastAttackTime = playerData.attackBufferTime;
         AttackResetTime = playerData.attackResetTime;
+    }
+    public void OnChangeWorld(InputHandler.InputArgs args)
+    {
+        ChangeWorld();
     }
     #endregion
 
@@ -611,7 +619,10 @@ public class TestPlayer : MonoBehaviour
 
     #region Spacial Abilitys
 
+    private void ChangeWorld()
+    {
 
+    }
 
     #endregion
 

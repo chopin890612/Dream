@@ -14,6 +14,8 @@ public class InputHandler : MonoBehaviour
     public Action<InputArgs> OnJumpReleased;
     public Action<InputArgs> OnDash;
     public Action<InputArgs> OnAttack;
+    public Action<InputArgs> OnChangeWorld;
+    public Action<InputArgs> OnFire;
     #endregion
 
     #region UI Input
@@ -59,6 +61,8 @@ public class InputHandler : MonoBehaviour
         playerAction.Player.JumpUp.performed += ctx => OnJumpReleased(new InputArgs { context = ctx });
         playerAction.Player.Dash.performed += ctx => OnDash(new InputArgs { context = ctx });
         playerAction.Player.Attack.performed += ctx => OnAttack(new InputArgs { context = ctx });
+        playerAction.Player.ChangeWorld.performed += ctx => OnChangeWorld(new InputArgs { context = ctx });
+        playerAction.Player.Fire.performed += ctx => OnFire(new InputArgs { context = ctx });
 
 
         UIAction.UI.Move.performed += ctx => UIMovment = ctx.ReadValue<Vector2>();
