@@ -71,12 +71,14 @@ public class TestPlayer : MonoBehaviour
     public float AtEdgeTime { get; private set; }
     public bool CanSlope { get; private set; }
     public bool IsPassingPlatform { get; private set; }
+    public bool IsInChangeWorld { get; private set; }
     #endregion
 
     #region INPUT PARAMETERS
     public float LastPressedJumpTime { get; private set; }
     public float LastPressedDashTime { get; private set; }
     public bool isPressJump;
+    public bool isPressChangeWorld;
     #endregion
 
     #region CHECK PARAMETERS
@@ -97,6 +99,10 @@ public class TestPlayer : MonoBehaviour
     [Space(5)]
     [SerializeField] private Transform _edgeClimbCheck;
     [SerializeField] private float _edgeClimbCheckSize;
+    [Space(5)]
+    [SerializeField] private CapsuleCollider _changeWorldCheck;
+    [SerializeField] private float _minRadius = 2;
+    [SerializeField] private float _maxRadius = 16;
     #endregion
 
     #region LAYERS & TAGS
@@ -148,6 +154,7 @@ public class TestPlayer : MonoBehaviour
         InputHandler.instance.OnDash += args => OnDash(args);
         InputHandler.instance.OnAttack += args => OnAttack(args);
         InputHandler.instance.OnChangeWorld += args => OnChangeWorld(args);
+        InputHandler.instance.ReleaseChangeWorld += args => ReleaseChangeWorld(args);
 
         SetGravityScale(playerData.gravityScale);
 
@@ -353,7 +360,16 @@ public class TestPlayer : MonoBehaviour
     }
     public void OnChangeWorld(InputHandler.InputArgs args)
     {
-        ChangeWorld();
+        if (IsInChangeWorld == false)
+        {
+            IsInChangeWorld = true;
+            isPressChangeWorld = true;
+            ChangeWorld();
+        }
+    }
+    public void ReleaseChangeWorld(InputHandler.InputArgs args)
+    {
+        isPressChangeWorld = false;
     }
     #endregion
 
@@ -621,7 +637,26 @@ public class TestPlayer : MonoBehaviour
 
     private void ChangeWorld()
     {
-
+        _changeWorldCheck.gameObject.SetActive(!_changeWorldCheck.gameObject.activeSelf);
+        _changeWorldCheck.transform.localScale = new Vector2(_minRadius, _minRadius);        
+        InvokeRepeating("TranslateRadius", 0f,Time.deltaTime);
+    }
+    private void TranslateRadius()
+    {
+        if (_changeWorldCheck.transform.localScale.x < _maxRadius && isPressChangeWorld)
+            _changeWorldCheck.transform.localScale = new Vector2
+                (_changeWorldCheck.transform.localScale.x + Time.deltaTime * 7f, 
+                _changeWorldCheck.transform.localScale.y + Time.deltaTime * 7f);
+        else if(_changeWorldCheck.transform.localScale.x > _minRadius && !isPressChangeWorld)
+            _changeWorldCheck.transform.localScale = new Vector2
+                (_changeWorldCheck.transform.localScale.x - Time.deltaTime * 1f,
+                _changeWorldCheck.transform.localScale.y - Time.deltaTime * 1f);
+        else if(!isPressChangeWorld)
+        {
+            IsInChangeWorld = false;
+            CancelInvoke("TranslateRadius");
+            _changeWorldCheck.gameObject.SetActive(false);
+        }
     }
 
     #endregion

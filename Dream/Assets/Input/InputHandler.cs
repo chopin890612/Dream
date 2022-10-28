@@ -15,6 +15,7 @@ public class InputHandler : MonoBehaviour
     public Action<InputArgs> OnDash;
     public Action<InputArgs> OnAttack;
     public Action<InputArgs> OnChangeWorld;
+    public Action<InputArgs> ReleaseChangeWorld;
     public Action<InputArgs> OnFire;
     #endregion
 
@@ -62,6 +63,7 @@ public class InputHandler : MonoBehaviour
         playerAction.Player.Dash.performed += ctx => OnDash(new InputArgs { context = ctx });
         playerAction.Player.Attack.performed += ctx => OnAttack(new InputArgs { context = ctx });
         playerAction.Player.ChangeWorld.performed += ctx => OnChangeWorld(new InputArgs { context = ctx });
+        playerAction.Player.ChangeWorld.canceled += ctx => ReleaseChangeWorld(new InputArgs { context = ctx });
         playerAction.Player.Fire.performed += ctx => OnFire(new InputArgs { context = ctx });
 
 

@@ -26,7 +26,7 @@ TagManager:
   - Wall
   - CanPassGround
   - Enemy
-  - 
+  - NonCollision
   - 
   - 
   - 
