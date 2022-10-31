@@ -26,10 +26,9 @@ public class FloatingWord : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        EventManager.instance.ChangeWorldEvent.AddListener(ChangeWorld);
+        EventManager.instance.EndChangeWorldEvent.AddListener(EndChageWorldCallback);
         action.Enable();
-        action.performed += ctx => ChangeWorld();
-        wordBase = word.transform.position;
+        action.performed += ctx => ChangeWorld();        
         Initial();
     }
 
@@ -64,10 +63,20 @@ public class FloatingWord : MonoBehaviour
             isChangWorld = true;
         }
     }
+    private void EndChageWorldCallback()
+    {
+        if (isChangWorld)
+        {
+            wordState = WordState.ResetValue;
+            isChangWorld = false;
+        }
+    }
     private void Initial()
     {
         targetPos = transform.position;        
         timer = 0;
+        var orgPosition = word.transform.position;
+        wordBase = new Vector2(orgPosition.x, Random.Range(orgPosition.y + 1f, orgPosition.y - 1f));
         float mX = Random.Range(1f, 4f);
         float my = Random.Range(1f, 5f);
         multiplier = new Vector2(mX, my);

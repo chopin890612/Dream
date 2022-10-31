@@ -36,11 +36,11 @@ namespace Bang.StateMachine.PlayerMachine
             {
                 stateMachine.ChangeState(obj.attackState);
             }
-            else if (objData.enableDash && obj.LastPressedDashTime > 0 && obj.dashState.CanDash() && obj.statues.Have_Relic_Scale)
+            else if (objData.enableDash && obj.LastPressedDashTime > 0 && obj.dashState.CanDash() && obj.statues.Have_Relic_Scale && obj.isPressChangeWorld == false)
             {
                 stateMachine.ChangeState(obj.dashState);
             }
-            else if (objData.enableJump && obj.LastPressedJumpTime > 0 && obj.jumpState.CanJump())
+            else if (objData.enableJump && obj.LastPressedJumpTime > 0 && obj.jumpState.CanJump() && obj.isPressChangeWorld == false)
             {
                 stateMachine.ChangeState(obj.jumpState);
             }

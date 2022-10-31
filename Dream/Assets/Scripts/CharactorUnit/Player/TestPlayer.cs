@@ -369,7 +369,7 @@ public class TestPlayer : MonoBehaviour
     }
     public void ReleaseChangeWorld(InputHandler.InputArgs args)
     {
-        isPressChangeWorld = false;
+        isPressChangeWorld = false;        
     }
     #endregion
 
@@ -655,6 +655,7 @@ public class TestPlayer : MonoBehaviour
         {
             IsInChangeWorld = false;
             CancelInvoke("TranslateRadius");
+            EventManager.instance.EndChangeWorldEvent.Invoke();
             _changeWorldCheck.gameObject.SetActive(false);
         }
     }

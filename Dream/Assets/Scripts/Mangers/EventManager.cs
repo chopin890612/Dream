@@ -7,7 +7,9 @@ public class EventManager : MonoBehaviour
 {
     public static EventManager instance;
     public UnityEvent PlayerDeadEvent = new UnityEvent();
-    public UnityEvent ChangeWorldEvent = new UnityEvent();
+    public UnityEvent EndChangeWorldEvent = new UnityEvent();
+    public UnityEvent FireEvent = new UnityEvent();
+    public UnityEvent CollectFireEvent = new UnityEvent();
 
 
     public UnityEvent DialogueEndEvent = new UnityEvent();
