@@ -89,6 +89,11 @@ public class InputHandler : MonoBehaviour
     {
         switch (gameState)
         {
+            case GameManager.GameState.Prologue:
+                playerAction.Disable();
+                UIAction.Enable();
+                DialogueAction.Disable();
+                break;
             case GameManager.GameState.GameView:
                 playerAction.Enable();
                 UIAction.Disable();
