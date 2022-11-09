@@ -660,6 +660,11 @@ public class TestPlayer : MonoBehaviour
         }
     }
 
+    private void CollectFire()
+    {
+
+    }
+
     #endregion
 
 }

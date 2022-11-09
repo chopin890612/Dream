@@ -15,12 +15,20 @@ public class Fire : MonoBehaviour
         _maxSpotCount = fireSpots.Length;
         _currntSpotCount = 0;
         EventManager.instance.CollectFireEvent.AddListener(FireSpotCallback);
+        InputHandler.instance.OnFire += ctx => StartFire();
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+    private void StartFire()
+    {
+        if (_inRange)
+        {
+            Debug.Log("StartFire");
+        }
     }
 
     private void FireSpotCallback()
@@ -30,13 +38,17 @@ public class Fire : MonoBehaviour
     private void OnTriggerEnter(Collider collision)
     {
         if (collision.gameObject.CompareTag("Player"))
+        {
             _inRange = true;
-
-        Debug.Log("123");
+            //Debug.Log("In");
+        }
     }
     private void OnTriggerExit(Collider collision)
     {
         if (collision.gameObject.CompareTag("Player"))
+        {
             _inRange = false;
+            //Debug.Log("Out");
+        }        
     }
 }
