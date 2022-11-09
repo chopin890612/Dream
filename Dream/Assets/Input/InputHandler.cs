@@ -17,6 +17,7 @@ public class InputHandler : MonoBehaviour
     public Action<InputArgs> OnChangeWorld;
     public Action<InputArgs> ReleaseChangeWorld;
     public Action<InputArgs> OnFire;
+    public Action<InputArgs> OnInteract;
     #endregion
 
     #region UI Input
@@ -65,6 +66,7 @@ public class InputHandler : MonoBehaviour
         playerAction.Player.ChangeWorld.performed += ctx => OnChangeWorld(new InputArgs { context = ctx });
         playerAction.Player.ChangeWorld.canceled += ctx => ReleaseChangeWorld(new InputArgs { context = ctx });
         playerAction.Player.Fire.performed += ctx => OnFire(new InputArgs { context = ctx });
+        playerAction.Player.Interact.performed += ctx => OnInteract(new InputArgs { context = ctx });
 
 
         UIAction.UI.Move.performed += ctx => UIMovment = ctx.ReadValue<Vector2>();
@@ -78,7 +80,28 @@ public class InputHandler : MonoBehaviour
         DialogueAction.Dialogue.Down.performed += ctx => OnPressDown(new InputArgs { context = ctx });
         DialogueAction.Dialogue.Confirm.performed += ctx => OnSelect(new InputArgs { context = ctx });
         #endregion
+
+        #region Dummy Action
+        OnJumpPressed += ctx => Dummy();
+        OnJumpReleased += ctx => Dummy();
+        OnDash += ctx => Dummy();
+        OnAttack += ctx => Dummy();
+        OnChangeWorld += ctx => Dummy();
+        ReleaseChangeWorld += ctx => Dummy();
+        OnFire += ctx => Dummy();
+        OnInteract += ctx => Dummy();
+
+
+        OnUIConfirm += ctx => Dummy();
+        OnUIBack += ctx => Dummy();
+
+
+        OnPressUp += ctx => Dummy();
+        OnPressDown += ctx => Dummy();
+        OnSelect += ctx => Dummy();
+        #endregion
     }
+    private void Dummy() { }
 
     public class InputArgs
     {
