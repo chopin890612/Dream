@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class FireSpot : MonoBehaviour
 {
+    public int spotIndex = -1;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -18,6 +20,6 @@ public class FireSpot : MonoBehaviour
     private void OnTriggerEnter(Collider collision)
     {
         if (collision.gameObject.CompareTag("Player"))
-            EventManager.instance.CollectFireEvent.Invoke();
+            EventManager.instance.CollectFireEvent.Invoke(this);
     }
 }

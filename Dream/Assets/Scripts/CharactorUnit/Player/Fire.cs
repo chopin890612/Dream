@@ -13,7 +13,10 @@ public class Fire : MonoBehaviour
     void Start()
     {
         _maxSpotCount = fireSpots.Length;
-        _currntSpotCount = 0;
+        foreach(FireSpot fireSpot in fireSpots)
+        {
+            fireSpot.gameObject.SetActive(false);
+        }
         EventManager.instance.CollectFireEvent.AddListener(FireSpotCallback);
         InputHandler.instance.OnFire += ctx => StartFire();
     }
@@ -28,12 +31,32 @@ public class Fire : MonoBehaviour
         if (_inRange)
         {
             Debug.Log("StartFire");
+
+            _currntSpotCount = 0;
+            StartCoroutine(ShowFireSpot());
         }
     }
 
-    private void FireSpotCallback()
+    private void FireSpotCallback(FireSpot spot)
     {
-        _currntSpotCount++;
+        if (spot.spotIndex == _currntSpotCount)
+        {
+            _currntSpotCount++;
+            EventManager.instance.FireDashEvent.Invoke();            
+        }
+
+        spot.gameObject.SetActive(false);
+    }
+
+    private IEnumerator ShowFireSpot()
+    {
+        for(int i = 0; i < _maxSpotCount; i++)
+        {
+            fireSpots[i].gameObject.SetActive(true);
+            fireSpots[i].spotIndex = i;
+
+            yield return new WaitForSeconds(1f);
+        }
     }
     private void OnTriggerEnter(Collider collision)
     {

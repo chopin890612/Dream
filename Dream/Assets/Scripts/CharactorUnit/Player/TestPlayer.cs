@@ -156,6 +156,8 @@ public class TestPlayer : MonoBehaviour
         InputHandler.instance.OnChangeWorld += args => OnChangeWorld(args);
         InputHandler.instance.ReleaseChangeWorld += args => ReleaseChangeWorld(args);
 
+        EventManager.instance.FireDashEvent.AddListener(OnFireDash);
+
         SetGravityScale(playerData.gravityScale);
 
         stateMachine.Initalize(idleState);
@@ -370,6 +372,11 @@ public class TestPlayer : MonoBehaviour
     public void ReleaseChangeWorld(InputHandler.InputArgs args)
     {
         isPressChangeWorld = false;        
+    }
+    public void OnFireDash()
+    {
+        dashState.ResetDashes();
+        OnDash(new InputHandler.InputArgs());
     }
     #endregion
 
