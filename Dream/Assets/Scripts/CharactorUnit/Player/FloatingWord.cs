@@ -114,6 +114,7 @@ public class FloatingWord : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         ChangeWorld();
+        Debug.Log(other);
     }
     private void OnTriggerExit(Collider other)
     {

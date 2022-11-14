@@ -10,8 +10,6 @@ public class EventManager : MonoBehaviour
     public UnityEvent EndChangeWorldEvent = new UnityEvent();
 
     public UnityEvent FireEvent = new UnityEvent();
-    public UnityEvent<FireSpot> CollectFireEvent = new UnityEvent<FireSpot>();
-    public UnityEvent FireDashEvent = new UnityEvent();
 
 
     public UnityEvent DialogueEndEvent = new UnityEvent();

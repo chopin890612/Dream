@@ -34,6 +34,7 @@ public class TestPlayer : MonoBehaviour
     public float gravityScale;
     public PhysicMaterial noFriction;
     public PhysicMaterial infFrction;
+    public GameObject Fire;
     #endregion
 
     #region Animations
@@ -72,6 +73,7 @@ public class TestPlayer : MonoBehaviour
     public bool CanSlope { get; private set; }
     public bool IsPassingPlatform { get; private set; }
     public bool IsInChangeWorld { get; private set; }
+    public bool IsSetFire { get; private set; }
     #endregion
 
     #region INPUT PARAMETERS
@@ -155,8 +157,7 @@ public class TestPlayer : MonoBehaviour
         InputHandler.instance.OnAttack += args => OnAttack(args);
         InputHandler.instance.OnChangeWorld += args => OnChangeWorld(args);
         InputHandler.instance.ReleaseChangeWorld += args => ReleaseChangeWorld(args);
-
-        EventManager.instance.FireDashEvent.AddListener(OnFireDash);
+        InputHandler.instance.OnFire += arg => OnFire(arg);
 
         SetGravityScale(playerData.gravityScale);
 
@@ -373,10 +374,9 @@ public class TestPlayer : MonoBehaviour
     {
         isPressChangeWorld = false;        
     }
-    public void OnFireDash()
+    public void OnFire(InputHandler.InputArgs args)
     {
-        dashState.ResetDashes();
-        OnDash(new InputHandler.InputArgs());
+        SetFire();
     }
     #endregion
 
@@ -644,9 +644,19 @@ public class TestPlayer : MonoBehaviour
 
     private void ChangeWorld()
     {
+        if (IsSetFire == false)
+        {
+            _changeWorldCheck.transform.SetParent(transform);
+            _changeWorldCheck.transform.localPosition = Vector2.zero;
+        }
+        else if(IsSetFire == true)
+        {
+            _changeWorldCheck.transform.SetParent(Fire.transform);
+            _changeWorldCheck.transform.localPosition = Vector2.zero;
+        }
         _changeWorldCheck.gameObject.SetActive(!_changeWorldCheck.gameObject.activeSelf);
-        _changeWorldCheck.transform.localScale = new Vector2(_minRadius, _minRadius);        
-        InvokeRepeating("TranslateRadius", 0f,Time.deltaTime);
+        _changeWorldCheck.transform.localScale = new Vector2(_minRadius, _minRadius);
+        InvokeRepeating("TranslateRadius", 0f, Time.deltaTime);
     }
     private void TranslateRadius()
     {
@@ -666,10 +676,19 @@ public class TestPlayer : MonoBehaviour
             _changeWorldCheck.gameObject.SetActive(false);
         }
     }
-
-    private void CollectFire()
+    private void SetFire()
     {
-
+        if (IsSetFire == false)
+        {
+            Fire.SetActive(true);
+            Fire.transform.position = transform.position;
+            IsSetFire = true;
+        }
+        else if(IsSetFire == true)
+        {
+            Fire.SetActive(false);
+            IsSetFire = false;
+        }
     }
 
     #endregion
