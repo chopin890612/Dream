@@ -363,7 +363,7 @@ public class TestPlayer : MonoBehaviour
     }
     public void OnChangeWorld(InputHandler.InputArgs args)
     {
-        if (IsInChangeWorld == false)
+        if (IsInChangeWorld == false && LastOnGroundTime > 0 && statues.Have_Relic_Lily)
         {
             IsInChangeWorld = true;
             isPressChangeWorld = true;
@@ -376,7 +376,8 @@ public class TestPlayer : MonoBehaviour
     }
     public void OnFire(InputHandler.InputArgs args)
     {
-        SetFire();
+        if(statues.Have_Relic_Fire)
+            SetFire();
     }
     #endregion
 
@@ -431,6 +432,9 @@ public class TestPlayer : MonoBehaviour
         //applies acceleration to speed difference, then is raised to a set power so the acceleration increases with higher speeds, finally multiplies by sign to preserve direction
         float movement = Mathf.Pow(Mathf.Abs(speedDif) * accelRate, velPower) * Mathf.Sign(speedDif);
         movement = Mathf.Lerp(_rb.velocity.x, movement, lerpAmount);
+
+        if (isPressChangeWorld)
+            movement *= playerData.pressChangeWorldRunSpeed;
  
         Vector2 moveDir = Vector2.right;
         if (needSlope && CanSlope)
@@ -660,11 +664,11 @@ public class TestPlayer : MonoBehaviour
     }
     private void TranslateRadius()
     {
-        if (_changeWorldCheck.transform.localScale.x < _maxRadius && isPressChangeWorld)
+        if (_changeWorldCheck.transform.localScale.x < playerData.maxChangeWorldRadius && isPressChangeWorld)
             _changeWorldCheck.transform.localScale = new Vector2
                 (_changeWorldCheck.transform.localScale.x + Time.deltaTime * 7f, 
                 _changeWorldCheck.transform.localScale.y + Time.deltaTime * 7f);
-        else if(_changeWorldCheck.transform.localScale.x > _minRadius && !isPressChangeWorld)
+        else if(_changeWorldCheck.transform.localScale.x > playerData.minChangeWorldRadius && !isPressChangeWorld)
             _changeWorldCheck.transform.localScale = new Vector2
                 (_changeWorldCheck.transform.localScale.x - Time.deltaTime * 1f,
                 _changeWorldCheck.transform.localScale.y - Time.deltaTime * 1f);
@@ -678,16 +682,19 @@ public class TestPlayer : MonoBehaviour
     }
     private void SetFire()
     {
-        if (IsSetFire == false)
+        if (!IsInChangeWorld)
         {
-            Fire.SetActive(true);
-            Fire.transform.position = transform.position;
-            IsSetFire = true;
-        }
-        else if(IsSetFire == true)
-        {
-            Fire.SetActive(false);
-            IsSetFire = false;
+            if (IsSetFire == false)
+            {
+                Fire.SetActive(true);
+                Fire.transform.position = transform.position;
+                IsSetFire = true;
+            }
+            else if (IsSetFire == true)
+            {
+                Fire.SetActive(false);
+                IsSetFire = false;
+            }
         }
     }
 

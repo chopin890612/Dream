@@ -31,7 +31,7 @@ MonoBehaviour:
   maxSlopeAngle: 45
   enableJump: 1
   jumpAmount: 1
-  jumpForce: 25
+  jumpForce: 20
   jumpCutMultiplier: 0.5
   jumpBufferTime: 0.05
   enableWallJump: 0
@@ -51,6 +51,11 @@ MonoBehaviour:
   dashUpEndMult: 0.6
   dashEndRunLerp: 0.3
   dashBufferTime: 0.05
+  enableChangeWorld: 1
+  pressChangeWorldRunSpeed: 0.3
+  minChangeWorldRadius: 3
+  maxChangeWorldRadius: 8
+  enableFire: 1
   enableAttack: 0
   knockBackForce: {x: 10, y: 10}
   knockBackTime: 0.2

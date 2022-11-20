@@ -9,12 +9,15 @@ public class FloatingWord : MonoBehaviour
     public GameObject word;
     public Vector2 targetPos;
     public bool isChangWorld  = false;
+    public bool enableRandom = true;
+    public bool wordCollider = false;
     public InputAction action;
+    public Vector2 wordBorder = new Vector2(1f,1f);
 
     private Vector2 wordBase;
     private float timer;
     private int faceDir;
-    private WordState wordState = WordState.Initial;
+    [SerializeField] private WordState wordState = WordState.Initial;
     private enum WordState
     {
         Initial,
@@ -29,6 +32,11 @@ public class FloatingWord : MonoBehaviour
         EventManager.instance.EndChangeWorldEvent.AddListener(EndChageWorldCallback);
         action.Enable();
         action.performed += ctx => ChangeWorld();        
+        wordBase = word.transform.position;
+        if (wordCollider)
+            word.GetComponent<BoxCollider>().enabled = true;
+        else
+            word.GetComponent<BoxCollider>().enabled = false;
         Initial();
     }
 
@@ -41,14 +49,25 @@ public class FloatingWord : MonoBehaviour
                 break;
             case WordState.Floating:
                 RandomMove();
+                if (wordCollider)
+                    word.GetComponent<BoxCollider>().enabled = true;
+                else
+                    word.GetComponent<BoxCollider>().enabled = false;
                 break;
             case WordState.Platforming:
                 TransformToPlatform();
+                if (wordCollider)
+                    word.GetComponent<BoxCollider>().enabled = false;
                 break;
             case WordState.ResetValue:
-                Deplatform();
+                Deplatform();                
                 break;
-        }
+        }    
+    }
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireCube(transform.position, wordBorder);
     }
     private void ChangeWorld()
     {
@@ -76,10 +95,12 @@ public class FloatingWord : MonoBehaviour
         targetPos = transform.position;        
         timer = 0;
         var orgPosition = word.transform.position;
-        wordBase = new Vector2(orgPosition.x, Random.Range(orgPosition.y + 1f, orgPosition.y - 1f));
+        if (enableRandom)
+            wordBase = new Vector2(orgPosition.x, Random.Range(orgPosition.y + 1f, orgPosition.y - 1f));
         float mX = Random.Range(1f, 4f);
         float my = Random.Range(1f, 5f);
-        multiplier = new Vector2(mX, my);
+        if(enableRandom)
+            multiplier = new Vector2(mX, my);
         faceDir = Random.Range(0, 100) > 50 ? 1 : -1;
     }
     private void TransformToPlatform()

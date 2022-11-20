@@ -32,7 +32,7 @@ namespace Bang.StateMachine.PlayerMachine
         {
             base.LogicUpdate();
 
-            if(InputHandler.instance.Movement.x != 0 && obj.CanSlope)
+            if(InputHandler.instance.Movement.x != 0 && obj.CanSlope && stateMachine.currentState == obj.idleState)
             {
                 stateMachine.ChangeState(obj.runState);
             }

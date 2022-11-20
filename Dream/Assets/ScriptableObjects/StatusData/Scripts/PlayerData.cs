@@ -34,6 +34,7 @@ public class PlayerData : ScriptableObject
 	[Range(.5f, 2f)] public float stopPower;
 	[Range(.5f, 2f)] public float turnPower;
 	[Range(0f, 90f)] public float maxSlopeAngle;
+	
 
 
 	//JUMP
@@ -75,6 +76,15 @@ public class PlayerData : ScriptableObject
 	[Range(0f, 1f)] public float dashEndRunLerp; //slows the affect of player movement while dashing
 	[Space(5)]
 	[Range(0, 0.5f)] public float dashBufferTime;
+
+	[Header("ChangeWorld")]
+	public bool enableChangeWorld = false;
+	public float pressChangeWorldRunSpeed;
+	public float minChangeWorldRadius;
+	public float maxChangeWorldRadius;
+
+	[Header("Fire")]
+	public bool enableFire = false;
 
 	//COMBAT
 	[Header("Combat")]
