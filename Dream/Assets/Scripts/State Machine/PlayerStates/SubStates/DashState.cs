@@ -29,7 +29,8 @@ namespace Bang.StateMachine.PlayerMachine
             dashAttacking = true;
             obj.Dash(dir);
 
-            obj.animator.Play("Dash", 0);
+            if(obj.enableAnimator)
+                obj.animator.Play("Dash", 0);
         }
 
         public override void ExitState()

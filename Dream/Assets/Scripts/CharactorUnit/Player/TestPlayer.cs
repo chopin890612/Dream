@@ -39,12 +39,14 @@ public class TestPlayer : MonoBehaviour
 
     #region Animations
     [Header("Spine Animations")]
+    public bool enableSpine = false;
     public GameObject spineRenderer;
     public SkeletonAnimation skeletonAnimation;
     public AnimationReferenceAsset idle, walk, jump, fall, attack;
     public EventDataReferenceAsset startCollision, endCollision, endAttack;
     [Space(5)]
     [Header("Animator")]
+    public bool enableAnimator = false;
     public GameObject spriteRenderer;
     public Animator animator;
     #endregion
@@ -143,11 +145,20 @@ public class TestPlayer : MonoBehaviour
         knockBackState = new KnockBackState(this, stateMachine, playerData);
 
         _rb = GetComponent<Rigidbody>();
-        skeletonAnimation = spineRenderer.GetComponent<SkeletonAnimation>();
-        skeletonAnimation.AnimationState.Event += AttackAnimationHandler;
-        animator = spriteRenderer.GetComponent<Animator>();
+        if (enableSpine)
+        {
+            skeletonAnimation = spineRenderer.GetComponent<SkeletonAnimation>();
+            skeletonAnimation.AnimationState.Event += AttackAnimationHandler;
+        }
+        if (enableAnimator)
+        {
+            animator = spriteRenderer.GetComponent<Animator>();
+        }
 
-        combatSystem.hurtEvent.AddListener(Hurt);
+        if (playerData.enableAttack)
+        {
+            combatSystem.hurtEvent.AddListener(Hurt);
+        }
     }
     private void Start()
     {
@@ -164,7 +175,8 @@ public class TestPlayer : MonoBehaviour
         stateMachine.Initalize(idleState);
         IsFacingRight = true;
 
-        attackCollision.SetActive(false);
+        if(playerData.enableAttack)
+            attackCollision.SetActive(false);
     }
     private void Update()
     {
@@ -297,8 +309,10 @@ public class TestPlayer : MonoBehaviour
         //scale.x *= -1;
         //transform.localScale = scale;
 
-        spineRenderer.transform.Rotate(0, 180, 0);
-        spriteRenderer.transform.Rotate(0, 180, 0);
+        if(enableSpine)
+            spineRenderer.transform.Rotate(0, 180, 0);
+        if(enableAnimator)
+            spriteRenderer.transform.Rotate(0, 180, 0);
 
         IsFacingRight = !IsFacingRight;
     }
@@ -332,6 +346,8 @@ public class TestPlayer : MonoBehaviour
     {
         LastOnGroundTime = 0;
     }
+
+
     #region INPUT CALLBACKS
     //These functions are called when an even is triggered in my InputHandler. You could call these methods through a if(Input.GetKeyDown) in Update
     public void OnJump(InputHandler.InputArgs args)
@@ -434,7 +450,10 @@ public class TestPlayer : MonoBehaviour
         movement = Mathf.Lerp(_rb.velocity.x, movement, lerpAmount);
 
         if (isPressChangeWorld)
+        {
             movement *= playerData.pressChangeWorldRunSpeed;
+            
+        }
  
         Vector2 moveDir = Vector2.right;
         if (needSlope && CanSlope)
@@ -539,12 +558,14 @@ public class TestPlayer : MonoBehaviour
 
         SetGravityScale(0);
         Physics.IgnoreLayerCollision(3, 9, true);
-        bodyCollider.enabled = false;
+        if(playerData.enableAttack)
+            bodyCollider.enabled = false;
     }
     public void EndDash()
     {
         Physics.IgnoreLayerCollision(3, 9, false);
-        bodyCollider.enabled = true;
+        if (playerData.enableAttack)
+            bodyCollider.enabled = true;
     }
     public void Slide()
     {

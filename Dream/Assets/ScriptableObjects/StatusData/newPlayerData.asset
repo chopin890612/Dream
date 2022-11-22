@@ -20,7 +20,7 @@ MonoBehaviour:
   frictionAmount: 0.55
   coyoteTime: 0.1
   enableRun: 1
-  runMaxSpeed: 15
+  runMaxSpeed: 10
   runAccel: 9.3
   runDeccel: 25
   accelInAir: 0.65

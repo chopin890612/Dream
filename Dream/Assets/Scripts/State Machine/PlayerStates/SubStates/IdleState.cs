@@ -14,8 +14,11 @@ namespace Bang.StateMachine.PlayerMachine
         public override void EnterState()
         {
             base.EnterState();
-            obj.skeletonAnimation.AnimationState.SetAnimation(0, obj.idle, true);
-            obj.animator.Play("idle", 0);
+            if(obj.enableSpine)
+                obj.skeletonAnimation.AnimationState.SetAnimation(0, obj.idle, true);
+            if(obj.enableAnimator)
+                obj.animator.Play("idle", 0);
+
             if (obj.CanSlope)
                 obj.GetComponent<CapsuleCollider>().material = obj.infFrction;
             else

@@ -13,7 +13,9 @@ namespace Bang.StateMachine.PlayerMachine
         public override void EnterState()
         {
             base.EnterState();
-            obj.animator.Play("Fall", 0);
+
+            if(obj.enableAnimator)
+                obj.animator.Play("Fall", 0);
         }
 
         public override void ExitState()

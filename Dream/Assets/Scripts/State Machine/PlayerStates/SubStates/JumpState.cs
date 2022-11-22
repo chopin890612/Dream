@@ -16,8 +16,11 @@ namespace Bang.StateMachine.PlayerMachine
             base.EnterState();
             Jumped();
             obj.Jump();
-            obj.skeletonAnimation.AnimationState.SetAnimation(0, obj.jump, false);
-            obj.animator.Play("Jump", 0);
+
+            if(obj.enableSpine)
+                obj.skeletonAnimation.AnimationState.SetAnimation(0, obj.jump, false);
+            if(obj.enableAnimator)
+                obj.animator.Play("Jump", 0);
         }
 
         public override void ExitState()

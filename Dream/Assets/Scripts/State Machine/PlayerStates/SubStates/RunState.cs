@@ -15,8 +15,11 @@ namespace Bang.StateMachine.PlayerMachine
         public override void EnterState()
         {
             base.EnterState();
-            obj.skeletonAnimation.AnimationState.SetAnimation(0, obj.walk, true);
-            obj.animator.Play("run", 0);
+
+            if(obj.enableSpine)
+                obj.skeletonAnimation.AnimationState.SetAnimation(0, obj.walk, true);
+            if(obj.enableAnimator)
+                obj.animator.Play("run", 0);
         }
 
         public override void ExitState()
@@ -38,6 +41,14 @@ namespace Bang.StateMachine.PlayerMachine
         {
             base.PhysicsUpdate();
             obj.Run(1, true);
+
+            if (obj.enableSpine)
+            {
+                if(obj.isPressChangeWorld)
+                    obj.skeletonAnimation.timeScale = objData.pressChangeWorldRunSpeed * Mathf.Abs(InputHandler.instance.Movement.x);
+                else
+                    obj.skeletonAnimation.timeScale = Mathf.Abs(InputHandler.instance.Movement.x);
+            }
             //obj.SlopeRun(1);
         }
     }
