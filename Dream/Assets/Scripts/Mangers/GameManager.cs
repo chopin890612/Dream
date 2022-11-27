@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
 
     public enum GameState
     {
+        Prologue,
         MainMenu,
         GameView,
         GameMenu,
@@ -40,6 +41,11 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         InputHandler.instance.SetActionEnable(gameState);
+        if(gameState == GameState.Prologue)
+        {
+            InputHandler.instance.OnUIConfirm += (ctx) => ctx = new InputHandler.InputArgs();
+            InputHandler.instance.OnUIBack += (ctx) => ctx = new InputHandler.InputArgs();
+        }
         player = FindObjectOfType<TestPlayer>();
     }
 
