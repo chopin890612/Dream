@@ -12,6 +12,8 @@ namespace Bang.StateMachine.PlayerMachine
         public override void EnterState()
         {
             base.EnterState();
+
+            //play change world animation
         }
 
         public override void ExitState()

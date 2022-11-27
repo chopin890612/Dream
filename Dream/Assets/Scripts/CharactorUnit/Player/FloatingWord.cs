@@ -18,6 +18,8 @@ public class FloatingWord : MonoBehaviour
     private float timer;
     private int faceDir;
     [SerializeField] private WordState wordState = WordState.Initial;
+
+    [SerializeField] private Vector2 posi;
     private enum WordState
     {
         Initial,
@@ -125,11 +127,25 @@ public class FloatingWord : MonoBehaviour
     }
     private void RandomMove()
     {
+        if (InBorder() == false)
+            faceDir *= -1;
         timer += Time.deltaTime;
         Vector2 currentPos = word.transform.position;
         float x = currentPos.x + Time.deltaTime * multiplier.x * faceDir;
         float y = wordBase.y + Mathf.Sin(timer) *  multiplier.y;
         word.transform.position = new Vector2(x, y);
+    }
+    private bool InBorder()
+    {
+        Vector2 pos = word.transform.position;
+        posi = transform.position;
+        if(pos.x < transform.position.x - wordBorder.x / 2f ||
+           pos.x > transform.position.x + wordBorder.x / 2f)
+        {
+            return false;
+        }
+        else
+            return true;
     }
 
     private void OnTriggerEnter(Collider other)

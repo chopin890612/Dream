@@ -552,11 +552,11 @@ public class TestPlayer : MonoBehaviour
         LastPressedDashTime = 0;
 
         //_rb.velocity = new Vector2(dir.normalized.x * playerData.dashSpeed,0);
+        SetGravityScale(0);
         _rb.velocity = Vector2.zero;
         Vector2 force = new Vector2(dir.normalized.x * playerData.dashSpeed, 0);
         _rb.AddForce(force, ForceMode.Impulse);
 
-        SetGravityScale(0);
         Physics.IgnoreLayerCollision(3, 9, true);
         if(playerData.enableAttack)
             bodyCollider.enabled = false;

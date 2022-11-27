@@ -19,6 +19,7 @@ namespace Bang.StateMachine.PlayerMachine
                 obj.dashState.ResetDashes();
                 obj.jumpState.ResetJumps();
             }
+            obj._rb.velocity = Vector3.zero;
             obj.SetGravityScale(10);
         }
 
