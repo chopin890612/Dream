@@ -16,7 +16,7 @@ MonoBehaviour:
   gravityScale: 1
   fallGravityMult: 1.5
   quickFallGravityMult: 2
-  dragAmount: 0.22
+  dragAmount: 0.15
   frictionAmount: 0.55
   coyoteTime: 0.1
   enableRun: 1
@@ -52,9 +52,11 @@ MonoBehaviour:
   dashEndRunLerp: 0.3
   dashBufferTime: 0.05
   enableChangeWorld: 1
-  pressChangeWorldRunSpeed: 0.3
-  minChangeWorldRadius: 3
-  maxChangeWorldRadius: 8
+  pressChangeWorldRunSpeed: 0
+  worldIncreaseSpeed: 10
+  worldDecreaseSpeed: 0.6
+  minChangeWorldRadius: 2
+  maxChangeWorldRadius: 16
   enableFire: 1
   enableAttack: 0
   knockBackForce: {x: 10, y: 10}

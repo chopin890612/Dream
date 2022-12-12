@@ -54,6 +54,9 @@ public class GameManager : MonoBehaviour
     {
         
     }
+
+    #region Scene Management
+
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         if (scene != SceneManager.GetSceneByBuildIndex(0))
@@ -79,12 +82,19 @@ public class GameManager : MonoBehaviour
         SceneManager.UnloadSceneAsync(currenScene);
         SceneManager.LoadScene(sceneIndex, LoadSceneMode.Additive);
     }
+
+    #endregion
+
     public void ChangeGameState(GameState state)
     {
         this.gameState = state;
         InputHandler.instance.SetActionEnable(gameState);
     }
 
+    public void CamBorderChange(BoxCollider border)
+    {
+
+    }
     public void DoForSeconds(System.Action action ,float seconds)
     {
         StartCoroutine(WaitCoroutin(action, seconds));
