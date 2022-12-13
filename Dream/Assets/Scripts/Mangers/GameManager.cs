@@ -4,6 +4,7 @@ using UnityEngine;
 using XInputDotNetPure;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
+using UnityEngine.Playables;
 
 public class GameManager : MonoBehaviour
 {
@@ -15,6 +16,7 @@ public class GameManager : MonoBehaviour
     public string currentSceneName;
     public Cinemachine.CinemachineConfiner cameraBorder;
     private Scene currenScene;
+    private PlayableDirector director;
 
     public InputAction action;
 
@@ -32,11 +34,9 @@ public class GameManager : MonoBehaviour
             instance = this;
         else
             Destroy(gameObject);
-        if(!Debugging)
-            SceneManager.sceneLoaded += OnSceneLoaded;
 
-        action.Enable();
-        action.performed += LoadScene;
+        //if(!Debugging)
+        //    SceneManager.sceneLoaded += OnSceneLoaded;
     }
     void Start()
     {
@@ -47,6 +47,7 @@ public class GameManager : MonoBehaviour
             InputHandler.instance.OnUIBack += (ctx) => ctx = new InputHandler.InputArgs();
         }
         player = FindObjectOfType<TestPlayer>();
+        director = GetComponent<PlayableDirector>();
     }
 
     // Update is called once per frame
@@ -59,27 +60,18 @@ public class GameManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (scene != SceneManager.GetSceneByBuildIndex(0))
+        if(scene == SceneManager.GetSceneByName("BasicLevel"))
         {
-            currentSceneName = scene.name.ToString();
-            currenScene = scene;
-            Transform startPoint = GameObject.Find("StartPoint").transform;
-            player.transform.position = startPoint.position;
-            cameraBorder.m_BoundingVolume = GameObject.Find("CameraBorder").GetComponent<Collider>();
+            for(int i = 1; i < SceneManager.sceneCountInBuildSettings; i++)
+            {
+                LoadScene(i);                
+            }
+            DoForSeconds(() => player.transform.position = GetGameObjectInScene("CH1", "StartPoint").transform.position, Time.deltaTime);
         }
-        else if(scene == SceneManager.GetSceneByBuildIndex(0))
-        {
-            if(SceneManager.sceneCount == 1)
-                SceneManager.LoadScene(5, LoadSceneMode.Additive);
-        }
-    }
-    private void LoadScene(InputAction.CallbackContext ctx)
-    {
-        SceneManager.LoadScene(5, LoadSceneMode.Additive);
     }
     public void LoadScene(int sceneIndex)
     {
-        SceneManager.UnloadSceneAsync(currenScene);
+        //SceneManager.UnloadSceneAsync(currenScene);
         SceneManager.LoadScene(sceneIndex, LoadSceneMode.Additive);
     }
 
@@ -90,10 +82,10 @@ public class GameManager : MonoBehaviour
         this.gameState = state;
         InputHandler.instance.SetActionEnable(gameState);
     }
-
-    public void CamBorderChange(BoxCollider border)
+    public void ChangeCam(PlayableAsset play)
     {
-
+        director.playableAsset = play;
+        director.Play();
     }
     public void DoForSeconds(System.Action action ,float seconds)
     {
@@ -108,5 +100,21 @@ public class GameManager : MonoBehaviour
     {
         GamePad.SetVibration(playerIndex, LMotor, RMotor);
         DoForSeconds(() => GamePad.SetVibration(playerIndex, 0, 0), seconds);
+    }
+
+    /// <summary>
+    /// Find Gameobject in Specific Loaded Scene.(In Scene ROOT only)
+    /// </summary>
+    /// <param name="sceneName"></param>
+    /// <param name="objectName"></param>
+    /// <returns></returns>
+    public GameObject GetGameObjectInScene(string sceneName, string objectName)
+    {
+        foreach(GameObject ob in SceneManager.GetSceneByName(sceneName).GetRootGameObjects())
+        {
+            if(ob.name == objectName) return ob;
+        }
+        Debug.LogWarning($"Can't NOT find \"{objectName}\" in \"{sceneName}\".");
+        return null;
     }
 }
