@@ -35,8 +35,11 @@ public class GameManager : MonoBehaviour
         else
             Destroy(gameObject);
 
-        //if(!Debugging)
-        //    SceneManager.sceneLoaded += OnSceneLoaded;
+        if(!Debugging)
+            SceneManager.sceneLoaded += OnSceneLoaded;
+
+        action.Enable();
+        action.performed += ctx => SceneManager.LoadScene(0);
     }
     void Start()
     {
@@ -62,11 +65,12 @@ public class GameManager : MonoBehaviour
     {
         if(scene == SceneManager.GetSceneByName("BasicLevel"))
         {
-            for(int i = 1; i < SceneManager.sceneCountInBuildSettings; i++)
-            {
-                LoadScene(i);                
-            }
-            DoForSeconds(() => player.transform.position = GetGameObjectInScene("CH1", "StartPoint").transform.position, Time.deltaTime);
+            //for(int i = 1; i < SceneManager.sceneCountInBuildSettings; i++)
+            //{
+            //    LoadScene(i);                
+            //}
+            //DoForSeconds(() => player.transform.position = GetGameObjectInScene("CH1", "StartPoint").transform.position, Time.deltaTime);
+            player = FindObjectOfType<TestPlayer>();
         }
     }
     public void LoadScene(int sceneIndex)
