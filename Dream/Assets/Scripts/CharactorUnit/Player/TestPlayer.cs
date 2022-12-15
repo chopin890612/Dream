@@ -262,6 +262,8 @@ public class TestPlayer : MonoBehaviour
         //Physics.SphereCastAll(transform.position, )
         #endregion
 
+
+
         CurrentState = stateMachine.currentState.ToString();
     }
     private void FixedUpdate()

@@ -10,6 +10,7 @@ public class FloatingWord : MonoBehaviour
     public Vector2 targetPos;
     public bool isChangWorld  = false;
     public bool enableRandom = true;
+    public bool enableChageWorld = true;
     public bool wordCollider = false;
     public InputAction action;
     public Vector2 wordBorder = new Vector2(1f,1f);
@@ -73,15 +74,18 @@ public class FloatingWord : MonoBehaviour
     }
     private void ChangeWorld()
     {
-        if (isChangWorld)
+        if (enableChageWorld)
         {
-            wordState = WordState.ResetValue;
-            isChangWorld = false;
-        }
-        else
-        {
-            wordState = WordState.Platforming;
-            isChangWorld = true;
+            if (isChangWorld)
+            {
+                wordState = WordState.ResetValue;
+                isChangWorld = false;
+            }
+            else
+            {
+                wordState = WordState.Platforming;
+                isChangWorld = true;
+            }
         }
     }
     private void EndChageWorldCallback()
