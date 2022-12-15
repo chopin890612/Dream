@@ -6,25 +6,7 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/81DEMO/Basic.unity
-    guid: 5420f8c177f14da46b79972434becd25
-  - enabled: 1
-    path: Assets/Scenes/81DEMO/Cave.unity
-    guid: 126a51fd912368946bd5ada8048f0ead
-  - enabled: 1
-    path: Assets/Scenes/81DEMO/Villi.unity
-    guid: f54c8459968318648af807f63a4a5ff5
-  - enabled: 1
-    path: Assets/Scenes/81DEMO/UnderGround.unity
-    guid: f06678b216149624aa648f61c9592411
-  - enabled: 1
-    path: Assets/Scenes/81DEMO/BrokenVilli.unity
-    guid: 35b44c6334d9c854ca16152dcd7c5a11
-  - enabled: 1
-    path: Assets/Scenes/81DEMO/Camp.unity
-    guid: 9d489c6a168306f4b9181dc9ebfd65a2
-  - enabled: 1
-    path: Assets/Scenes/81DEMO/Camp 1.unity
-    guid: d3e52cb77b87b6948b5fec31959ee990
+    path: Assets/Scenes/Levels/BasicLevel.unity
+    guid: bfbc5e77b15c77243a7fc84c136ce16d
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: bdb6ff7a5b93d85498267ce813e807cc, type: 2}

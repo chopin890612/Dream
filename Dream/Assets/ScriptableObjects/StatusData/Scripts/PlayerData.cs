@@ -80,6 +80,8 @@ public class PlayerData : ScriptableObject
 	[Header("ChangeWorld")]
 	public bool enableChangeWorld = false;
 	public float pressChangeWorldRunSpeed;
+	public float worldIncreaseSpeed;
+	public float worldDecreaseSpeed;
 	public float minChangeWorldRadius;
 	public float maxChangeWorldRadius;
 

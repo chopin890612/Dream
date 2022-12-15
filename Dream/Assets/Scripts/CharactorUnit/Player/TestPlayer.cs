@@ -262,6 +262,8 @@ public class TestPlayer : MonoBehaviour
         //Physics.SphereCastAll(transform.position, )
         #endregion
 
+
+
         CurrentState = stateMachine.currentState.ToString();
     }
     private void FixedUpdate()
@@ -687,12 +689,12 @@ public class TestPlayer : MonoBehaviour
     {
         if (_changeWorldCheck.transform.localScale.x < playerData.maxChangeWorldRadius && isPressChangeWorld)
             _changeWorldCheck.transform.localScale = new Vector2
-                (_changeWorldCheck.transform.localScale.x + Time.deltaTime * 7f, 
-                _changeWorldCheck.transform.localScale.y + Time.deltaTime * 7f);
+                (_changeWorldCheck.transform.localScale.x + Time.deltaTime * playerData.worldIncreaseSpeed, 
+                _changeWorldCheck.transform.localScale.y + Time.deltaTime * playerData.worldIncreaseSpeed);
         else if(_changeWorldCheck.transform.localScale.x > playerData.minChangeWorldRadius && !isPressChangeWorld)
             _changeWorldCheck.transform.localScale = new Vector2
-                (_changeWorldCheck.transform.localScale.x - Time.deltaTime * 1f,
-                _changeWorldCheck.transform.localScale.y - Time.deltaTime * 1f);
+                (_changeWorldCheck.transform.localScale.x - Time.deltaTime * playerData.worldDecreaseSpeed,
+                _changeWorldCheck.transform.localScale.y - Time.deltaTime * playerData.worldDecreaseSpeed);
         else if(!isPressChangeWorld)
         {
             IsInChangeWorld = false;

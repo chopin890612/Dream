@@ -8,6 +8,9 @@ public class InputHandler : MonoBehaviour
 {
     public static InputHandler instance;
 
+    public bool enableDummyMove = false;
+    public Vector2 dummyMovment = Vector2.zero;
+
     #region Player Input
     public Vector2 Movement { get; private set; }
     public Action<InputArgs> OnJumpPressed;
@@ -100,6 +103,19 @@ public class InputHandler : MonoBehaviour
         OnPressDown += ctx => Dummy();
         OnSelect += ctx => Dummy();
         #endregion
+    }
+
+    private void Update()
+    {
+        if (enableDummyMove)
+        {
+            Movement = dummyMovment;
+        }
+    }
+
+    public void ReDetectInput()
+    {
+        Movement = playerAction.Player.Movment.ReadValue<Vector2>();
     }
     private void Dummy() { }
 

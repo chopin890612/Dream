@@ -11,6 +11,7 @@ public class EventManager : MonoBehaviour
 
     public UnityEvent FireEvent = new UnityEvent();
 
+    public UnityEvent<string> LevelChangeEvent = new UnityEvent<string>();
 
     public UnityEvent DialogueEndEvent = new UnityEvent();
     public UnityEvent<DialogueData> TalkToNPCEvent = new UnityEvent<DialogueData>();

@@ -15,6 +15,7 @@ TagManager:
   - AttackCollider
   - Body
   - Heal
+  - Border
   layers:
   - Default
   - TransparentFX
