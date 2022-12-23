@@ -705,7 +705,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Debugging: 1
-  gameState: 1
+  gameState: 2
   player: {fileID: 0}
   currentSceneName: 
   cameraBorder: {fileID: 7900299291546386599}
@@ -730,6 +730,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9d14ef2711290d43b657d371c28ee42, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enableDummyMove: 0
+  dummyMovment: {x: 0, y: 0}
 --- !u!114 &4724213428832806289
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -749,6 +751,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   FireEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  LevelChangeEvent:
     m_PersistentCalls:
       m_Calls: []
   DialogueEndEvent:
@@ -1183,7 +1188,7 @@ MonoBehaviour:
   m_Follow: {fileID: 1795832721081390700}
   m_Lens:
     FieldOfView: 60
-    OrthographicSize: 5
+    OrthographicSize: 8
     NearClipPlane: 0.3
     FarClipPlane: 1000
     Dutch: 0
@@ -1208,7 +1213,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2fba25a5cd15594e8f050a11e386c80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ConfineMode: 0
+  m_ConfineMode: 1
   m_BoundingVolume: {fileID: 0}
   m_BoundingShape2D: {fileID: 0}
   m_ConfineScreenEdges: 1
@@ -1273,8 +1278,8 @@ Camera:
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
-  orthographic: 0
-  orthographic size: 5
+  orthographic: 1
+  orthographic size: 8
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
