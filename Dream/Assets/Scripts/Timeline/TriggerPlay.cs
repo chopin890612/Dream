@@ -6,11 +6,16 @@ using UnityEngine.Playables;
 public class TriggerPlay : MonoBehaviour
 {
     public PlayableDirector director;
+    public int playablesIndex;
+    public bool changePlayable = false;
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
         {
-            director.Resume();
+            if(!changePlayable)
+                director.Resume();
+            else
+                director.GetComponent<TimelineControl>().ChangePlayable(playablesIndex);
         }
     }
 }

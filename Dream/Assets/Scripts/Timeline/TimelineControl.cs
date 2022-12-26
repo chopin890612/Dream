@@ -7,12 +7,13 @@ public class TimelineControl : MonoBehaviour
 {
     public PlayableDirector director;
     public PlayableAsset[] playables;
+    public bool playOnStart = false;
 
     [SerializeField]private int index = 0;
 
     private void Start()
     {
-        if (playables.Length > 0)
+        if (playables.Length > 0 && playOnStart)
         {
             director.playableAsset = playables[index];
             director.Play();
@@ -38,6 +39,12 @@ public class TimelineControl : MonoBehaviour
     {
         director.Stop();
         director.playableAsset = playables[++index];
+        director.Play();
+    }
+    public void ChangePlayable(int index)
+    {
+        director.Stop();
+        director.playableAsset = playables[index];
         director.Play();
     }
 }
