@@ -60439,7 +60439,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5140655115517042151}
   m_Layer: 0
-  m_Name: CH3
+  m_Name: CH3Platform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
