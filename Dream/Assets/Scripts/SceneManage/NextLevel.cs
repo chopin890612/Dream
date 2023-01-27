@@ -35,7 +35,7 @@ public class NextLevel : MonoBehaviour
         if (other.CompareTag("Player")) 
         { 
             //GameManager.instance.CamBorderChange(nextBorder);
-            GameManager.instance.ChangeCam(camChange);
+            GameObject.FindObjectOfType<DirectorController>().ChangeCam(camChange);
             EventManager.instance.LevelChangeEvent.Invoke(nextLevel);
         }
     }

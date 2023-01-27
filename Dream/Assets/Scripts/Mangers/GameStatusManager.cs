@@ -7,19 +7,61 @@ using UnityEngine.InputSystem;
 
 public class GameStatusManager: MonoBehaviour
 {
-    public SaveStatus playerData;
-    public SaveStatus testt;
-    public string LoadPath;
-
-    private Dictionary<string, object> dataStreams;
+    [SerializeField]private Dictionary<string, object> dataStreams;
+    public static GameStatusManager instance;
     private string savePath;
 
-    public InputAction press;
-
+    //[Header("TEST")]
+    //public SaveStatus playerData;
+    //public SaveStatus testt;
+    //public string LoadPath;
+    //public string Name;
+    //public InputAction load;
+    //public InputAction save;
+    //public InputAction add;
+    //public InputAction getp;
+    //public InputAction printDiction;
+    private void Awake()
+    {
+        instance = this;
+    }
     private void Start()
     {
         savePath = $"{Application.persistentDataPath}/save.txt";
+        dataStreams = LoadData();
+
+        //LoadPath = savePath;
+        //load.Enable();
+        //save.Enable();
+        //add.Enable();
+        //getp.Enable();
+        //printDiction.Enable();
+
+        //load.performed += ctx => dataStreams = LoadData();
+        //save.performed += ctx => SaveData();
+        //add.performed += ctx => AddNew(Name);
+        //getp.performed += ctx => GetPlayer(Name);
+        //printDiction.performed += ctx => PrintDic();
     }
+    //void PrintDic()
+    //{
+    //    string text = "";
+    //    foreach(KeyValuePair<string, object> pair in dataStreams)
+    //    {
+    //        text += string.Format("Key = {0}, Value = {1}\n", pair.Key, pair.Value);
+    //    }
+    //    Debug.Log(text);
+    //}
+    //void GetPlayer(string name)
+    //{
+    //    playerData = (SaveStatus)ReadStatus(name);
+    //}
+    //void AddNew(string name)
+    //{
+    //    AddStatus(name, testt);
+    //}
+
+
     public object ReadStatus(string name)
     {
         return dataStreams[name];

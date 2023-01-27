@@ -20,7 +20,6 @@ public class PlayerData : ScriptableObject
 	[Header("Other Physics")]
 	[Range(0, 0.5f)] public float coyoteTime; //grace time to Jump after the player has fallen off a platformer
 
-
 	//GROUND
 	[Header("Run")]
 	public bool enableRun = false;

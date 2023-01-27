@@ -20,15 +20,15 @@ namespace Bang.StateMachine.PlayerMachine
                 obj.animator.Play("idle", 0);
 
             if (obj.CanSlope)
-                obj.GetComponent<CapsuleCollider>().material = obj.infFrction;
+                obj.GetComponent<Collider>().material = obj.infFrction;
             else
-                obj.GetComponent<CapsuleCollider>().material = obj.noFriction;
+                obj.GetComponent<Collider>().material = obj.noFriction;
         }
 
         public override void ExitState()
         {
             base.ExitState();
-            obj.GetComponent<CapsuleCollider>().material = obj.noFriction;
+            obj.GetComponent<Collider>().material = obj.noFriction;
         }
 
         public override void LogicUpdate()
