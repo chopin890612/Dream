@@ -51,13 +51,13 @@ MonoBehaviour:
   dashUpEndMult: 0.6
   dashEndRunLerp: 0.3
   dashBufferTime: 0.05
-  enableChangeWorld: 1
+  enableChangeWorld: 0
   pressChangeWorldRunSpeed: 0
   worldIncreaseSpeed: 15
   worldDecreaseSpeed: 1.5
   minChangeWorldRadius: 3
   maxChangeWorldRadius: 8
-  enableFire: 1
+  enableFire: 0
   enableAttack: 0
   knockBackForce: {x: 10, y: 10}
   knockBackTime: 0.2
