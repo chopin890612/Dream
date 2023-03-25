@@ -12,10 +12,13 @@ public class TriggerPlay : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-            if(!changePlayable)
+            if (!changePlayable)
                 director.Resume();
             else
+            {
                 director.GetComponent<TimelineControl>().ChangePlayable(playablesIndex);
+                GetComponent<Collider2D>().enabled = false;
+            }
         }
     }
 }
