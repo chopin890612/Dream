@@ -4,14 +4,25 @@ using UnityEngine;
 
 public class TalkNPC : MonoBehaviour
 {
-    public DialogueData data;
+    [SerializeField] bool isFirstTalk = true;
+    public DialogueData firstTalk;
+    public DialogueData[] talk;
+    private int talkIndex = 0;
 
-    [SerializeField] private bool canTalk;
+    [SerializeField] bool canTalk;
     private void Update()
     {
-        if (canTalk && InputHandler.instance.Movement.y > 0.5f)
-            Talk();
-
+        if (isFirstTalk && canTalk && InputHandler.instance.Movement.y > 0.5f)
+        {
+            Talk(firstTalk);
+            isFirstTalk = false;
+        }
+        else if (canTalk && InputHandler.instance.Movement.y > 0.5f)
+        {
+            Talk(talk[talkIndex]);
+            talkIndex++;
+            if (talkIndex >= talk.Length) talkIndex = 0;
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -29,9 +40,9 @@ public class TalkNPC : MonoBehaviour
         }
     }
 
-    private void Talk()
+    private void Talk(DialogueData talkContent)
     {
-        EventManager.instance.TalkToNPCEvent.Invoke(data);
+        EventManager.instance.TalkToNPCEvent.Invoke(talkContent);
         GameManager.instance.ChangeGameState(GameManager.GameState.Dialogue);
     }
 }

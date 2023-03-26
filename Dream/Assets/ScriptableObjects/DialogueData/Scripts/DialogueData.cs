@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 [CreateAssetMenu(fileName = "newConversation", menuName = "Bang's Things/ScriptObjects/DialogueData/DialogueData")]
 public class DialogueData : ScriptableObject
@@ -22,4 +23,6 @@ public class DialogueContext
 
     [TextArea]
     public List<string> sentence = new List<string>();
+
+    public List<DialogueEventData> Events = new List<DialogueEventData>();
 }

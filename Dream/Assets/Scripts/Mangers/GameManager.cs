@@ -14,9 +14,7 @@ public class GameManager : MonoBehaviour
     public GameState gameState;
     public TestPlayer player;
     public string currentSceneName;
-    public Cinemachine.CinemachineConfiner cameraBorder;
     private Scene currenScene;
-    private PlayableDirector director;
 
     public InputAction action;
 
@@ -30,12 +28,20 @@ public class GameManager : MonoBehaviour
     }
     private void Awake()
     {
+        #region Singleton
         if (instance == null)
+        {
             instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
         else
+        {
             Destroy(gameObject);
+            return;
+        }
+        #endregion
 
-        if(!Debugging)
+        if (!Debugging)
             SceneManager.sceneLoaded += OnSceneLoaded;
 
         action.Enable();
@@ -50,7 +56,6 @@ public class GameManager : MonoBehaviour
             InputHandler.instance.OnUIBack += (ctx) => ctx = new InputHandler.InputArgs();
         }
         player = FindObjectOfType<TestPlayer>();
-        director = GetComponent<PlayableDirector>();
     }
 
     // Update is called once per frame
@@ -85,11 +90,6 @@ public class GameManager : MonoBehaviour
     {
         this.gameState = state;
         InputHandler.instance.SetActionEnable(gameState);
-    }
-    public void ChangeCam(PlayableAsset play)
-    {
-        director.playableAsset = play;
-        director.Play();
     }
     public void DoForSeconds(System.Action action ,float seconds)
     {

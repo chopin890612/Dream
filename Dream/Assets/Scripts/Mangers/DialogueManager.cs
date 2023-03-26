@@ -196,6 +196,10 @@ public class DialogueManager : MonoBehaviour
 
             CharNameImage0.SetActive(false);
         }
+        foreach(DialogueEventData Devent in currentContext.Events)
+        {
+            Devent.EventAction();
+        }
     }
     private void ShowSelectOutline()
     {
