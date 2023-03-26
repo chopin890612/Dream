@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class SoundManager : MonoBehaviour
 {
+    public float masterVol;
+    public float BGMVol;
+    public float SFXVol;
     public static SoundManager Instance { get; private set; }
     public AudioClip[] BGM;
     public AudioClip[] SFX;

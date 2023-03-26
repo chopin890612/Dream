@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BirdPlatform : MonoBehaviour
 {
-    public GameObject Platfrom;
+    public GameObject[] Platfrom;
     // Start is called before the first frame update
     void Start()
     {
@@ -19,6 +19,9 @@ public class BirdPlatform : MonoBehaviour
 
     private void EnablePlatform()
     {
-        Platfrom.SetActive(true);
+        foreach (GameObject g in Platfrom)
+        {
+            g.SetActive(!g.activeSelf);
+        }
     }
 }
