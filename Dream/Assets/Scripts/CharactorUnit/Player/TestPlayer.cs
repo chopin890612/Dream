@@ -8,7 +8,7 @@ using UnityEngine.Events;
 
 public class TestPlayer : MonoBehaviour
 {
-    #region State Variables
+    #region State Variables    
     public StateMachine<TestPlayer, PlayerData> stateMachine { get; private set; }
     public IdleState idleState { get; private set; }
     public RunState runState { get; private set; }
@@ -35,6 +35,7 @@ public class TestPlayer : MonoBehaviour
     public PhysicMaterial noFriction;
     public PhysicMaterial infFrction;
     public GameObject Fire;
+    public GameObject[] AbilityOutfit;
     #endregion
 
     #region Animations

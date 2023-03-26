@@ -41,18 +41,7 @@ public class InputHandler : MonoBehaviour
 
     private void Awake()
     {
-        #region Singleton
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
-        #endregion
+        instance = this;
 
         playerAction = new InputMaster();
         UIAction = new InputMaster();

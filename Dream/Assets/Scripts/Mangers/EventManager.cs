@@ -16,6 +16,8 @@ public class EventManager : MonoBehaviour
     public UnityEvent DialogueEndEvent = new UnityEvent();
     public UnityEvent<DialogueData> TalkToNPCEvent = new UnityEvent<DialogueData>();
 
+    public UnityEvent BirdPlatformEvent = new UnityEvent();
+
     private void Awake()
     {
         instance = this;
