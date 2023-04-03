@@ -1,12 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SoundManager : MonoBehaviour
 {
     public float masterVol;
     public float BGMVol;
     public float SFXVol;
+
+    public UnityEngine.Audio.AudioMixer masterMixer;
+    public UnityEngine.Audio.AudioMixerGroup BGMMixer;
+    public UnityEngine.Audio.AudioMixerGroup SFXMixer;
+    public bool MuteBGM = false;
+    public bool MuteSFX = false;
     public static SoundManager Instance { get; private set; }
     public AudioClip[] BGM;
     public AudioClip[] SFX;
@@ -17,18 +24,24 @@ public class SoundManager : MonoBehaviour
     AudioSource[] SFXSources;
     void Start()
     {
-        if(Instance == null)
+        if (Instance == null)
+        {
             Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
         else
+        {
             Destroy(gameObject);
-
-        DontDestroyOnLoad(this.gameObject);
+            return;
+        }
         BGMPlayer = new GameObject("BGMPlayer");
         BGMPlayer.transform.parent = this.transform;
         BGMSource = BGMPlayer.AddComponent<AudioSource>();
+        BGMSource.outputAudioMixerGroup = BGMMixer;
         BGMSource.loop = true;
         PlayBGM(0);
 
+        
 
         SFXPlayer = new GameObject("SFXPlayer");
         SFXPlayer.transform.parent = this.transform;
@@ -39,8 +52,17 @@ public class SoundManager : MonoBehaviour
             tSource.loop = false;
             tSource.playOnAwake = false;
             tSource.clip = SFX[i];
+            tSource.outputAudioMixerGroup = SFXMixer;
             SFXSources[i] = tSource;
         }
+    }
+    private void Update()
+    {
+        if (MuteBGM)
+            masterMixer.SetFloat("BGMVolume", -80f);
+
+        if (MuteSFX)
+            masterMixer.SetFloat("SFXVolume", -80f);
     }
 
     public void PlayBGM(int index)
@@ -51,5 +73,27 @@ public class SoundManager : MonoBehaviour
     public void PlaySFX(int index)
     {
         SFXSources[index].Play();
+    }
+
+    public void OnSliderValueChange(float sliderRawValue, Slider sliderSender)
+    {
+        switch (sliderSender.name)
+        {
+            case "Master":
+                masterMixer.SetFloat("MasterVolume", sliderRawValue.Remap(-10f, 10, -40, 20));
+                break;
+            case "BGM":
+                if(MuteBGM)
+                    masterMixer.SetFloat("BGMVolume", -80f);
+                else
+                    masterMixer.SetFloat("BGMVolume", sliderRawValue.Remap(-10f, 10, -40, 20));
+                break;
+            case "SFX":
+                if(MuteSFX)
+                    masterMixer.SetFloat("SFXVolume", -80f);
+                else
+                    masterMixer.SetFloat("SFXVolume", sliderRawValue.Remap(-10f, 10, -40, 20));
+                break;
+        }
     }
 }

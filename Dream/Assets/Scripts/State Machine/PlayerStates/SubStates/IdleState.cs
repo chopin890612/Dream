@@ -14,8 +14,11 @@ namespace Bang.StateMachine.PlayerMachine
         public override void EnterState()
         {
             base.EnterState();
-            if(obj.enableSpine)
+            if (obj.enableSpine)
+            {
                 obj.skeletonAnimation.AnimationState.SetAnimation(0, obj.idle, true);
+                obj.skeletonAnimation.timeScale = 1f;
+            }
             if(obj.enableAnimator)
                 obj.animator.Play("idle", 0);
 

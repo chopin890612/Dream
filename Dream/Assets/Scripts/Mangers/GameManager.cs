@@ -12,9 +12,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] private bool Debugging;
     public static GameManager instance;
     public GameState gameState;
+    public GameState previousState;
     public TestPlayer player;
     public string currentSceneName;
     private Scene currenScene;
+
+    public GameObject PauseUI;
 
     public InputAction action;
 
@@ -50,32 +53,41 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         InputHandler.instance.SetActionEnable(gameState);
-        if(gameState == GameState.Prologue)
-        {
-            InputHandler.instance.OnUIConfirm += (ctx) => ctx = new InputHandler.InputArgs();
-            InputHandler.instance.OnUIBack += (ctx) => ctx = new InputHandler.InputArgs();
-        }
-        player = FindObjectOfType<TestPlayer>();
+        
+        
+        //if (gameState == GameState.Prologue)
+        //{
+        //    InputHandler.instance.OnUIConfirm += (ctx) => ctx = new InputHandler.InputArgs();
+        //    InputHandler.instance.OnUIBack += (ctx) => ctx = new InputHandler.InputArgs();
+        //}
+        //player = FindObjectOfType<TestPlayer>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     #region Scene Management
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if(scene == SceneManager.GetSceneByName("BasicLevel"))
+        PauseUI.SetActive(false);
+        switch (scene.buildIndex)
         {
-            //for(int i = 1; i < SceneManager.sceneCountInBuildSettings; i++)
-            //{
-            //    LoadScene(i);                
-            //}
-            //DoForSeconds(() => player.transform.position = GetGameObjectInScene("CH1", "StartPoint").transform.position, Time.deltaTime);
-            player = FindObjectOfType<TestPlayer>();
+            case 0:
+                ChangeGameState(GameState.MainMenu);
+                break;
+            case 1:
+                ChangeGameState(GameState.Prologue);
+                break;
+            case 2:
+                ChangeGameState(GameState.GameView);
+                player = FindObjectOfType<TestPlayer>();
+                InputHandler.instance.OnPause += arg => OnPause();
+                InputHandler.instance.OnUIPause += arg => OnPause();
+                break;
         }
     }
     public void LoadScene(int sceneIndex)
@@ -88,9 +100,30 @@ public class GameManager : MonoBehaviour
 
     public void ChangeGameState(GameState state)
     {
-        this.gameState = state;
+        previousState = gameState;
+        gameState = state;
         InputHandler.instance.SetActionEnable(gameState);
     }
+    public void OnPause()
+    {
+        if (!PauseUI.activeSelf)
+        {
+            PauseUI.SetActive(true);
+            ChangeGameState(GameState.GameMenu);
+        }
+        else
+        {
+            PauseUI.SetActive(false);
+            ChangeGameState(previousState);
+        }
+    }
+
+
+
+
+
+
+
     public void DoForSeconds(System.Action action ,float seconds)
     {
         StartCoroutine(WaitCoroutin(action, seconds));

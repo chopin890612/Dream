@@ -32,7 +32,7 @@ public partial class @InputMaster : IInputActionCollection2, IDisposable
                     ""type"": ""Value"",
                     ""id"": ""9edf78f9-49b4-4fea-91eb-f4eb2c6c7e79"",
                     ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
+                    ""processors"": ""StickDeadzone(min=0.1,max=0.9)"",
                     ""interactions"": """",
                     ""initialStateCheck"": true
                 },
@@ -94,6 +94,15 @@ public partial class @InputMaster : IInputActionCollection2, IDisposable
                     ""name"": ""Interact"",
                     ""type"": ""Button"",
                     ""id"": ""d60cdc09-675a-45f5-86de-05ae66f30a7a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Pause"",
+                    ""type"": ""Button"",
+                    ""id"": ""3ee3f514-df20-46a7-b488-5bcb53080276"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -331,6 +340,28 @@ public partial class @InputMaster : IInputActionCollection2, IDisposable
                     ""action"": ""Interact"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""68f1875d-0aef-4271-89b2-74d891614b9e"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""85896d6c-51c2-4603-b4be-845e70fcff97"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -343,7 +374,7 @@ public partial class @InputMaster : IInputActionCollection2, IDisposable
                     ""type"": ""Value"",
                     ""id"": ""5b57ac98-837d-4603-aa68-0d943e488c36"",
                     ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
+                    ""processors"": ""StickDeadzone"",
                     ""interactions"": """",
                     ""initialStateCheck"": true
                 },
@@ -360,6 +391,15 @@ public partial class @InputMaster : IInputActionCollection2, IDisposable
                     ""name"": ""Back"",
                     ""type"": ""Button"",
                     ""id"": ""f24e3a55-5129-46ad-9536-1923b60deb47"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Pause"",
+                    ""type"": ""Button"",
+                    ""id"": ""c9f37a1f-0d3b-451a-8954-aa40b7540d20"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -487,6 +527,28 @@ public partial class @InputMaster : IInputActionCollection2, IDisposable
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0af7c9af-705f-4320-9be5-ee0a436d64e7"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""670ec20e-6f0d-4707-a873-76aac32546bb"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -499,7 +561,7 @@ public partial class @InputMaster : IInputActionCollection2, IDisposable
                     ""type"": ""Button"",
                     ""id"": ""1761c388-c674-4262-ba27-1bd84236ae6a"",
                     ""expectedControlType"": ""Button"",
-                    ""processors"": """",
+                    ""processors"": ""AxisDeadzone"",
                     ""interactions"": """",
                     ""initialStateCheck"": false
                 },
@@ -612,6 +674,162 @@ public partial class @InputMaster : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Prologue"",
+            ""id"": ""6284f4c8-f03d-4c75-b275-e788d4681785"",
+            ""actions"": [
+                {
+                    ""name"": ""Move"",
+                    ""type"": ""Value"",
+                    ""id"": ""88ca840c-457b-4035-872c-62f9c52cce22"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": ""StickDeadzone"",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Confirm"",
+                    ""type"": ""Button"",
+                    ""id"": ""8ee2ece8-1474-4ffb-ab7a-88d450d3a457"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Back"",
+                    ""type"": ""Button"",
+                    ""id"": ""9a525d3c-969c-4174-bc0b-480a713b8432"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""b01e6cbf-71a9-4420-8985-27c4c177518f"",
+                    ""path"": ""<Keyboard>/x"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Back"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""19ddc9a2-3eb1-4788-b724-32166cfb0132"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Back"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""KeyBoard_ArrowKey"",
+                    ""id"": ""b910c52c-4d9f-4487-922a-b5be70d1e80d"",
+                    ""path"": ""2DVector(mode=2)"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""65ef1322-1746-4ff6-8750-87807e3bc93d"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""9d84a16e-b5b3-4d2b-8625-7894233955a8"",
+                    ""path"": ""<Keyboard>/downArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""0c8d180c-c2ba-4440-aa60-b58f351df941"",
+                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""263e28e9-b039-4ab4-a8f8-4c8679909549"",
+                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c6ae7f46-5393-4580-a77d-350adbe2ab65"",
+                    ""path"": ""<Gamepad>/leftStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b75aaaab-57a9-4b67-aed2-93a57cd27007"",
+                    ""path"": ""<Gamepad>/dpad"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d71c561b-1ba9-49ba-afcf-252df8af0dc8"",
+                    ""path"": ""<Keyboard>/c"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Confirm"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0808c39f-431a-4c65-9fc6-5b4580c3019f"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Confirm"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -637,16 +855,23 @@ public partial class @InputMaster : IInputActionCollection2, IDisposable
         m_Player_ChangeWorld = m_Player.FindAction("ChangeWorld", throwIfNotFound: true);
         m_Player_Fire = m_Player.FindAction("Fire", throwIfNotFound: true);
         m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
+        m_Player_Pause = m_Player.FindAction("Pause", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Move = m_UI.FindAction("Move", throwIfNotFound: true);
         m_UI_Confirm = m_UI.FindAction("Confirm", throwIfNotFound: true);
         m_UI_Back = m_UI.FindAction("Back", throwIfNotFound: true);
+        m_UI_Pause = m_UI.FindAction("Pause", throwIfNotFound: true);
         // Dialogue
         m_Dialogue = asset.FindActionMap("Dialogue", throwIfNotFound: true);
         m_Dialogue_Up = m_Dialogue.FindAction("Up", throwIfNotFound: true);
         m_Dialogue_Down = m_Dialogue.FindAction("Down", throwIfNotFound: true);
         m_Dialogue_Confirm = m_Dialogue.FindAction("Confirm", throwIfNotFound: true);
+        // Prologue
+        m_Prologue = asset.FindActionMap("Prologue", throwIfNotFound: true);
+        m_Prologue_Move = m_Prologue.FindAction("Move", throwIfNotFound: true);
+        m_Prologue_Confirm = m_Prologue.FindAction("Confirm", throwIfNotFound: true);
+        m_Prologue_Back = m_Prologue.FindAction("Back", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -714,6 +939,7 @@ public partial class @InputMaster : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_ChangeWorld;
     private readonly InputAction m_Player_Fire;
     private readonly InputAction m_Player_Interact;
+    private readonly InputAction m_Player_Pause;
     public struct PlayerActions
     {
         private @InputMaster m_Wrapper;
@@ -726,6 +952,7 @@ public partial class @InputMaster : IInputActionCollection2, IDisposable
         public InputAction @ChangeWorld => m_Wrapper.m_Player_ChangeWorld;
         public InputAction @Fire => m_Wrapper.m_Player_Fire;
         public InputAction @Interact => m_Wrapper.m_Player_Interact;
+        public InputAction @Pause => m_Wrapper.m_Player_Pause;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -759,6 +986,9 @@ public partial class @InputMaster : IInputActionCollection2, IDisposable
                 @Interact.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteract;
                 @Interact.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteract;
                 @Interact.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteract;
+                @Pause.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPause;
+                @Pause.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPause;
+                @Pause.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPause;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -787,6 +1017,9 @@ public partial class @InputMaster : IInputActionCollection2, IDisposable
                 @Interact.started += instance.OnInteract;
                 @Interact.performed += instance.OnInteract;
                 @Interact.canceled += instance.OnInteract;
+                @Pause.started += instance.OnPause;
+                @Pause.performed += instance.OnPause;
+                @Pause.canceled += instance.OnPause;
             }
         }
     }
@@ -798,6 +1031,7 @@ public partial class @InputMaster : IInputActionCollection2, IDisposable
     private readonly InputAction m_UI_Move;
     private readonly InputAction m_UI_Confirm;
     private readonly InputAction m_UI_Back;
+    private readonly InputAction m_UI_Pause;
     public struct UIActions
     {
         private @InputMaster m_Wrapper;
@@ -805,6 +1039,7 @@ public partial class @InputMaster : IInputActionCollection2, IDisposable
         public InputAction @Move => m_Wrapper.m_UI_Move;
         public InputAction @Confirm => m_Wrapper.m_UI_Confirm;
         public InputAction @Back => m_Wrapper.m_UI_Back;
+        public InputAction @Pause => m_Wrapper.m_UI_Pause;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -823,6 +1058,9 @@ public partial class @InputMaster : IInputActionCollection2, IDisposable
                 @Back.started -= m_Wrapper.m_UIActionsCallbackInterface.OnBack;
                 @Back.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnBack;
                 @Back.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnBack;
+                @Pause.started -= m_Wrapper.m_UIActionsCallbackInterface.OnPause;
+                @Pause.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnPause;
+                @Pause.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnPause;
             }
             m_Wrapper.m_UIActionsCallbackInterface = instance;
             if (instance != null)
@@ -836,6 +1074,9 @@ public partial class @InputMaster : IInputActionCollection2, IDisposable
                 @Back.started += instance.OnBack;
                 @Back.performed += instance.OnBack;
                 @Back.canceled += instance.OnBack;
+                @Pause.started += instance.OnPause;
+                @Pause.performed += instance.OnPause;
+                @Pause.canceled += instance.OnPause;
             }
         }
     }
@@ -889,6 +1130,55 @@ public partial class @InputMaster : IInputActionCollection2, IDisposable
         }
     }
     public DialogueActions @Dialogue => new DialogueActions(this);
+
+    // Prologue
+    private readonly InputActionMap m_Prologue;
+    private IPrologueActions m_PrologueActionsCallbackInterface;
+    private readonly InputAction m_Prologue_Move;
+    private readonly InputAction m_Prologue_Confirm;
+    private readonly InputAction m_Prologue_Back;
+    public struct PrologueActions
+    {
+        private @InputMaster m_Wrapper;
+        public PrologueActions(@InputMaster wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Move => m_Wrapper.m_Prologue_Move;
+        public InputAction @Confirm => m_Wrapper.m_Prologue_Confirm;
+        public InputAction @Back => m_Wrapper.m_Prologue_Back;
+        public InputActionMap Get() { return m_Wrapper.m_Prologue; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(PrologueActions set) { return set.Get(); }
+        public void SetCallbacks(IPrologueActions instance)
+        {
+            if (m_Wrapper.m_PrologueActionsCallbackInterface != null)
+            {
+                @Move.started -= m_Wrapper.m_PrologueActionsCallbackInterface.OnMove;
+                @Move.performed -= m_Wrapper.m_PrologueActionsCallbackInterface.OnMove;
+                @Move.canceled -= m_Wrapper.m_PrologueActionsCallbackInterface.OnMove;
+                @Confirm.started -= m_Wrapper.m_PrologueActionsCallbackInterface.OnConfirm;
+                @Confirm.performed -= m_Wrapper.m_PrologueActionsCallbackInterface.OnConfirm;
+                @Confirm.canceled -= m_Wrapper.m_PrologueActionsCallbackInterface.OnConfirm;
+                @Back.started -= m_Wrapper.m_PrologueActionsCallbackInterface.OnBack;
+                @Back.performed -= m_Wrapper.m_PrologueActionsCallbackInterface.OnBack;
+                @Back.canceled -= m_Wrapper.m_PrologueActionsCallbackInterface.OnBack;
+            }
+            m_Wrapper.m_PrologueActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @Move.started += instance.OnMove;
+                @Move.performed += instance.OnMove;
+                @Move.canceled += instance.OnMove;
+                @Confirm.started += instance.OnConfirm;
+                @Confirm.performed += instance.OnConfirm;
+                @Confirm.canceled += instance.OnConfirm;
+                @Back.started += instance.OnBack;
+                @Back.performed += instance.OnBack;
+                @Back.canceled += instance.OnBack;
+            }
+        }
+    }
+    public PrologueActions @Prologue => new PrologueActions(this);
     private int m_KeyboardSchemeIndex = -1;
     public InputControlScheme KeyboardScheme
     {
@@ -917,17 +1207,25 @@ public partial class @InputMaster : IInputActionCollection2, IDisposable
         void OnChangeWorld(InputAction.CallbackContext context);
         void OnFire(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
+        void OnPause(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {
         void OnMove(InputAction.CallbackContext context);
         void OnConfirm(InputAction.CallbackContext context);
         void OnBack(InputAction.CallbackContext context);
+        void OnPause(InputAction.CallbackContext context);
     }
     public interface IDialogueActions
     {
         void OnUp(InputAction.CallbackContext context);
         void OnDown(InputAction.CallbackContext context);
         void OnConfirm(InputAction.CallbackContext context);
+    }
+    public interface IPrologueActions
+    {
+        void OnMove(InputAction.CallbackContext context);
+        void OnConfirm(InputAction.CallbackContext context);
+        void OnBack(InputAction.CallbackContext context);
     }
 }

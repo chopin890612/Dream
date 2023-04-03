@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41491792f8a41d84681d418135fcb534, type: 3}
+  m_Name: CH1_SnakeAgain
+  m_EditorClassIdentifier: 
+  data:
+  - charImage: {fileID: 0}
+    charSide: 1
+    charName: "\u86C7"
+    IsSelect: 0
+    selects: []
+    sentence:
+    - "\u4E0D\u77E5\u9053\u8981\u53BB\u54EA\u55CE\uFF1F\u592A\u967D\u7684\u5B69\u5B50\u3002\r"
+    - "\u6216\u8A31\u53EF\u4EE5\u8A66\u7740\u53BB\u53F3\u908A\u7684\u5EFA\u7BC9\u7269\u63A2\u7D22\u770B\u770B\u3002"
+    Events: []

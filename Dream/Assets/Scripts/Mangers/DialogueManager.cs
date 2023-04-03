@@ -118,6 +118,10 @@ public class DialogueManager : MonoBehaviour
                 {                    
                     sentenceIndex = 0;
                     SetContext();
+                    foreach (DialogueEventData Devent in currentContext.Events)
+                    {
+                        Devent.EventAction();
+                    }
                 }
                 else
                 {
@@ -195,10 +199,6 @@ public class DialogueManager : MonoBehaviour
             CharNameImage1.SetActive(true);
 
             CharNameImage0.SetActive(false);
-        }
-        foreach(DialogueEventData Devent in currentContext.Events)
-        {
-            Devent.EventAction();
         }
     }
     private void ShowSelectOutline()

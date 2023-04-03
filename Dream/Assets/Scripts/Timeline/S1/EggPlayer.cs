@@ -23,7 +23,7 @@ public class EggPlayer : MonoBehaviour
 
     private void Update()
     {
-        inputM = InputHandler.instance.Movement.x * -1f;
+        inputM = InputHandler.instance.PMovment.x * -1f;
 
         if (canControl)
         {            
