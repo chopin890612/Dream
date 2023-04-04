@@ -31,6 +31,11 @@ namespace Bang.StateMachine.PlayerMachine
 
             if(obj.enableAnimator)
                 obj.animator.Play("Dash", 0);
+            if (obj.enableSpine)
+            {
+                obj.skeletonAnimation.AnimationState.SetAnimation(0, obj.dash, false);
+                obj.skeletonAnimation.timeScale = 2f;
+            }
         }
 
         public override void ExitState()
@@ -39,6 +44,7 @@ namespace Bang.StateMachine.PlayerMachine
 
             obj.SetGravityScale(objData.gravityScale);
             obj.EndDash();
+            obj.skeletonAnimation.timeScale = 1f;
         }
 
         public override void LogicUpdate()

@@ -18,6 +18,8 @@ public class EventManager : MonoBehaviour
 
     public UnityEvent BirdPlatformEvent = new UnityEvent();
 
+    public UnityEvent LoadingCompleteEvent = new UnityEvent();
+
     private void Awake()
     {
         instance = this;

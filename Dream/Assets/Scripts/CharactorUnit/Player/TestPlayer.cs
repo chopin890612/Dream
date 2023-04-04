@@ -36,6 +36,7 @@ public class TestPlayer : MonoBehaviour
     public PhysicMaterial infFrction;
     public GameObject Fire;
     public GameObject[] AbilityOutfit;
+    public ParticleSystem dashEffect;
     #endregion
 
     #region Animations
@@ -43,7 +44,8 @@ public class TestPlayer : MonoBehaviour
     public bool enableSpine = false;
     public GameObject spineRenderer;
     public SkeletonAnimation skeletonAnimation;
-    public AnimationReferenceAsset idle, walk, jump, fall, attack;
+    public AnimationReferenceAsset idle, walk, jump, fall, attack, dash;
+    public EventDataReferenceAsset jumpSpineEvent, run1SpineEvent, run2SpineEvent;
     public EventDataReferenceAsset startCollision, endCollision, endAttack;
     [Space(5)]
     [Header("Animator")]
@@ -149,7 +151,8 @@ public class TestPlayer : MonoBehaviour
         if (enableSpine)
         {
             skeletonAnimation = spineRenderer.GetComponent<SkeletonAnimation>();
-            skeletonAnimation.AnimationState.Event += AttackAnimationHandler;
+            //skeletonAnimation.AnimationState.Event += AttackAnimationHandler;
+            skeletonAnimation.AnimationState.Event += MovementAnimationHandler;
         }
         if (enableAnimator)
         {
@@ -270,7 +273,8 @@ public class TestPlayer : MonoBehaviour
     private void FixedUpdate()
     {
         UseGravity();
-        stateMachine.currentState.PhysicsUpdate();        
+        stateMachine.currentState.PhysicsUpdate();
+        dashEffect.transform.position = spineRenderer.transform.position + new Vector3(0, 0.6f, 0);
     }
 
     #endregion
@@ -316,6 +320,7 @@ public class TestPlayer : MonoBehaviour
             spineRenderer.transform.Rotate(0, 180, 0);
         if(enableAnimator)
             spriteRenderer.transform.Rotate(0, 180, 0);
+        dashEffect.transform.Rotate(0, 180, 0);
 
         IsFacingRight = !IsFacingRight;
     }
@@ -563,6 +568,8 @@ public class TestPlayer : MonoBehaviour
         Physics.IgnoreLayerCollision(3, 9, true);
         if(playerData.enableAttack)
             bodyCollider.enabled = false;
+
+        dashEffect.Play();
     }
     public void EndDash()
     {
@@ -610,6 +617,22 @@ public class TestPlayer : MonoBehaviour
 
         _rb.AddForce(force, ForceMode.Impulse);
         #endregion
+
+    }
+    public void MovementAnimationHandler(Spine.TrackEntry trackEntry, Spine.Event e)
+    {
+        if (e.Data == jumpSpineEvent.EventData)
+        {
+            SoundManager.instance.PlaySFX(0);
+        }
+        if (e.Data == run1SpineEvent.EventData)
+        {
+            SoundManager.instance.PlaySFX(2);
+        }
+        if (e.Data == run2SpineEvent.EventData)
+        {
+            SoundManager.instance.PlaySFX(3);
+        }
     }
     #endregion
 

@@ -16,6 +16,10 @@ namespace Bang.StateMachine.PlayerMachine
 
             if(obj.enableAnimator)
                 obj.animator.Play("Fall", 0);
+            if (obj.enableSpine)
+            {
+                obj.skeletonAnimation.AnimationState.SetAnimation(0, obj.fall, false);
+            }
         }
 
         public override void ExitState()

@@ -174,6 +174,12 @@ public class InputHandler : MonoBehaviour
                 DialogueAction.Enable();
                 PrologueAction.Disable();
                 break;
+            case GameManager.GameState.Loading:
+                playerAction.Disable();
+                UIAction.Disable();
+                DialogueAction.Disable();
+                PrologueAction.Disable();
+                break;
 
             default:
                 Debug.LogError("There is no " + gameState.ToString() + " GameState.");

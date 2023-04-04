@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
     private Scene currenScene;
 
     public GameObject PauseUI;
+    public GameObject LoadingUI;
 
     public InputAction action;
 
@@ -27,7 +28,8 @@ public class GameManager : MonoBehaviour
         MainMenu,
         GameView,
         GameMenu,
-        Dialogue
+        Dialogue,
+        Loading
     }
     private void Awake()
     {
@@ -45,7 +47,10 @@ public class GameManager : MonoBehaviour
         #endregion
 
         if (!Debugging)
+        {
             SceneManager.sceneLoaded += OnSceneLoaded;
+            //SceneManager.activeSceneChanged += OnActiveSceneChanged;
+        }
 
         action.Enable();
         action.performed += ctx => SceneManager.LoadScene(0);
@@ -78,17 +83,24 @@ public class GameManager : MonoBehaviour
         {
             case 0:
                 ChangeGameState(GameState.MainMenu);
+                DoForSeconds(() => LoadingComplete(), 0.5f);
                 break;
             case 1:
                 ChangeGameState(GameState.Prologue);
+                DoForSeconds(() => LoadingComplete(), 0.5f);
                 break;
             case 2:
                 ChangeGameState(GameState.GameView);
                 player = FindObjectOfType<TestPlayer>();
                 InputHandler.instance.OnPause += arg => OnPause();
                 InputHandler.instance.OnUIPause += arg => OnPause();
+                DoForSeconds(() => LoadingComplete(), 0.5f);
                 break;
         }
+    }
+    private void OnActiveSceneChanged(Scene current, Scene next)
+    {
+        Loading(true);
     }
     public void LoadScene(int sceneIndex)
     {
@@ -118,9 +130,16 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void Loading(bool isLoading)
+    {
+        LoadingUI.SetActive(isLoading);
+    }
 
-
-
+    private void LoadingComplete()
+    {
+        Loading(false);
+        EventManager.instance.LoadingCompleteEvent.Invoke();
+    }
 
 
 

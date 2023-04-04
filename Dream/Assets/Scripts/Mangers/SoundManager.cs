@@ -14,7 +14,7 @@ public class SoundManager : MonoBehaviour
     public UnityEngine.Audio.AudioMixerGroup SFXMixer;
     public bool MuteBGM = false;
     public bool MuteSFX = false;
-    public static SoundManager Instance { get; private set; }
+    public static SoundManager instance { get; private set; }
     public AudioClip[] BGM;
     public AudioClip[] SFX;
 
@@ -24,9 +24,9 @@ public class SoundManager : MonoBehaviour
     AudioSource[] SFXSources;
     void Start()
     {
-        if (Instance == null)
+        if (instance == null)
         {
-            Instance = this;
+            instance = this;
             DontDestroyOnLoad(gameObject);
         }
         else
@@ -55,6 +55,8 @@ public class SoundManager : MonoBehaviour
             tSource.outputAudioMixerGroup = SFXMixer;
             SFXSources[i] = tSource;
         }
+
+        SetupMixerVolume();
     }
     private void Update()
     {
@@ -80,20 +82,26 @@ public class SoundManager : MonoBehaviour
         switch (sliderSender.name)
         {
             case "Master":
-                masterMixer.SetFloat("MasterVolume", sliderRawValue.Remap(-10f, 10, -40, 20));
+                masterMixer.SetFloat("MasterVolume", sliderRawValue.Remap(-10f, 10, -80, 10));
                 break;
             case "BGM":
                 if(MuteBGM)
                     masterMixer.SetFloat("BGMVolume", -80f);
                 else
-                    masterMixer.SetFloat("BGMVolume", sliderRawValue.Remap(-10f, 10, -40, 20));
+                    masterMixer.SetFloat("BGMVolume", sliderRawValue.Remap(-10f, 10, -60, 10));
                 break;
             case "SFX":
                 if(MuteSFX)
                     masterMixer.SetFloat("SFXVolume", -80f);
                 else
-                    masterMixer.SetFloat("SFXVolume", sliderRawValue.Remap(-10f, 10, -40, 20));
+                    masterMixer.SetFloat("SFXVolume", sliderRawValue.Remap(-10f, 10, 0, 20));
                 break;
         }
+    }
+    private void SetupMixerVolume()
+    {
+        masterMixer.SetFloat("MasterVolume", 3f.Remap(-10f, 10, -80, 10));
+        masterMixer.SetFloat("BGMVolume", 5f.Remap(-10f, 10, -60, 10));
+        masterMixer.SetFloat("SFXVolume", 5f.Remap(-10f, 10, 0, 20));
     }
 }
