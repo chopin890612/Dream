@@ -22,7 +22,8 @@ MonoBehaviour:
     - "\u6211\u4E00\u76F4\u770B\u7740\u592A\u967D\u7684\u5B69\u5B50\u51FA\u751F\uFF0C\r"
     - "\u4F60\u7684\u5148\u7956\uFF0C\u4F60\u5148\u7956\u7684\u5148\u7956\uFF0C\u548C\u518D\u66F4\u65E9\u4EE5\u524D\u7684\u5148\u7956\u3002\r"
     - "\u81EA\u5F9E\u90A3\u5929\u4EE5\u5F8C\u4F60\u5011\u5C31\u518D\u4E5F\u4E0D\u5B8C\u6574\u4E86\u3002\r"
-    Events: []
+    Events:
+    - {fileID: 11400000, guid: c51bf87b155927a46a48db33e9526bd0, type: 2}
   - charImage: {fileID: 0}
     charSide: 0
     charName: "\u4E3B\u89D2"
@@ -62,4 +63,5 @@ MonoBehaviour:
     sentence:
     - "\u6211\u770B\u5230\u4F60\u5DF2\u7D93\u6E96\u5099\u597D\u51FA\u767C\u4E86\u3002"
     - "\u53BB\u5C0B\u627E\u5427\uFF0C\u592A\u967D\u7684\u5B69\u5B50\u3002"
-    Events: []
+    Events:
+    - {fileID: 11400000, guid: 2cfe034f3ebf6e942827c862160c597d, type: 2}

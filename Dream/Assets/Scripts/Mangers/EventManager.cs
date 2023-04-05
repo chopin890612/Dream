@@ -20,6 +20,9 @@ public class EventManager : MonoBehaviour
 
     public UnityEvent LoadingCompleteEvent = new UnityEvent();
 
+    public UnityEvent NPCTalkDEvent = new UnityEvent();
+    public UnityEvent NPCTalkEndDEvent = new UnityEvent();
+
     private void Awake()
     {
         instance = this;

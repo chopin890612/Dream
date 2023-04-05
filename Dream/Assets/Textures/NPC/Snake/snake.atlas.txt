@@ -1,0 +1,62 @@
+
+snake.png
+size: 1993,370
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+body grass
+  rotate: false
+  xy: 652, 173
+  size: 592, 195
+  orig: 612, 199
+  offset: 6, 1
+  index: -1
+body1
+  rotate: false
+  xy: 2, 26
+  size: 522, 147
+  orig: 523, 157
+  offset: 1, 0
+  index: -1
+body2
+  rotate: false
+  xy: 2, 175
+  size: 648, 193
+  orig: 648, 200
+  offset: 0, 7
+  index: -1
+body3
+  rotate: false
+  xy: 526, 59
+  size: 453, 112
+  orig: 453, 135
+  offset: 0, 0
+  index: -1
+haed
+  rotate: false
+  xy: 981, 32
+  size: 228, 139
+  orig: 235, 144
+  offset: 3, 4
+  index: -1
+nail
+  rotate: true
+  xy: 1246, 178
+  size: 190, 449
+  orig: 201, 487
+  offset: 0, 0
+  index: -1
+nail grass
+  rotate: true
+  xy: 1246, 9
+  size: 167, 385
+  orig: 778, 570
+  offset: 199, 137
+  index: -1
+tail
+  rotate: false
+  xy: 1697, 2
+  size: 294, 366
+  orig: 299, 403
+  offset: 0, 0
+  index: -1

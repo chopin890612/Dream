@@ -114,14 +114,15 @@ public class DialogueManager : MonoBehaviour
             else
             {
                 contextIndex++;
+                foreach (DialogueEventData Devent in currentContext.Events)
+                {
+                    Devent.EventAction();
+                }
                 if (contextIndex < dialogueData.data.Count)
                 {                    
                     sentenceIndex = 0;
                     SetContext();
-                    foreach (DialogueEventData Devent in currentContext.Events)
-                    {
-                        Devent.EventAction();
-                    }
+                    
                 }
                 else
                 {
