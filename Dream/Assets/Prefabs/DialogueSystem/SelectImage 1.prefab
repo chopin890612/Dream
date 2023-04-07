@@ -182,7 +182,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 500, y: 63.2196}
+  m_SizeDelta: {x: 500, y: 71.2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2235860940920486711
 CanvasRenderer:
@@ -213,7 +213,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: 90330713d683d524bb94f77dcc8d1eb3, type: 3}
     m_FontSize: 48
     m_FontStyle: 0
     m_BestFit: 0

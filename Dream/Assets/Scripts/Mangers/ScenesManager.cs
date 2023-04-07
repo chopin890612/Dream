@@ -9,6 +9,7 @@ public class ScenesManager : MonoBehaviour
     {
         SceneManager.LoadScene(1);//Prologue
         GameManager.instance.Loading(true);
+        SoundManager.instance.PlayBGM(1);//ch0~ch2
     }
     public void StartLevel()
     {
@@ -23,5 +24,6 @@ public class ScenesManager : MonoBehaviour
     {
         SceneManager.LoadScene(0);//Menu
         GameManager.instance.Loading(true);
+        SoundManager.instance.PlayBGM(0);//main menu
     }
 }

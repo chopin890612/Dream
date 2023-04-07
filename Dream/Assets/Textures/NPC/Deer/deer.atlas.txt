@@ -1,0 +1,34 @@
+
+deer.png
+size: 1259,661
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+back-antle
+  rotate: true
+  xy: 760, 2
+  size: 306, 351
+  orig: 306, 351
+  offset: 0, 0
+  index: -1
+body
+  rotate: false
+  xy: 2, 6
+  size: 756, 653
+  orig: 868, 891
+  offset: 112, 0
+  index: -1
+front-antle
+  rotate: false
+  xy: 760, 310
+  size: 402, 349
+  orig: 402, 349
+  offset: 0, 0
+  index: -1
+head
+  rotate: false
+  xy: 1113, 141
+  size: 144, 167
+  orig: 305, 416
+  offset: 156, 0
+  index: -1
