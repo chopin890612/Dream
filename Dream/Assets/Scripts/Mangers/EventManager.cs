@@ -25,6 +25,7 @@ public class EventManager : MonoBehaviour
 
     public UnityEvent DeerPillarEvent = new UnityEvent();
 
+    public UnityEvent BirdTalkEvent = new UnityEvent();
     private void Awake()
     {
         instance = this;
