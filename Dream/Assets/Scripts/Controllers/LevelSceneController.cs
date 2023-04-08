@@ -19,12 +19,17 @@ public class LevelSceneController : MonoBehaviour
     public SkeletonAnimation eagleAnimation;
     public AnimationReferenceAsset eagleIdle;
     public AnimationReferenceAsset eagleTalk;
+    [Space(20)]
+
+    public SpriteRenderer lilyPillar;
+    public Sprite newPillar;
 
     // Start is called before the first frame update
     void Start()
     {
         EventManager.instance.NPCTalkDEvent.AddListener(TalkEventHandler);
         EventManager.instance.NPCTalkEndDEvent.AddListener(TalkEndEvenetHandler);
+        EventManager.instance.DeerPillarEvent.AddListener(DeerPillarChange);
     }
 
     // Update is called once per frame
@@ -42,5 +47,10 @@ public class LevelSceneController : MonoBehaviour
     {
         snakeAnimation.AnimationState.SetAnimation(0, snakeIdle, true);
         deerAnimation.AnimationState.SetAnimation(0, deerIdle, true);
+    }
+
+    private void DeerPillarChange()
+    {
+        lilyPillar.sprite = newPillar;
     }
 }

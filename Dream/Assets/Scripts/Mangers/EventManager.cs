@@ -23,6 +23,8 @@ public class EventManager : MonoBehaviour
     public UnityEvent NPCTalkDEvent = new UnityEvent();
     public UnityEvent NPCTalkEndDEvent = new UnityEvent();
 
+    public UnityEvent DeerPillarEvent = new UnityEvent();
+
     private void Awake()
     {
         instance = this;
