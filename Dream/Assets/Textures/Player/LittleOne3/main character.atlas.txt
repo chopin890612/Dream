@@ -1,0 +1,111 @@
+
+main character.png
+size: 1436,315
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+L hair
+  rotate: true
+  xy: 297, 16
+  size: 31, 69
+  orig: 37, 71
+  offset: 0, 1
+  index: -1
+L hand
+  rotate: false
+  xy: 972, 119
+  size: 156, 194
+  orig: 168, 194
+  offset: 1, 0
+  index: -1
+L leg
+  rotate: true
+  xy: 794, 9
+  size: 96, 183
+  orig: 98, 286
+  offset: 0, 1
+  index: -1
+R hair
+  rotate: true
+  xy: 368, 18
+  size: 29, 92
+  orig: 33, 94
+  offset: 2, 2
+  index: -1
+R hand
+  rotate: false
+  xy: 414, 61
+  size: 378, 252
+  orig: 378, 253
+  offset: 0, 1
+  index: -1
+R leg
+  rotate: false
+  xy: 297, 49
+  size: 115, 264
+  orig: 117, 266
+  offset: 1, 1
+  index: -1
+dash effect
+  rotate: false
+  xy: 1130, 139
+  size: 104, 174
+  orig: 134, 197
+  offset: 13, 8
+  index: -1
+down body-b
+  rotate: false
+  xy: 1310, 6
+  size: 124, 152
+  orig: 183, 158
+  offset: 1, 3
+  index: -1
+down body-f
+  rotate: true
+  xy: 794, 107
+  size: 206, 176
+  orig: 207, 178
+  offset: 0, 0
+  index: -1
+fire
+  rotate: true
+  xy: 555, 3
+  size: 56, 123
+  orig: 93, 137
+  offset: 15, 8
+  index: -1
+flower
+  rotate: true
+  xy: 462, 2
+  size: 57, 91
+  orig: 65, 98
+  offset: 1, 3
+  index: -1
+head
+  rotate: false
+  xy: 2, 5
+  size: 293, 308
+  orig: 293, 309
+  offset: 0, 1
+  index: -1
+pony tail
+  rotate: true
+  xy: 1236, 160
+  size: 153, 138
+  orig: 153, 138
+  offset: 0, 0
+  index: -1
+up body-b
+  rotate: true
+  xy: 979, 10
+  size: 107, 154
+  orig: 108, 159
+  offset: 1, 5
+  index: -1
+up body-f
+  rotate: true
+  xy: 1135, 6
+  size: 131, 173
+  orig: 161, 178
+  offset: 2, 4
+  index: -1

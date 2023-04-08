@@ -23,6 +23,13 @@ public class LevelSceneController : MonoBehaviour
     public AnimationReferenceAsset birdBlue2Red;
     public AnimationReferenceAsset birdRedGiveFire;
     public AnimationReferenceAsset birdRedTalk;
+
+    [Header("Player")]
+    public SkeletonAnimation playerAnimation;
+    public AnimationReferenceAsset playerIdle;
+    public AnimationReferenceAsset getLeaf;
+    public AnimationReferenceAsset getLily;
+    public AnimationReferenceAsset getFire;
     [Space(20)]
 
     public SpriteRenderer lilyPillar;
@@ -37,6 +44,9 @@ public class LevelSceneController : MonoBehaviour
         EventManager.instance.NPCTalkEndDEvent.AddListener(TalkEndEvenetHandler);
         EventManager.instance.DeerPillarEvent.AddListener(DeerPillarChange);
         EventManager.instance.BirdTalkEvent.AddListener(BirdTalkHandler);
+        EventManager.instance.BirdFirstTalk.AddListener(BirdFirstTalkHandler);
+        EventManager.instance.BirdTalkEnd.AddListener(BirdTalkEndHandler);
+        EventManager.instance.GetRelicEvent.AddListener(GetRelicHandler);
     }
 
     // Update is called once per frame
@@ -49,20 +59,25 @@ public class LevelSceneController : MonoBehaviour
     {
         snakeAnimation.AnimationState.SetAnimation(0, snakeTalk, true);
         deerAnimation.AnimationState.SetAnimation(0, deerTalk, true);
-        birdAnimation.AnimationState.SetAnimation(0, birdBlueTalk, true);
     }
     private void TalkEndEvenetHandler()
     {
         snakeAnimation.AnimationState.SetAnimation(0, snakeIdle, true);
-        deerAnimation.AnimationState.SetAnimation(0, deerIdle, true);
-        birdAnimation.AnimationState.SetAnimation(0, birdRedIdle, true);
+        deerAnimation.AnimationState.SetAnimation(0, deerIdle, true);        
     }
 
     private void DeerPillarChange()
     {
         lilyPillar.sprite = newPillar;
     }
-
+    private void BirdFirstTalkHandler()
+    {
+        birdAnimation.AnimationState.SetAnimation(0, birdBlueTalk, true);
+    }
+    private void BirdTalkEndHandler()
+    {
+        birdAnimation.AnimationState.SetAnimation(0, birdRedIdle, true);
+    }
     private void BirdTalkHandler()
     {
         switch (birdAnimaitonIndex)
@@ -78,5 +93,21 @@ public class LevelSceneController : MonoBehaviour
                 break;
         }
         birdAnimaitonIndex++;
+    }
+
+    private void GetRelicHandler(string relicName)
+    {
+        switch (relicName)
+        {
+            case "Leaf":
+                playerAnimation.AnimationState.SetAnimation(0, getLeaf, false);
+                break;
+            case "Lily":
+                playerAnimation.AnimationState.SetAnimation(0, getLily, false);
+                break;
+            case "Fire":
+                playerAnimation.AnimationState.SetAnimation(0, getFire, false);
+                break;
+        }
     }
 }

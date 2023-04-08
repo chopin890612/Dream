@@ -23,7 +23,7 @@ MonoBehaviour:
     - "\u4E00\u500B\u592A\u967D\u7684\u5B69\u5B50\u3002"
     - "\u6211\u4EE5\u70BA\u7D93\u904E\u90A3\u5834\u707D\u96E3\u5F8C\uFF0C\u6211\u518D\u4E5F\u4E0D\u6703\u518D\u898B\u5230\u592A\u967D\u7684\u5B69\u5B50\u4E86\u3002"
     Events:
-    - {fileID: 11400000, guid: c51bf87b155927a46a48db33e9526bd0, type: 2}
+    - {fileID: 11400000, guid: e7a23d95270dfd74cba2031f6469acd1, type: 2}
   - charImage: {fileID: 0}
     charSide: 1
     charName: "\u9DF9"
@@ -63,6 +63,7 @@ MonoBehaviour:
     - "\u6211\u4E5F\u6709\u6771\u897F\u9700\u8981\u7D66\u4F60\uFF0C\u5B69\u5B50\u3002"
     Events:
     - {fileID: 11400000, guid: 82bd2224f9481694cb6fae2f7058be86, type: 2}
+    - {fileID: 11400000, guid: fd18a2ac94c9fb04d8525b465c7eabf6, type: 2}
   - charImage: {fileID: 0}
     charSide: 1
     charName: "\u9DF9"
@@ -83,4 +84,4 @@ MonoBehaviour:
     - "\u5E0C\u671B\u9019\u5718\u65B0\u751F\u7684\u706B\u80FD\u5920\u627F\u8F09\u4F60\u5373\u5C07\u958B\u555F\u7684\u65B0\u4E16\u4EE3\u3002"
     Events:
     - {fileID: 11400000, guid: 80d2f794bc72d7841bb4753b4e220e07, type: 2}
-    - {fileID: 11400000, guid: 2cfe034f3ebf6e942827c862160c597d, type: 2}
+    - {fileID: 11400000, guid: 4fdb5d1e3f4a49548ba8674492023b88, type: 2}

@@ -25,7 +25,11 @@ public class EventManager : MonoBehaviour
 
     public UnityEvent DeerPillarEvent = new UnityEvent();
 
+    public UnityEvent BirdFirstTalk = new UnityEvent();
+    public UnityEvent BirdTalkEnd = new UnityEvent();
     public UnityEvent BirdTalkEvent = new UnityEvent();
+
+    public UnityEvent<string> GetRelicEvent = new UnityEvent<string>();
     private void Awake()
     {
         instance = this;

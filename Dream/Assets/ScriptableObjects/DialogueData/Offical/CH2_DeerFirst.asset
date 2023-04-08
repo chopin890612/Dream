@@ -20,10 +20,17 @@ MonoBehaviour:
     selects: []
     sentence:
     - "\u6211\u770B\u5230\u4F60\u8EAB\u4E0A\u7684\u9C57\u7247\uFF0C"
-    - "\u6211\u4E0D\u662F\u5F88\u78BA\u5B9A\u70BA\u751A\u9EBC\u767E\u6B65\u86C7\u6703\u76F8\u4FE1\u4F60\u4E26\u5C07\u9C57\u7247\u4EA4\u7D66\u4F60\uFF0C"
-    - "\u7D55\u5C0D\u4E0D\u6703\u662F\u56E0\u70BA\u7260\u9084\u76F8\u4FE1\u90A3\u53E4\u8001\u7684\u300C\u53CB\u60C5\u300D\u5427\u3002"
     Events:
     - {fileID: 11400000, guid: c51bf87b155927a46a48db33e9526bd0, type: 2}
+  - charImage: {fileID: 0}
+    charSide: 1
+    charName: "\u767D\u9E7F"
+    IsSelect: 0
+    selects: []
+    sentence:
+    - "\u6211\u4E0D\u662F\u5F88\u78BA\u5B9A\u70BA\u751A\u9EBC\u767E\u6B65\u86C7\u6703\u76F8\u4FE1\u4F60\u4E26\u5C07\u9C57\u7247\u4EA4\u7D66\u4F60\uFF0C"
+    - "\u7D55\u5C0D\u4E0D\u6703\u662F\u56E0\u70BA\u7260\u9084\u76F8\u4FE1\u90A3\u53E4\u8001\u7684\u300C\u53CB\u60C5\u300D\u5427\u3002"
+    Events: []
   - charImage: {fileID: 0}
     charSide: 1
     charName: "\u767D\u9E7F"
@@ -39,7 +46,8 @@ MonoBehaviour:
     - ......
     - "\u597D\u5427\uFF0C\u6216\u8A31\u5C07\u672A\u4F86\u4EA4\u7D66\u751A\u9EBC\u90FD\u4E0D\u61C2\u7684\u5B69\u5B50\u6703\u662F\u4E00\u4EF6\u597D\u4E8B\u3002"
     - "\u4F60\u5011\u80CC\u8CA0\u7740\u672A\u4F86\uFF0C\u540C\u6642\u9084\u4FDD\u6709\u5C0D\u4E8B\u7269\u7684\u5F48\u6027\u3002"
-    Events: []
+    Events:
+    - {fileID: 11400000, guid: 709500d40e4b7e64b88d764ba96f2484, type: 2}
   - charImage: {fileID: 0}
     charSide: 1
     charName: "\u767D\u9E7F"
