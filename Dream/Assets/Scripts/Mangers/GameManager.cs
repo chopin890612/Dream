@@ -116,6 +116,10 @@ public class GameManager : MonoBehaviour
         gameState = state;
         InputHandler.instance.SetActionEnable(gameState);
     }
+    public void ChangeGameStateFinal()
+    {
+        ChangeGameState(GameState.Loading);
+    }
     public void OnPause()
     {
         if (!PauseUI.activeSelf)

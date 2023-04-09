@@ -18,6 +18,10 @@ public class SoundManager : MonoBehaviour
     public AudioClip[] BGM;
     public AudioClip[] SFX;
 
+    [Header("Test")]
+    public UnityEngine.InputSystem.InputAction press;
+    public int index; 
+
     GameObject BGMPlayer;
     GameObject SFXPlayer;
     AudioSource BGMSource;
@@ -57,6 +61,9 @@ public class SoundManager : MonoBehaviour
         }
 
         SetupMixerVolume();
+
+        press.Enable();
+        press.performed += ctx => PlayBGM(index);
     }
     private void Update()
     {
@@ -69,8 +76,26 @@ public class SoundManager : MonoBehaviour
 
     public void PlayBGM(int index)
     {
+        StartCoroutine(PlayBGMRoutine(index));
+    }
+
+    private IEnumerator PlayBGMRoutine(int index)
+    {
+        for(int i = 0; i < 10; i++)
+        {
+            BGMSource.volume += -0.1f;
+            yield return new WaitForSeconds(0.1f);
+        }
+
+
         BGMSource.clip = BGM[index];
         BGMSource.Play();
+
+        for (int i = 0; i < 10; i++)
+        {
+            BGMSource.volume += 0.1f;
+            yield return new WaitForSeconds(0.1f);
+        }
     }
     public void PlaySFX(int index)
     {

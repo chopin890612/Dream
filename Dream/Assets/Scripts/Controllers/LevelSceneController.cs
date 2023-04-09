@@ -35,7 +35,13 @@ public class LevelSceneController : MonoBehaviour
     public SpriteRenderer lilyPillar;
     public Sprite newPillar;
 
+    public UnityEngine.Video.VideoPlayer VideoPlayer;
+
     private int birdAnimaitonIndex = 0;
+
+    [SerializeField]private double videoLength;
+    private float startPlayTime;
+    private bool isPlayingFinal = false;
 
     // Start is called before the first frame update
     void Start()
@@ -47,12 +53,17 @@ public class LevelSceneController : MonoBehaviour
         EventManager.instance.BirdFirstTalk.AddListener(BirdFirstTalkHandler);
         EventManager.instance.BirdTalkEnd.AddListener(BirdTalkEndHandler);
         EventManager.instance.GetRelicEvent.AddListener(GetRelicHandler);
+
+        videoLength = VideoPlayer.length;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if(Time.time - startPlayTime > videoLength && isPlayingFinal)
+        {
+            FindObjectOfType<GameManager>().transform.Find("ScM").GetComponent<ScenesManager>().MainMenu();
+        }
     }
 
     private void TalkEventHandler()
@@ -109,5 +120,13 @@ public class LevelSceneController : MonoBehaviour
                 playerAnimation.AnimationState.SetAnimation(0, getFire, false);
                 break;
         }
+    }
+
+    public void PlayFinal()
+    {
+        VideoPlayer.Stop();
+        VideoPlayer.Play();
+        startPlayTime = Time.time;
+        isPlayingFinal = true;
     }
 }
