@@ -129,4 +129,8 @@ public class LevelSceneController : MonoBehaviour
         startPlayTime = Time.time;
         isPlayingFinal = true;
     }
+    public void PlayCH3BGM()
+    {
+        SoundManager.instance.PlayBGM(2);
+    }
 }

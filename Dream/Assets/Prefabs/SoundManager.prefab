@@ -52,9 +52,21 @@ MonoBehaviour:
   MuteBGM: 0
   MuteSFX: 0
   BGM:
-  - {fileID: 8300000, guid: 77ec6f15201306d478f4e51c409905ba, type: 3}
-  - {fileID: 8300000, guid: 9dce3841853a4984883ac43b430f037f, type: 3}
+  - {fileID: 8300000, guid: bfcaad10ab522904abefc17f7160f2fd, type: 3}
+  - {fileID: 8300000, guid: e7f74af6c7f8f644481bce985c7084ca, type: 3}
+  - {fileID: 8300000, guid: 9f493a38e203ff548a8b945382dfc60b, type: 3}
   SFX:
-  - {fileID: 8300000, guid: cfafb80f03136404dbd9bcdd74931e22, type: 3}
-  - {fileID: 8300000, guid: b7138b050de57e449954bfd0034f7d6a, type: 3}
-  - {fileID: 8300000, guid: ea55248812607d7488ad421ca46cc1cd, type: 3}
+  - {fileID: 8300000, guid: bfe18110fa7ccd94b899bc3d3b6e8cc4, type: 3}
+  - {fileID: 8300000, guid: 879d12885f7a42e4c92834b1f5db03b8, type: 3}
+  - {fileID: 8300000, guid: 663937b5b1791464e994b72a51eb00d4, type: 3}
+  - {fileID: 8300000, guid: 4f9ba2c07eac29449ad8ee5e3d9522d9, type: 3}
+  press:
+    m_Name: Press
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 3260a1e0-044c-4f61-bca5-d39d73072666
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+  index: 0

@@ -22,11 +22,11 @@ public class NextLevel : MonoBehaviour
     {
         if (levelName == currentLevel)
         {
-            GameManager.instance.DoForSeconds(() => GetComponent<BoxCollider>().enabled = true, 1);
+            GameManager.instance.DoForSeconds(() => GetComponent<BoxCollider>().enabled = true, (float)camChange.duration);
         }
         else
         {
-            GameManager.instance.DoForSeconds(() => GetComponent<BoxCollider>().enabled = false, 1);
+            GameManager.instance.DoForSeconds(() => GetComponent<BoxCollider>().enabled = false, (float)camChange.duration);
         }
     }
 
@@ -37,6 +37,7 @@ public class NextLevel : MonoBehaviour
             //GameManager.instance.CamBorderChange(nextBorder);
             GameObject.FindObjectOfType<DirectorController>().ChangeCam(camChange);
             EventManager.instance.LevelChangeEvent.Invoke(nextLevel);
+            GetComponent<BoxCollider>().enabled = false;
         }
     }
 

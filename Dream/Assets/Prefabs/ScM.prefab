@@ -43,3 +43,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6793dafe02932ff4cad175e4ae04ce54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ChangeScene:
+    m_Name: Change Scene
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 1cd89650-452e-4f20-af9c-50cddaad26a7
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 73cf3d24-8d50-4552-bd96-b5c23cb41d5f
+      m_Path: <Keyboard>/l
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Change Scene
+      m_Flags: 0
+    m_Flags: 0

@@ -8,7 +8,7 @@ public class InputHandler : MonoBehaviour
 {
     public static InputHandler instance;
 
-    public bool enableDummyMove = false;
+    [SerializeField] private bool enableDummyMove = false;
     public Vector2 dummyMovment = Vector2.zero;
 
     #region Player Input
@@ -48,9 +48,15 @@ public class InputHandler : MonoBehaviour
     private InputMaster DialogueAction;
     private InputMaster PrologueAction;
 
+    private Action<InputAction.CallbackContext> DashHandler;
+    private Action<InputAction.CallbackContext> JumpPressHandler;
+    private Action<InputAction.CallbackContext> JumpReleaseHandler;
     private void Awake()
     {
-        instance = this;
+        if(instance == null)
+            instance = this;
+        else
+            Destroy(this);
 
         playerAction = new InputMaster();
         UIAction = new InputMaster();
@@ -58,12 +64,15 @@ public class InputHandler : MonoBehaviour
         PrologueAction = new InputMaster();
         #region Assign Input
 
+        JumpPressHandler = ctx => OnJumpPressed(new InputArgs { context = ctx });
+        JumpReleaseHandler = ctx => OnJumpReleased(new InputArgs { context = ctx });
+        DashHandler = ctx => OnDash(new InputArgs { context = ctx });
+
         playerAction.Player.Movment.performed += ctx => Movement = ctx.ReadValue<Vector2>();
         playerAction.Player.Movment.canceled += ctx => Movement = Vector2.zero;
-
-        playerAction.Player.Jump.performed += ctx => OnJumpPressed(new InputArgs { context = ctx});
-        playerAction.Player.JumpUp.performed += ctx => OnJumpReleased(new InputArgs { context = ctx });
-        playerAction.Player.Dash.performed += ctx => OnDash(new InputArgs { context = ctx });
+        playerAction.Player.Jump.performed += JumpPressHandler;
+        playerAction.Player.JumpUp.performed += JumpReleaseHandler;
+        playerAction.Player.Dash.performed += DashHandler;
         playerAction.Player.Attack.performed += ctx => OnAttack(new InputArgs { context = ctx });
         playerAction.Player.ChangeWorld.performed += ctx => OnChangeWorld(new InputArgs { context = ctx });
         playerAction.Player.ChangeWorld.canceled += ctx => ReleaseChangeWorld(new InputArgs { context = ctx });
@@ -128,10 +137,30 @@ public class InputHandler : MonoBehaviour
             Movement = dummyMovment;
         }
     }
-
-    public void ReDetectInput()
+    private void DisconnectDash()
     {
+        playerAction.Player.Dash.performed -= DashHandler;
+    }
+    private void DisconnectJump()
+    {
+        playerAction.Player.Jump.performed -= JumpPressHandler;
+        playerAction.Player.JumpUp.performed -= JumpReleaseHandler;
+    }
+    public void DisconnectInput()
+    {
+        DisconnectDash();
+        DisconnectJump();
+        enableDummyMove = true;
+        Debug.Log("Disconnect");
+    }
+    public void ConnectInput()
+    {
+        playerAction.Player.Dash.performed += DashHandler;
         Movement = playerAction.Player.Movment.ReadValue<Vector2>();
+        playerAction.Player.Jump.performed += JumpPressHandler;
+        playerAction.Player.JumpUp.performed += JumpReleaseHandler;
+        enableDummyMove = false;
+        Debug.Log("Connect");
     }
     private void Dummy() { }
 

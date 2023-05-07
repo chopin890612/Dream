@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
     public string currentSceneName;
     private Scene currenScene;
 
+    public UIController uiController;
     public GameObject PauseUI;
     public GameObject LoadingUI;
 
@@ -58,7 +59,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         InputHandler.instance.SetActionEnable(gameState);
-        
+        uiController = GetComponentInChildren<UIController>();
         
         //if (gameState == GameState.Prologue)
         //{
@@ -92,8 +93,6 @@ public class GameManager : MonoBehaviour
             case 2:
                 ChangeGameState(GameState.GameView);
                 player = FindObjectOfType<TestPlayer>();
-                InputHandler.instance.OnPause += arg => OnPause();
-                InputHandler.instance.OnUIPause += arg => OnPause();
                 DoForSeconds(() => LoadingComplete(), 0.5f);
                 break;
         }
@@ -119,19 +118,6 @@ public class GameManager : MonoBehaviour
     public void ChangeGameStateFinal()
     {
         ChangeGameState(GameState.Loading);
-    }
-    public void OnPause()
-    {
-        if (!PauseUI.activeSelf)
-        {
-            PauseUI.SetActive(true);
-            ChangeGameState(GameState.GameMenu);
-        }
-        else
-        {
-            PauseUI.SetActive(false);
-            ChangeGameState(previousState);
-        }
     }
 
     public void Loading(bool isLoading)

@@ -2,9 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
 
 public class ScenesManager : MonoBehaviour
 {
+    public InputAction ChangeScene;
+    private void Awake()
+    {
+        ChangeScene.Enable();
+    }
+    private void Start()
+    {
+        ChangeScene.performed += ctx => StartLevel();
+    }
     public void StartGame()
     {
         SceneManager.LoadScene(1);//Prologue
